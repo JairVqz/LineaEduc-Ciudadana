@@ -209,7 +209,7 @@
                                 </tbody>
                             </table>
 
-                            
+
                         </div>
                     </div>
                 </div>
@@ -239,28 +239,28 @@
     console.log(chartImage);
 
     fetch("{{ route('solicitud.pdf_generator') }}", {
-        method: "POST",
+    method: "POST",
         headers: {
-            "Content-Type": "application/json",
+        "Content-Type": "application/json",
             "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ chartImage: chartImage }) // Enviar imagen al servidor
+    },
+    body: JSON.stringify({ chartImage: chartImage }) // Enviar imagen al servidor
     })
     .then(response => response.json())
-    .then(data => {
-        window.open(data.url, '_blank'); // Abre en nueva pestaña
-    })
-    .catch(error => console.error("Error generando PDF:", error));
-});
-
-document.getElementById("generarPDF").addEventListener("click", function() {
-    fetch("{{ route('solicitud.pdf_generator') }}")  // Asegúrate de que esta ruta sea correcta
-        .then(response => response.json())
         .then(data => {
             window.open(data.url, '_blank'); // Abre en nueva pestaña
         })
         .catch(error => console.error("Error generando PDF:", error));
-});*/
+});
+
+    document.getElementById("generarPDF").addEventListener("click", function () {
+        fetch("{{ route('solicitud.pdf_generator') }}")  // Asegúrate de que esta ruta sea correcta
+            .then(response => response.json())
+            .then(data => {
+                window.open(data.url, '_blank'); // Abre en nueva pestaña
+            })
+            .catch(error => console.error("Error generando PDF:", error));
+    });*/
 </script>
 
 <script>

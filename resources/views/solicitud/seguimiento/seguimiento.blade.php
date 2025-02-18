@@ -19,7 +19,7 @@
 @include('menuNavigation')
 
 <body>
-    
+
 
     <!-- mi contenedor -->
     <div class="content">
@@ -33,7 +33,7 @@
                 <!-- Filtros-->
                 <div class="card mb-3" style="border-radius: 0px">
                     <div class="card-body">
-                       
+
                         <div class="mb-3 row">
                             <div class="col-md-3">
                                 <label for="filtroFolio" class="form-label">Folio:</label>
@@ -48,7 +48,7 @@
                                 <label for="fecha" class="form-label">Fecha de solicitud:</label>
                                 <input type="date" class="form-control" id="fecha" name="fecha">
                             </div>
-                            
+
                         </div>
 
                         <div class="mb-4 row">
@@ -63,7 +63,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-3">
                                 <label for="idTipoSolicitud" class="form-label">Tipo de solicitud:</label>
                                 <select name="idTipoSolicitud" id="idTipoSolicitud" class="form-select">
@@ -102,8 +102,7 @@
                         <div class="mb-4 row">
                             <div class="col-md-3">
                                 <label for="filtroCCT" class="form-label">CCT:</label>
-                                <input type="text" class="form-control" id="filtroCCT"
-                                    placeholder="Ej. 30DPR0969O">
+                                <input type="text" class="form-control" id="filtroCCT" placeholder="Ej. 30DPR0969O">
                             </div>
 
                             <div class="col-md-3">
@@ -123,8 +122,8 @@
                                 <button name="button" id="btnLimpiarFiltros" style="border-radius: 8px; 
                                 width:100%; height:75%">Limpiar filtros</button>
                             </div>
-                            <input type="hidden" name="curpUsuario" id="curpUsuario" >
-                            <input type="hidden" name="usuario" id="usuario" >
+                            <input type="hidden" name="curpUsuario" id="curpUsuario">
+                            <input type="hidden" name="usuario" id="usuario">
                             <input type="hidden" name="idAreaUsuario" id="idAreaUsuario">
                         </div>
                     </div>
@@ -175,7 +174,7 @@
                                 </td>
                             @endif
 
-                            
+
                             <td>{{ $solicitud->municipio}}</td>
                             <td>{{ $solicitud->localidad}}</td>
                             <!--ESTATUS POR COLOR.-->
@@ -237,7 +236,7 @@
                 </table>
             </div>
         </div>
-    </div>    
+    </div>
 </body>
 @include('solicitud.seguimiento.modalDetalle')
 
@@ -247,6 +246,8 @@
 <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -281,31 +282,31 @@
 
 <script>//TABLA
 
-document.addEventListener('DOMContentLoaded', function () {
-    const tabla = $('#tablaResultados').DataTable({
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-        },
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": false,
-        "info": true,
-        "autoWidth": true,
-        "responsive": true,
-    });
-    /* Filtro de CCT
-        $('#filtroCCT').on('input', function () {
-            let filtro = $(this).val().toLowerCase().trim();
-            tabla.rows().every(function () {
-                let cct = $(this.node()).find('td:last-child a').data('cct') || ''; // Obtiene el data-cct
-                let match = cct.toLowerCase().includes(filtro);
-                console.log(match);
-
-                $(this.node()).toggle(match); // Muestra u oculta la fila según el filtro
-            });
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabla = $('#tablaResultados').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": false,
+            "info": true,
+            "autoWidth": true,
+            "responsive": true,
         });
-*/
+        /* Filtro de CCT
+            $('#filtroCCT').on('input', function () {
+                let filtro = $(this).val().toLowerCase().trim();
+                tabla.rows().every(function () {
+                    let cct = $(this.node()).find('td:last-child a').data('cct') || ''; // Obtiene el data-cct
+                    let match = cct.toLowerCase().includes(filtro);
+                    console.log(match);
+    
+                    $(this.node()).toggle(match); // Muestra u oculta la fila según el filtro
+                });
+            });
+    */
         //SCRIPTS DE FILTROS :D
         filtroFolio.addEventListener('input', function () {
             const filtro = filtroFolio.value.toLowerCase().trim();
@@ -325,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#tablaResultados').DataTable().columns(3).search(filtro).draw();
             }
         });
-        
+
         idPrioridad.addEventListener('input', function () {
             const filtro = idPrioridad.options[idPrioridad.selectedIndex].text.toLowerCase().trim();
             if (idPrioridad.selectedIndex === 0) {
@@ -426,78 +427,78 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 <script>//API DE MUNICIPIOS Y LOCALIDADES
-window.Laravel = <?php echo json_encode([
-        'apiMunicipios' => route('api.apiMunicipios'),
-        'apiLocalidades' => route('api.apiLocalidades'),
-    ]); ?>;
-document.addEventListener('DOMContentLoaded', function () {   
-    
-    const apiMunicipios = window.Laravel.apiMunicipios;
-    const apiLocalidades = window.Laravel.apiLocalidades;
+    window.Laravel = <?php echo json_encode([
+    'apiMunicipios' => route('api.apiMunicipios'),
+    'apiLocalidades' => route('api.apiLocalidades'),
+]); ?>;
+    document.addEventListener('DOMContentLoaded', function () {
 
-    document.getElementById('curpUsuario').value = localStorage.getItem('curpSEV');
-    document.getElementById('usuario').value = localStorage.getItem('nombreSEV');
-    document.getElementById('idAreaUsuario').value = localStorage.getItem('idArea');
+        const apiMunicipios = window.Laravel.apiMunicipios;
+        const apiLocalidades = window.Laravel.apiLocalidades;
+
+        document.getElementById('curpUsuario').value = localStorage.getItem('curpSEV');
+        document.getElementById('usuario').value = localStorage.getItem('nombreSEV');
+        document.getElementById('idAreaUsuario').value = localStorage.getItem('idArea');
 
 
-    $(document).ready(function () {
-        $.ajax({
-            //url: 'https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/',
-            //url: '/api-municipios',
-            url: apiMunicipios,
-            type: 'GET',
-            success: function (response) {
-                if (response) {
-                    var selectMunicipio = $('#SelectMunicipio');
-                    selectMunicipio.empty();
-                    selectMunicipio.append('<option value="">Selecciona el municipio</option>');
-                    response.forEach(function (municipio) {
-                        selectMunicipio.append(
-                            '<option value="' + municipio.Id + '">' + municipio.Nombre + '</option>'
-                        );
-                    });
-                } else {
-                    console.error('La respuesta de la API está vacía.');
-                }
-            },
-            error: function () {
-                console.error('Hubo un error al consumir la API de municipios.');
-            }
-        });
-
-    
-
-        $('#SelectMunicipio').on('change', function () {
-            var idMunicipio = $(this).val();
-            var selectLocalidad = $('#SelectLocalidad');
-            selectLocalidad.empty();
-            selectLocalidad.append('<option value="">Selecciona la localidad</option>');
-            if (idMunicipio) {
-                //var urlLocalidades = `/api-municipios/${idMunicipio}/localidad`;
-                var urlLocalidades = `https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/${idMunicipio}/localidad`;
-
-                $.ajax({
-                    url: urlLocalidades,
-                    type: 'GET',
-                    success: function (response) {
-                        if (response) {
-                            response.forEach(function (localidad) {
-                                selectLocalidad.append(
-                                    '<option value="' + localidad.Id + '">' + localidad.Nombre + '</option>'
-                                );
-                            });
-                        } else {
-                            console.error('La respuesta de la API de localidades está vacía.');
-                        }
-                    },
-                    error: function () {
-                        console.error('Hubo un error al consumir la API de localidades.');
+        $(document).ready(function () {
+            $.ajax({
+                //url: 'https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/',
+                //url: '/api-municipios',
+                url: apiMunicipios,
+                type: 'GET',
+                success: function (response) {
+                    if (response) {
+                        var selectMunicipio = $('#SelectMunicipio');
+                        selectMunicipio.empty();
+                        selectMunicipio.append('<option value="">Selecciona el municipio</option>');
+                        response.forEach(function (municipio) {
+                            selectMunicipio.append(
+                                '<option value="' + municipio.Id + '">' + municipio.Nombre + '</option>'
+                            );
+                        });
+                    } else {
+                        console.error('La respuesta de la API está vacía.');
                     }
-                });
-            }
+                },
+                error: function () {
+                    console.error('Hubo un error al consumir la API de municipios.');
+                }
+            });
+
+
+
+            $('#SelectMunicipio').on('change', function () {
+                var idMunicipio = $(this).val();
+                var selectLocalidad = $('#SelectLocalidad');
+                selectLocalidad.empty();
+                selectLocalidad.append('<option value="">Selecciona la localidad</option>');
+                if (idMunicipio) {
+                    //var urlLocalidades = `/api-municipios/${idMunicipio}/localidad`;
+                    var urlLocalidades = `https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/${idMunicipio}/localidad`;
+
+                    $.ajax({
+                        url: urlLocalidades,
+                        type: 'GET',
+                        success: function (response) {
+                            if (response) {
+                                response.forEach(function (localidad) {
+                                    selectLocalidad.append(
+                                        '<option value="' + localidad.Id + '">' + localidad.Nombre + '</option>'
+                                    );
+                                });
+                            } else {
+                                console.error('La respuesta de la API de localidades está vacía.');
+                            }
+                        },
+                        error: function () {
+                            console.error('Hubo un error al consumir la API de localidades.');
+                        }
+                    });
+                }
+            });
         });
     });
-});
 </script>
 
 </html>

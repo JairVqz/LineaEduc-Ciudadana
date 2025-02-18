@@ -90,7 +90,7 @@
 
 
     <?php
-    /*$chartUrl = "https://quickchart.io/chart?c=" . urlencode(json_encode([
+    $chartUrl = "https://quickchart.io/chart?c=" . urlencode(json_encode([
         "type" => "bar",
         "data" => [
             "labels" => $labelsHora,
@@ -120,10 +120,10 @@
                 "display"=> false,
             ],
         ]
-    ]));*/
+    ]));
     ?>
 
-    <!--<img src="<?php /*echo $chartUrl; */?>" alt="Gráfico de Solicitudes por Hora" style="width: 100%; height: 350px;">-->
+    <img src="<?php echo $chartUrl; ?>" alt="Gráfico de Solicitudes por Hora" style="width: 100%; height: 350px;">
 
 </body>
 

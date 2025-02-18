@@ -1,6 +1,4 @@
-<!-- Modal -->
-    <!-- Modal -->
-    <div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
+<div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="modalDetalleLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content " style="padding:15px">
                 <div class="modal-header text-center">
@@ -84,55 +82,76 @@
                             </div>
                         </fieldset>
 
-
-
-                        <fieldset class="border border-secondary p-3" style="border-radius:5px; margin-bottom:5px;">
+                        <fieldset id="divDatosUbicacion" class="border border-secondary p-3" style="border-radius:5px; margin-bottom:5px;">
                             <!--DATOS DEL CCT-->
                             <legend class="float-none w-auto px-2" style="font-size: 18px; font-weight:bold"><i
                                     class="bi bi-geo-alt-fill" style="margin-right:5px;"></i>Datos de ubicación:
                             </legend>
                             <div class="row mb-0">
-                                <div class="col-md-4 d-flex">
-                                    <label class="form-label me-2"><strong>CCT:</strong></label>
+                                <div class="col-md-6 d-flex" id="divCct">
+                                    <label id="labelCct" class="form-label me-2"><strong>CCT:</strong></label>
                                     <p id="modalCct" class="mb-0"></p>
                                 </div>
-                                <div class="col-md-4 d-flex">
-                                    <label class="form-label me-2"><strong>Municipio:</strong></label>
-                                    <p id="modalMunicipio" class="mb-0"></p>
-                                </div>
-                                <div class="col-md-4 d-flex">
-                                    <label class="form-label me-2"><strong>Localidad:</strong></label>
-                                    <p id="modalLocalidad" class="mb-0"></p>
-                                </div>
-                            </div>
-                            <div class="row mb-0">
-                                <div class="col-12 d-flex">
-                                    <label class="form-label me-2"><strong>Nombre del plantel:</strong></label>
-                                    <p id="modalNombrePlantel" class="mb-0"></p>
-                                </div>
-                            </div>
-                            <div class="row mb-0">
-                                <div class="col-12 d-flex">
-                                    <label class="form-label me-2"><strong>Nivel educativo:</strong></label>
+                                <div class="col-md-6 d-flex" id="divNivel">
+                                    <label id="labelNivel" class="form-label me-2"><strong>Nivel:</strong></label>
                                     <p id="modalNivel" class="mb-0"></p>
                                 </div>
                             </div>
                             <div class="row mb-0">
-                                <div class="col-12 d-flex">
-                                    <label class="form-label me-2"><strong>Nombre del director:</strong></label>
+                                <div class="col-md-6 d-flex" id="divMunicipio">
+                                    <label  id="labelMunicipio" class="form-label me-2"><strong>Municipio:</strong></label>
+                                    <p id="modalMunicipio" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-6 d-flex" id="divLocalidad">
+                                    <label id="labelLocalidad" class="form-label me-2"><strong>Localidad:</strong></label>
+                                    <p id="modalLocalidad" class="mb-0"></p>
+                                </div>
+                            </div>
+
+                            <div class="row mb-0">
+                                <div class="col-12 d-flex" id="divNombrePlantel">
+                                    <label id="labelNombrePlantel" class="form-label me-2"><strong>Nombre del plantel:</strong></label>
+                                    <p id="modalNombrePlantel" class="mb-0"></p>
+                                </div>
+                            </div>
+                            <div class="row mb-0">
+                                
+                            </div>
+                            <div class="row mb-0">
+                                <div class="col-12 d-flex" id="divNombreDirector">
+                                    <label id="labelNombreDirector" class="form-label me-2"><strong>Nombre del director:</strong></label>
                                     <p id="modalNombreDirector" class="mb-0"></p>
                                 </div>
                             </div>
                             <div class="row mb-0">
-                                <div class="col-12 d-flex">
-                                    <label class="form-label me-2"><strong>Dirección del CCT:</strong></label>
+                                <div class="col-12 d-flex" id="divDireccionCct">
+                                    <label id="labelDireccionCct" class="form-label me-2"><strong>Dirección del CCT:</strong></label>
                                     <p id="modalDireccionCct" class="mb-0"></p>
                                 </div>
                             </div>
                         </fieldset>
 
-                        <fieldset class="border border-secondary p-3" style="border-radius:5px; margin-bottom:5px;">
+
+                        <fieldset id="divDatosMunicipio" class="border border-secondary p-3" style="border-radius:5px; margin-bottom:5px;">
                             <!--DATOS DEL CCT-->
+                            <legend class="float-none w-auto px-2" style="font-size: 18px; font-weight:bold"><i
+                                    class="bi bi-geo-alt-fill" style="margin-right:5px;"></i>Datos de ubicación:
+                            </legend>
+                            
+                            <div class="row mb-0">
+                                <div class="col-md-6 d-flex" id="divMunicipio2">
+                                    <label  id="labelMunicipio" class="form-label me-2"><strong>Municipio:</strong></label>
+                                    <p id="modalMunicipio2" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-6 d-flex" id="divLocalidad2">
+                                    <label id="labelLocalidad" class="form-label me-2"><strong>Localidad:</strong></label>
+                                    <p id="modalLocalidad2" class="mb-0"></p>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <fieldset class="border border-secondary p-3" style="border-radius:5px; margin-bottom:5px;">
                             <legend class="float-none w-auto px-2" style="font-size: 18px; font-weight:bold"><i
                                     class="bi bi-telephone-fill" style="margin-right:5px;"></i>Datos de la llamada:
                             </legend>
@@ -160,3 +179,5 @@
             </div>
         </div>
     </div>
+
+    
