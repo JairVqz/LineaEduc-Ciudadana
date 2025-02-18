@@ -63,49 +63,48 @@
                     </thead>
                     <tbody>
                         @foreach ($listaUsuarios as $key => $usuario)
-                            <tr>
-                                <td>{{ $usuario->name }} </td>
-                                <td>{{ $usuario->curp }}</td>
-                                <td>{{ $usuario->email }}</td>
-                                <td>{{ $usuario->rol }}</td>
-                                <td>{{ $areaUsuarios[$key]->area }}</td>
+                                                <tr>
+                                                    <td>{{ $usuario->name }} </td>
+                                                    <td>{{ $usuario->curp }}</td>
+                                                    <td>{{ $usuario->email }}</td>
+                                                    <td>{{ $usuario->rol }}</td>
+                                                    <td>{{ $areaUsuarios[$key]->area }}</td>
 
-                                @php
-                                    $fecha = \Carbon\Carbon::parse($usuario->created_at)->format('d/m/Y');
-                                @endphp
-                                <td>{{ $fecha }}</td>
+                                                    @php
+                                                        $fecha = \Carbon\Carbon::parse($usuario->created_at)->format('d/m/Y');
+                                                    @endphp
+                                                    <td>{{ $fecha }}</td>
 
-                                <td class="text-center">
+                                                    <td class="text-center">
 
-                                    <button type="button" id="btnEditarUsuario" class="btn btn-primary"
-                                        data-bs-toggle="modal" data-bs-target="#modalEditarUsuario{{ $usuario->id }}"
-                                        title="Editar"><i class="bi bi-pencil"></i></button>
+                                                        <button type="button" id="btnEditarUsuario" class="btn btn-primary"
+                                                            data-bs-toggle="modal" data-bs-target="#modalEditarUsuario{{ $usuario->id }}"
+                                                            title="Editar"><i class="bi bi-pencil"></i></button>
 
-                                    @if ($usuario->trashed())
-                                        <button type="button" id="btnActivarUsuario" class="btn btn-success"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalActivarUsuario{{ $usuario->id }}" title="Activar">
-                                            <i class="bi bi-check-lg"></i></button>
-                                    @else
-                                        <button type="button" id="btnEliminarUsuario" class="btn btn-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#modalEliminarUsuario{{ $usuario->id }}"
-                                            title="Desactivar">
-                                            <i class="bi bi-x-lg"></i></button>
-                                    @endif
+                                                        @if ($usuario->trashed())
+                                                            <button type="button" id="btnActivarUsuario" class="btn btn-success"
+                                                                data-bs-toggle="modal" data-bs-target="#modalActivarUsuario{{ $usuario->id }}"
+                                                                title="Activar">
+                                                                <i class="bi bi-check-lg"></i></button>
+                                                        @else
+                                                            <button type="button" id="btnEliminarUsuario" class="btn btn-danger"
+                                                                data-bs-toggle="modal" data-bs-target="#modalEliminarUsuario{{ $usuario->id }}"
+                                                                title="Desactivar">
+                                                                <i class="bi bi-x-lg"></i></button>
+                                                        @endif
 
-                                    <!--div class="form-check form-switch" style="display: inline-block">
-                                        <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode"
-                                            value="yes" checked>
-                                        <label class="form-check-label" for="mySwitch">Estatus</label>
-                                    </div-->
+                                                        <!--div class="form-check form-switch" style="display: inline-block">
+                                                                <input class="form-check-input" type="checkbox" id="mySwitch" name="darkmode"
+                                                                    value="yes" checked>
+                                                                <label class="form-check-label" for="mySwitch">Estatus</label>
+                                                            </div-->
 
-                                </td>
+                                                    </td>
 
-                            </tr>
-                            @include('usuario.modalEditar')
-                            @include('usuario.modalEliminar')
-                            @include('usuario.modalActivar')
+                                                </tr>
+                                                @include('usuario.modalEditar')
+                                                @include('usuario.modalEliminar')
+                                                @include('usuario.modalActivar')
                         @endforeach
                     </tbody>
                 </table>
@@ -126,10 +125,7 @@
 <script>
     //TABLA
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const body = document.body;
-
+    document.addEventListener('DOMContentLoaded', function () {
         $('#tablaUsuarios').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
@@ -143,7 +139,7 @@
             "responsive": true,
         });
 
-        $('#parametroBusqueda').on('input', function() {
+        $('#parametroBusqueda').on('input', function () {
             const parametro = parametroBusqueda.value.toLowerCase().trim();
             $('#tablaUsuarios').DataTable().columns(0).search(parametro).draw();
         });

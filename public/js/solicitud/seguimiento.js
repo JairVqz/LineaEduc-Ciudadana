@@ -1,3 +1,115 @@
+/*document.addEventListener("DOMContentLoaded", function () {
+    var modalDetalle = document.getElementById('modalDetalle');
+
+    modalDetalle.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+
+        // Obtener valores y limpiarlos de espacios extra
+        var cct = (button.getAttribute('data-cct') || "").trim().toUpperCase();
+        var nivel = (button.getAttribute('data-nivel') || "").trim().toUpperCase();
+        var municipio = (button.getAttribute('data-municipio') || "").trim().toUpperCase();
+        var localidad = (button.getAttribute('data-localidad') || "").trim().toUpperCase();
+        var nombrePlantel = (button.getAttribute('data-nombrePlantel') || "").trim().toUpperCase();
+        var nombreDirector = (button.getAttribute('data-nombre-director') || "").trim().toUpperCase();
+        var direccionCct = (button.getAttribute('data-direccion') || "").trim().toUpperCase();
+
+        // Función auxiliar para verificar si un valor está vacío o es "SIN ASIGNAR"
+        function esVacio(valor) {
+            return valor === "" || valor === "SIN ASIGNAR";
+        }
+
+        // Asignar valores a los elementos del modal
+        document.getElementById('modalCct').textContent = esVacio(cct) ? "" : cct;
+        document.getElementById('modalNivel').textContent = esVacio(nivel) ? "" : nivel;
+        document.getElementById('modalMunicipio').textContent = esVacio(municipio) ? "" : municipio;
+        document.getElementById('modalLocalidad').textContent = esVacio(localidad) ? "" : localidad;
+        document.getElementById('modalNombrePlantel').textContent = esVacio(nombrePlantel) ? "" : nombrePlantel;
+        document.getElementById('modalNombreDirector').textContent = esVacio(nombreDirector) ? "" : nombreDirector;
+        document.getElementById('modalDireccionCct').textContent = esVacio(direccionCct) ? "" : direccionCct;
+
+
+        document.getElementById('modalMunicipio2').textContent = esVacio(municipio) ? "" : municipio;
+        document.getElementById('modalLocalidad2').textContent = esVacio(localidad) ? "" : localidad;
+
+        // Obtener referencias a los divs contenedores
+        var divDatosUbicacion = document.getElementById('divDatosUbicacion');
+        var divDatosMunicipio = document.getElementById('divDatosMunicipio');
+
+        var divCct = document.getElementById('divCct');
+        var divNivel = document.getElementById('divNivel');
+        var divMunicipio = document.getElementById('divMunicipio');
+        var divLocalidad = document.getElementById('divLocalidad');
+        var divNombrePlantel = document.getElementById('divNombrePlantel');
+        var divNombreDirector = document.getElementById('divNombreDirector');
+        var divDireccionCct = document.getElementById('divDireccionCct');
+
+
+        var divMunicipio2 = document.getElementById('divMunicipio2');
+        var divLocalidad2 = document.getElementById('divLocalidad2');
+
+        // Ocultar todos los divs por defecto
+        divDatosUbicacion.style.display = "none";
+        divDatosMunicipio.style.display = "none";
+
+        divCct.style.display = "none";
+        divNivel.style.display = "none";
+        divMunicipio.style.display = "none";
+        divLocalidad.style.display = "none";
+        divNombrePlantel.style.display = "none";
+        divNombreDirector.style.display = "none";
+        divDireccionCct.style.display = "none";
+
+        divMunicipio2.style.display = "none";
+        divLocalidad2.style.display = "none";
+
+        // Verificar si TODOS los valores están vacíos o "SIN ASIGNAR"
+        if (
+            esVacio(cct) && esVacio(nivel) && esVacio(municipio) && esVacio(localidad) &&
+            esVacio(nombrePlantel) && esVacio(nombreDirector) && esVacio(direccionCct)
+        ) {
+            divDatosUbicacion.style.display = "none";
+            divDatosMunicipio.style.display = "none";
+        } else {
+            
+
+            // Contar cuántos valores están llenos
+            let camposLlenos = 0;
+            if (!esVacio(cct)) camposLlenos++;
+            if (!esVacio(nivel)) camposLlenos++;
+            if (!esVacio(municipio)) camposLlenos++;
+            if (!esVacio(localidad)) camposLlenos++;
+            if (!esVacio(nombrePlantel)) camposLlenos++;
+            if (!esVacio(nombreDirector)) camposLlenos++;
+            if (!esVacio(direccionCct)) camposLlenos++;
+
+            // Si solo hay valores en Municipio y Localidad, mostrar solo esos dos
+            if (!esVacio(municipio) && !esVacio(localidad) && camposLlenos === 2) {
+                divDatosMunicipio.style.display = "block";
+                divDatosUbicacion.style.display = "none";
+
+                divMunicipio2.style.display = "flex";
+                divLocalidad2.style.display = "flex";
+
+
+            } else {
+                divDatosMunicipio.style.display = "none";
+
+                divDatosUbicacion.style.display = "block";
+                // Si hay otros datos además de municipio y localidad, mostrar todo
+                if (!esVacio(municipio)) divMunicipio.style.display = "flex";
+                if (!esVacio(localidad)) divLocalidad.style.display = "flex";
+                if (!esVacio(cct)) divCct.style.display = "flex";
+                if (!esVacio(nivel)) divNivel.style.display = "flex";
+                if (!esVacio(nombrePlantel)) divNombrePlantel.style.display = "flex";
+                if (!esVacio(nombreDirector)) divNombreDirector.style.display = "flex";
+                if (!esVacio(direccionCct)) divDireccionCct.style.display = "flex";
+            }
+        }
+    });
+});
+*/
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const modalDetalle = document.getElementById('modalDetalle');
     modalDetalle.addEventListener('show.bs.modal', function (event) {
@@ -11,11 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const area = button.getAttribute('data-area');
         const prioridad = button.getAttribute('data-prioridad');
         const estatus = button.getAttribute('data-estatus');
-        const cct = button.getAttribute('data-cct');
-        const municipio = button.getAttribute('data-municipio');
-        const localidad = button.getAttribute('data-localidad');
-        const direccionCct = button.getAttribute('data-direccion');
-        const nombreDirector = button.getAttribute('data-nombre-director');
         const correo = button.getAttribute('data-correo');
         const telefonoFijo = button.getAttribute('data-telefono-fijo');
         const telefonoCelular = button.getAttribute('data-telefono-celular');
@@ -26,33 +133,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const horaTermino = button.getAttribute('data-hora-termino');
         const duracion = button.getAttribute('data-duracion');
         const extension = button.getAttribute('data-extension');
-        const nombrePlantel = button.getAttribute('data-nombrePlantel');
-        const nivel = button.getAttribute('data-nivel');
-
 
         document.getElementById('modalFolio').textContent = folio;
         document.getElementById('modalNombreCompleto').textContent = `${nombre} ${apellidoPaterno} ${apellidoMaterno}`;
         document.getElementById('modalTipoSolicitud').textContent = tipoSolicitud;
         document.getElementById('modalArea').textContent = area;
         document.getElementById('modalPrioridad').textContent = prioridad;
-        
+
         const estatusElement = document.getElementById('modalEstatus');
         estatusElement.textContent = estatus;
-        estatusElement.className = ''; 
-        
+        estatusElement.className = '';
+
         if (estatus === 'EN PROCESO') {
-            estatusElement.classList.add('text-warning'); 
+            estatusElement.classList.add('text-warning');
         } else if (estatus === 'TERMINADO') {
-            estatusElement.classList.add('text-success'); 
+            estatusElement.classList.add('text-success');
         } else if (estatus === 'PENDIENTE') {
-            estatusElement.classList.add('text-danger'); 
+            estatusElement.classList.add('text-danger');
         }
 
-        document.getElementById('modalCct').textContent = cct;
-        document.getElementById('modalMunicipio').textContent = municipio;
-        document.getElementById('modalLocalidad').textContent = localidad;
-        document.getElementById('modalDireccionCct').textContent = direccionCct;
-        document.getElementById('modalNombreDirector').textContent = nombreDirector;
         document.getElementById('modalCorreo').textContent = correo;
         document.getElementById('modalTelefonoFijo').textContent = telefonoFijo;
         document.getElementById('modalTelefonoCelular').textContent = telefonoCelular;
@@ -65,9 +164,109 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('modalDuracion').textContent=duracion;
         document.getElementById('modalExtension').textContent = extension;
-        document.getElementById('modalNombrePlantel').textContent = nombrePlantel;
-        document.getElementById('modalNivel').textContent = nivel;
+
+        //DATOS DE UBICACION
+        // Obtener valores y limpiarlos de espacios extra
+        var cct = (button.getAttribute('data-cct') || "").trim().toUpperCase();
+        var nivel = (button.getAttribute('data-nivel') || "").trim().toUpperCase();
+        var municipio = (button.getAttribute('data-municipio') || "").trim().toUpperCase();
+        var localidad = (button.getAttribute('data-localidad') || "").trim().toUpperCase();
+        var nombrePlantel = (button.getAttribute('data-nombrePlantel') || "").trim().toUpperCase();
+        var nombreDirector = (button.getAttribute('data-nombre-director') || "").trim().toUpperCase();
+        var direccionCct = (button.getAttribute('data-direccion') || "").trim().toUpperCase();
+
+        // Función auxiliar para verificar si un valor está vacío o es "SIN ASIGNAR"
+        function esVacio(valor) {
+            return valor === "" || valor === "SIN ASIGNAR";
+        }
+
+        // Asignar valores a los elementos del modal
+        document.getElementById('modalCct').textContent = esVacio(cct) ? "" : cct;
+        document.getElementById('modalNivel').textContent = esVacio(nivel) ? "" : nivel;
+        document.getElementById('modalMunicipio').textContent = esVacio(municipio) ? "" : municipio;
+        document.getElementById('modalLocalidad').textContent = esVacio(localidad) ? "" : localidad;
+        document.getElementById('modalNombrePlantel').textContent = esVacio(nombrePlantel) ? "" : nombrePlantel;
+        document.getElementById('modalNombreDirector').textContent = esVacio(nombreDirector) ? "" : nombreDirector;
+        document.getElementById('modalDireccionCct').textContent = esVacio(direccionCct) ? "" : direccionCct;
 
 
+        document.getElementById('modalMunicipio2').textContent = esVacio(municipio) ? "" : municipio;
+        document.getElementById('modalLocalidad2').textContent = esVacio(localidad) ? "" : localidad;
+
+        // Obtener referencias a los divs contenedores
+        var divDatosUbicacion = document.getElementById('divDatosUbicacion');
+        var divDatosMunicipio = document.getElementById('divDatosMunicipio');
+
+        var divCct = document.getElementById('divCct');
+        var divNivel = document.getElementById('divNivel');
+        var divMunicipio = document.getElementById('divMunicipio');
+        var divLocalidad = document.getElementById('divLocalidad');
+        var divNombrePlantel = document.getElementById('divNombrePlantel');
+        var divNombreDirector = document.getElementById('divNombreDirector');
+        var divDireccionCct = document.getElementById('divDireccionCct');
+
+
+        var divMunicipio2 = document.getElementById('divMunicipio2');
+        var divLocalidad2 = document.getElementById('divLocalidad2');
+
+        // Ocultar todos los divs por defecto
+        divDatosUbicacion.style.display = "none";
+        divDatosMunicipio.style.display = "none";
+
+        divCct.style.display = "none";
+        divNivel.style.display = "none";
+        divMunicipio.style.display = "none";
+        divLocalidad.style.display = "none";
+        divNombrePlantel.style.display = "none";
+        divNombreDirector.style.display = "none";
+        divDireccionCct.style.display = "none";
+
+        divMunicipio2.style.display = "none";
+        divLocalidad2.style.display = "none";
+
+        // Verificar si TODOS los valores están vacíos o "SIN ASIGNAR"
+        if (
+            esVacio(cct) && esVacio(nivel) && esVacio(municipio) && esVacio(localidad) &&
+            esVacio(nombrePlantel) && esVacio(nombreDirector) && esVacio(direccionCct)
+        ) {
+            divDatosUbicacion.style.display = "none";
+            divDatosMunicipio.style.display = "none";
+        } else {
+            
+
+            // Contar cuántos valores están llenos
+            let camposLlenos = 0;
+            if (!esVacio(cct)) camposLlenos++;
+            if (!esVacio(nivel)) camposLlenos++;
+            if (!esVacio(municipio)) camposLlenos++;
+            if (!esVacio(localidad)) camposLlenos++;
+            if (!esVacio(nombrePlantel)) camposLlenos++;
+            if (!esVacio(nombreDirector)) camposLlenos++;
+            if (!esVacio(direccionCct)) camposLlenos++;
+
+            // Si solo hay valores en Municipio y Localidad, mostrar solo esos dos
+            if (!esVacio(municipio) && !esVacio(localidad) && camposLlenos === 2) {
+                divDatosMunicipio.style.display = "block";
+                divDatosUbicacion.style.display = "none";
+
+                divMunicipio2.style.display = "flex";
+                divLocalidad2.style.display = "flex";
+
+
+            } else {
+                divDatosMunicipio.style.display = "none";
+
+                divDatosUbicacion.style.display = "block";
+                // Si hay otros datos además de municipio y localidad, mostrar todo
+                if (!esVacio(municipio)) divMunicipio.style.display = "flex";
+                if (!esVacio(localidad)) divLocalidad.style.display = "flex";
+                if (!esVacio(cct)) divCct.style.display = "flex";
+                if (!esVacio(nivel)) divNivel.style.display = "flex";
+                if (!esVacio(nombrePlantel)) divNombrePlantel.style.display = "flex";
+                if (!esVacio(nombreDirector)) divNombreDirector.style.display = "flex";
+                if (!esVacio(direccionCct)) divDireccionCct.style.display = "flex";
+            }
+        }
+        
     });
 });

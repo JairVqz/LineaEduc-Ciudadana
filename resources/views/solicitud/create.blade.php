@@ -20,7 +20,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/css/solicitud/general.css">
     <script src="/js/solicitud/general.js"></script>
-    <link rel="stylesheet" href="/css/solicitud/general.css">
     <script src="/js/solicitud/create.js"></script>
     <link rel="stylesheet" href="/css/solicitud/create.css">
 

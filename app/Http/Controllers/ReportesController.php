@@ -16,6 +16,39 @@ class ReportesController extends Controller
 
     public function reportesDia( Request $request)
     {
+
+        //QUERY'S REPORTE DIARIO
+        $fechaGeneracionReporteQuery = now()->format('Y-m-d');
+
+        $llamadasRecibidasPorDia = DB::table('listarSolicitudes')
+        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+        ->count();
+
+        $primeraLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+        ->value('created_at');
+        
+        $primeraLlamadaPorDiaFormateada = Carbon::parse($primeraLlamadaRecibidaPorDia)->format('H:i:s');
+
+        $minutosEfectivosPorDia = DB::table('listarSolicitudes')
+        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+        ->selectRaw('SUM(CAST( duracionMinutos AS INT)) as total_duracion')
+        ->value('total_duracion');
+
+        $ultimaLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+        ->orderBy('folio', 'desc')
+        ->value('created_at');
+
+        $ultimaLlamadaPorDiaFormateada = Carbon::parse($ultimaLlamadaRecibidaPorDia)->format('H:i:s');
+
+        $llamadaMasMinutosPorDia = DB::table('listarSolicitudes')
+        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+        ->selectRaw('MAX(duracionMinutos)')
+        ->value('duracionMinutos');
+
+
+
         $fechaSeleccionada = $request->input('fecha', now()->toDateString());
         //Solicitudes x prioridad
         $prioridades = Solicitud::select('tbl_prioridad.prioridad', DB::raw('count(tbl_solicitudesGeneral.idPrioridad) as total'))
@@ -124,7 +157,9 @@ class ReportesController extends Controller
                 'labelsMinutoACUM',
                 'valuesMinutoACUM',
                 'labelsHora',
-                'valuesHora'
+                'valuesHora','llamadasRecibidasPorDia', 'primeraLlamadaPorDiaFormateada',
+                                                                    'minutosEfectivosPorDia','ultimaLlamadaPorDiaFormateada',
+                                                                    'llamadaMasMinutosPorDia',
             )
         );
     }
