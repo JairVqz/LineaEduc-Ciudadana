@@ -1,0 +1,68 @@
+          
+        table td.estado-pendiente {
+            color: rgb(161, 38, 38) !important;
+            font-weight: bold;
+        }
+
+        table td.estado-en-proceso {
+            color: rgb(212, 167, 31) !important;
+            font-weight: bold;
+        }
+
+        table td.estado-terminado {
+            color: rgb(12, 170, 57) !important;
+            font-weight: bold;
+        }
+        div.dataTables_filter {
+            display: none;
+        }
+        .accordion {
+        background-color: #EDD1AA;
+        border-radius: 0px;
+        color: black;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 18px;
+        transition: 0.4s;
+        margin-top: 25px;
+        }
+
+        .active, .accordion:hover {
+        background-color:rgb(219, 182, 136);
+        }
+
+        .accordion:after {
+        content: '\002B';
+        color: #777;
+        font-weight: bold;
+        float: right;
+        margin-left: 5px;
+        }
+        .accordion.active:after {
+        content: "\2212";
+        }
+
+        .panel {
+        padding: 0px;
+        background-color: white;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.2s ease-out;
+        } 
+        #btnLimpiarFiltros {
+            background-color: #7A1737;
+            color: white;
+            border: none;
+        }
+        #btnLimpiarFiltros:hover{
+            background-color: #501125;
+        }
+        
+        #btnPerfil:hover {
+            color: white;
+        }
+        

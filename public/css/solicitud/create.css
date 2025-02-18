@@ -1,0 +1,38 @@
+.btn-third-color {
+    background-color: #B28854;
+    color: #fff;
+}
+
+.btn-third-color:hover {
+    background-color: #a3753d;
+    color: #fff;
+}
+
+#btnLimpiarFormulario:hover {
+    background-color: #501125;
+    color: #fff;
+}
+
+#btnRegistrarSolicitud:hover {
+    background-color: #501125;
+    color: #fff;
+}
+
+.btn-outline-color {
+    text-transform: none;
+    font-size: 16px;
+    background-color: #fcfcfc;
+    border-color: #7A1737;
+    /*background-color: #B28854;*/
+    color: #7A1737;
+}
+
+input[type="radio"]:checked + .btn {
+    color: #fff;
+    background: #7A1737!important;
+}
+
+input[type="radio"]:hover + .btn {
+  color: #fff;
+  background-color: #501125;
+}

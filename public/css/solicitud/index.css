@@ -1,0 +1,114 @@
+.content {
+    background-image: url('/images/textura.jpg');
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed; 
+    min-height: 100vh;
+    margin-left: 250px;
+    padding: 20px;
+    transition: margin-left 0.5s ease;
+    will-change: margin-left;
+}
+
+.collapsed .content {
+    margin-left: 0;
+}
+
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #7A1737;
+    padding: 25px;
+    overflow-y: auto;
+    transition: transform 0.5s ease;
+    will-change: transform;
+    padding-top: 70px;
+}
+
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.sidebar a:hover {
+    background-color: #501125;
+}
+
+
+.collapsed .sidebar {
+    transform: translateX(-250px);
+}
+
+
+.btn-color {
+    text-transform: none;
+    font-size: 16px;
+    background-color: #7A1737;
+    /*background-color: #B28854;*/
+    color: #fff;
+}
+
+.btn-color:hover {
+    background-color: #501125;
+    color: #ffffff;
+}
+
+#mostrarBuscador {
+    background-color: #7A1737;
+    color: white;
+    border: none;
+}
+#mostrarBuscador:hover{
+    background-color: #501125;
+}
+
+#boton {
+    background-color: #7A1737;
+    color: white;
+    border: none;
+}
+#boton:hover{
+    background-color: #501125;
+}
+
+#btnPerfil {
+    text-transform: none;
+    font-size: 18px;
+}
+
+#btnPerfil:hover {
+    color: white;
+}
+
+#btnPerfil:focus,
+#btnPerfil:active {
+    outline: none !important;
+    background-color: transparent !important;
+    color: white !important;
+    border: none;
+}
+
+.position-bottom {
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 20px;
+    width: 200px;
+}
+
+.btn-third-color {
+    background-color: #B28854;
+    color: #fff;
+}
+
+.btn-third-color:hover {
+    background-color: #8f714b;
+    color: #fff;
+}

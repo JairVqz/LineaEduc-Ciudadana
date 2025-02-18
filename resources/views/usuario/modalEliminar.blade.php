@@ -1,0 +1,103 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/config.js"></script>
+
+<style>
+    .modal-backdrop {
+        opacity: 0.04 !important;
+    }
+</style>
+
+<div class="modal fade" id="modalEliminarUsuario{{ $usuario->id }}" tabindex="-1"
+    aria-labelledby="modalEliminarUsuarioLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalEliminarUsuarioLabel">Eliminar usuario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-md-12 mb-3 d-flex flex-column">
+                        <h5 class="text-center">¿Estás seguro de eliminar el usuario: {{ $usuario->name }}?</h5>
+                        <h5 class="text-center" style="font-weight: normal">El usuario será inhabilitado para
+                            acceder al sistema.</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-color"
+                    id="eliminarUsuario{{ $usuario->id }}">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        var btnEliminarUsuario = document.getElementById("eliminarUsuario" + {{ $usuario->id }});
+
+        btnEliminarUsuario.addEventListener("click", function() {
+        var idUsuario = "{{ $usuario->id }}";
+        var nombreDelete = "{{ $usuario->name }}";
+
+        fetch(deleteUser, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                        'content')
+                },
+                body: JSON.stringify({
+                    id: idUsuario,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Petición enviada correctamente:', data);
+                if (data.message === "Usuario eliminado correctamente") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "¡Usuario eliminado con éxito!",
+                        text: "El usuario: " + nombreDelete +
+                            ", ya no tiene acceso al sistema",
+                        showCancelButton: false,
+                        confirmButtonText: `ACEPTAR`,
+                        confirmButtonColor: "#7A1737",
+                        cancelButtonText: `CANCELAR`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.close();
+                            window.location.href = indexUsuario;
+                        } else {
+                            Swal.close();
+                            window.location.href = indexUsuario;
+                        }
+                    });
+
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "¡Error al eliminar el usuario!",
+                        text: "Ocurrió un error al inhabilitar el acceso del usuario" +
+                            nombreDelete + ", por favor intente de nuevo o recargue la página",
+                        showCancelButton: false,
+                        confirmButtonText: `ACEPTAR`,
+                        confirmButtonColor: "#7A1737",
+                        cancelButtonText: `CANCELAR`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.close();
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error al enviar la petición:', body);
+                //alert('Hubo un error al enviar la notificación');
+            });
+    })
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

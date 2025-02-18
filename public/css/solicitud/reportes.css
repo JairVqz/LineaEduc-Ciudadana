@@ -1,0 +1,81 @@
+.leaflet-container{
+    background: white !important;
+}
+.info.legend {
+    background: white;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    line-height: 18px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.info.legend i {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    margin-right: 8px;
+    border: 1px solid black;
+}
+#btnFiltrar {
+    background-color: #7A1737;
+    color: white;
+    border: none;
+}
+#btnFiltrar:hover{
+    background-color: #501125;
+}
+  /* Estilo para el selector de mapa */
+  #mapToggle {
+        
+        
+
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    font-family: Arial, sans-serif;
+}
+
+#mapToggle select {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 1000;
+    padding: 5px;
+    width: 150px;
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    background: #7A1737;
+    color: white;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.3s;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+}
+
+#mapToggle select:hover {
+    background:rgb(87, 17, 39);
+}
+
+/* Estilo para la leyenda */
+.info.legend {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.info.legend i {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    margin-right: 8px;
+    border-radius: 4px;
+}
+
+div.dataTables_filter {
+    display: none;
+}

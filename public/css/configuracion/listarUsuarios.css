@@ -1,0 +1,55 @@
+table td.estado-pendiente {
+    color: rgb(161, 38, 38) !important;
+    font-weight: bold;
+}
+
+table td.estado-en-proceso {
+    color: rgb(212, 167, 31) !important;
+    font-weight: bold;
+}
+
+table td.estado-terminado {
+    color: rgb(12, 170, 57) !important;
+    font-weight: bold;
+}
+
+.dataTables_length {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.dataTables_length select {
+    display: block;
+    margin-bottom: 10px;
+    min-width: 150px;
+}
+
+div.dataTables_filter {
+    display: block;
+    margin-bottom: 10px;
+    float: inline-end;
+}
+
+div.dataTables_filter input {
+    display: block;
+    width: 20vw;
+}
+
+
+@media screen and (width <=780px) {
+
+    div.dataTables_filter {
+        display: block;
+        margin-bottom: 10px;
+        float: inline-start;
+    }
+
+}
+
+.panel {
+    padding: 0px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
