@@ -162,20 +162,28 @@ class SolicitudController extends Controller
                 $ubicacion->nivelCct = "SIN ASIGNAR";
                 $ubicacion->nombrePlantel = "SIN ASIGNAR";
                 $ubicacion->nombreDirector = "SIN ASIGNAR";
-                $ubicacion->municipio = "SIN ASIGNAR";
-                $ubicacion->localidad = "SIN ASIGNAR";
                 $ubicacion->direccionCct = "SIN ASIGNAR";
-                $ubicacion->save();
             } else {
                 $ubicacion->cct = $request->cct;
                 $ubicacion->nivelCct = $request->nivelCct;
                 $ubicacion->nombrePlantel = $request->nombreCct;
                 $ubicacion->nombreDirector = $request->nombreDirector;
-                $ubicacion->municipio = $request->nombreMunicipio;
-                $ubicacion->localidad = $request->nombreLocalidad;
                 $ubicacion->direccionCct = $request->direccionCct;
-                $ubicacion->save();
             }
+
+            if ($request->nombreMunicipio == ""){
+                $ubicacion->municipio = "SIN ASIGNAR";
+            } else {
+                $ubicacion->municipio = $request->nombreMunicipio;
+            }
+
+            if ($request->nombreLocalidad == ""){
+                $ubicacion->localidad = "SIN ASIGNAR";
+            } else {
+                $ubicacion->localidad = $request->nombreLocalidad;
+            }
+
+            $ubicacion->save();
 
             $ubicacionGuardada = Ubicacion::where('folio', $folioGuardado)->first();
 
@@ -288,6 +296,7 @@ class SolicitudController extends Controller
         $listaAreas = CatalogoAreas::all();
         $listaPrioridades = Prioridad::all();
         $listaEstatus = Estatus::all();
+        $listaExtensiones = CatalogoExtensiones::all();
 
         return view('solicitud.listarSolicitudes.edit', [
             'solicitudes' => $solicitudes,
@@ -296,6 +305,7 @@ class SolicitudController extends Controller
             'listaAreas' => $listaAreas,
             'listaPrioridades' => $listaPrioridades,
             'listaEstatus' => $listaEstatus,
+            'listaExtensiones' => $listaExtensiones,
         ]);
     }
     /**

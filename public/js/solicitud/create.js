@@ -131,6 +131,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+    $('#municipio').on('change', function () {
+        var municipioSeleccionado = $(this).find('option:selected').text();
+
+        if (municipioSeleccionado === "Selecciona el municipio") {
+            municipioSeleccionado = "";
+        }
+        document.getElementById("nombreMunicipio").value = municipioSeleccionado;
+    });
+
+    $('#localidad').on('change', function () {
+        var localidadSeleccionada = $(this).find('option:selected').text();
+
+        if (localidadSeleccionada === "Selecciona la localidad") {
+            localidadSeleccionada = "";
+        }
+        document.getElementById("nombreLocalidad").value = localidadSeleccionada;
+    });
+
     //LIMPIAR FORMULARIO
     var btnLimpiarFormulario = document.getElementById("btnLimpiarFormulario");
 
@@ -345,6 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
 
         var formData = $(this).serialize();
+        console.log(formData);
 
         var correo = document.getElementById("correo").value;
         var telefonoFijo = document.getElementById("telefonoFijo").value;
