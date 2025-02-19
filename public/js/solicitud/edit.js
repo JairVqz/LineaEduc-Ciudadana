@@ -1,21 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('datosUbicacion').style.display = 'none';
+    //document.getElementById('datosUbicacion').style.display = 'none';
 
-    const guardarSolicitudRoute = window.Laravel.guardarSolicitud;
-    const listarSolicitudesRoute = '/index.php/solicitud/index';
+    const editarSolicitudRoute = window.Laravel.editarSolicitud;
+    const listarSolicitudesRoute = window.Laravel.listarSolicitudes;
     const apiPlantel = window.Laravel.apiPlantel;
     const apiFetchExtensionAreas = window.Laravel.apiFetchExtensionAreas;
     const apiFetchAreaTipoSolicitudes = window.Laravel.apiFetchAreaTipoSolicitudes;
     const apiFetchTipoSolicitudPrioridad = window.Laravel.apiFetchTipoSolicitudPrioridad;
-
-    let now = new Date();
-
-    const fechaInicio = now.getDate().toString().padStart(2, '0') + "/" + (now.getMonth() + 1).toString().padStart(2, '0') + "/" + now.getFullYear();
-    const horaInicio = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0') + ":" + now.getSeconds().toString().padStart(2, '0');
-
-    document.getElementById("fechaSolicitud").value = fechaInicio;
-    document.getElementById("horaSolicitud").value = horaInicio;
-    document.getElementById("horaInicio").value = horaInicio;
 
     var inputNombre = document.getElementById("nombre");
     var inputApellidoPaterno = document.getElementById("apellidoPaterno");
@@ -117,7 +108,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 success: function (data) {
                     for (var i = 0; i < listaPrioridades.length; i++) {
                         if (listaPrioridades[i].idPrioridad === data.tipoSolicitudPrioridad[0].idPrioridad) {
-                            document.getElementById('idPrioridad').selectedIndex = i;
+                            console.log("encontro coincidencia");
+                            $('#idPrioridad').val(listaPrioridades[i].idPrioridad);
                             document.getElementById('idPrioridad').dispatchEvent(new Event('change'));
                             break;
                         }
@@ -148,33 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
             localidadSeleccionada = "";
         }
         document.getElementById("nombreLocalidad").value = localidadSeleccionada;
-    });
-
-    //LIMPIAR FORMULARIO
-    var btnLimpiarFormulario = document.getElementById("btnLimpiarFormulario");
-
-    btnLimpiarFormulario.addEventListener('click', function () {
-        document.getElementById("nombre").value = "";
-        document.getElementById("apellidoPaterno").value = "";
-        document.getElementById("apellidoMaterno").value = "";
-        document.getElementById("correo").value = "";
-        document.getElementById("telefonoFijo").value = "";
-        document.getElementById("telefonoCelular").value = "";
-        document.getElementById("idTipoSolicitud").selectedIndex = 0;
-        document.getElementById("idArea").selectedIndex = 0;
-        document.getElementById("idPrioridad").selectedIndex = 0;
-        document.getElementById("descripcion").value = "";
-        document.getElementById("cct").value = "";
-        document.getElementById("nivelCct").value = "";
-        document.getElementById("municipio").selectedIndex = 0;
-        document.getElementById("nombreMunicipio").value = "";
-        document.getElementById("localidad").selectedIndex = 0;
-        document.getElementById("nombreLocalidad").value = "";
-        document.getElementById("nombreCct").value = "";
-        document.getElementById("nombreDirector").value = "";
-        document.getElementById("direccionCct").value = "";
-        document.getElementById("extension").value = "";
-        document.getElementById("areaSolicitante").value = "";
     });
 
     //CERRAR EL MODAL BUSQUEDA CCT Y REFLEJAR EL CCT SELECCIONADO EN EL FORMULARIO PRINCIPAL
@@ -360,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     //Modal Guardado exitoso o error
-    $('#formularioRegistrarSolicitud').on('submit', function (e) {
+    $('#formularioActualizarSolicitud').on('submit', function (e) {
         e.preventDefault();
 
         var formData = $(this).serialize();
@@ -422,14 +387,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         $.ajax({
-            url: guardarSolicitudRoute,
+            url: editarSolicitudRoute,
             type: 'POST',
             data: formData,
             success: function (response) {
-                if (response.mensaje === "Solicitud guardada correctamente") {
+                console.log("peticion exitosa");
+                if (response.mensaje === "Solicitud actualizada correctamente") {
                     Swal.fire({
                         icon: "success",
-                        title: "¡Solicitud registrada con éxito!",
+                        title: "¡Solicitud actualizada con éxito!",
                         text: "Folio de seguimiento: " + response.folio,
                         showCancelButton: false,
                         confirmButtonText: `ACEPTAR`,
@@ -439,19 +405,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (result.isConfirmed) {
                             Swal.close();
                             window.location.href = listarSolicitudesRoute;
+                        } else {
+                            Swal.close();
+                            window.location.href = listarSolicitudesRoute;
                         }
                     });
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: "¡Error al registrar la solicitud!",
-                        text: "Ocurrió un error al guardar la solicitud, por favor intente de nuevo o recargue la página",
+                        title: "¡Error al actualizar la solicitud!",
+                        text: "Ocurrió un error al actualizar la solicitud, por favor intente de nuevo o recargue la página",
                         showCancelButton: false,
                         confirmButtonText: `ACEPTAR`,
                         confirmButtonColor: "#7A1737",
                         cancelButtonText: `CANCELAR`,
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            Swal.close();
+                        } else{
                             Swal.close();
                         }
                     });
@@ -463,8 +434,8 @@ document.addEventListener('DOMContentLoaded', function () {
             error: function (xhr) {
                 Swal.fire({
                     icon: "error",
-                    title: "¡Error al registrar la solicitud!",
-                    text: "Intente nuevamente guardar la solicitud, si el problema persiste contacte al administrador.",
+                    title: "¡Error al actualizar la solicitud!",
+                    text: "Intente nuevamente actualizar la solicitud, si el problema persiste contacte al administrador.",
                     showCancelButton: false,
                     confirmButtonText: `ACEPTAR`,
                     confirmButtonColor: "#7A1737",

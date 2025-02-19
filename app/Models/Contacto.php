@@ -10,6 +10,8 @@ class Contacto extends Model
     use HasFactory;
     protected $table = 'tbl_contactoSolicitud';
 
+    protected $primaryKey = 'idContacto';
+
     protected $fillable = [
         'idContacto',
         'folio',

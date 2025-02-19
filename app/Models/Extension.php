@@ -10,6 +10,8 @@ class Extension extends Model
     use HasFactory;
     protected $table = 'tbl_extensionSolicitud';
 
+    protected $primaryKey = 'idExtensionSolicitud';
+
     protected $fillable = [
         'idExtensionSolicitud',
         'folio',

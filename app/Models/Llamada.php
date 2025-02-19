@@ -9,6 +9,8 @@ class Llamada extends Model
 {
     use HasFactory;
     protected $table = 'tbl_llamadaSolicitud';
+    
+    protected $primaryKey = 'idLlamada';
 
     protected $fillable = [
         'idLlamada',

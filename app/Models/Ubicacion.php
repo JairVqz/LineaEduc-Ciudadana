@@ -11,6 +11,8 @@ class Ubicacion extends Model
 
     protected $table = 'tbl_ubicacionSolicitud';
 
+    protected $primaryKey = 'idUbicacion';
+
     protected $fillable = [
         'idUbicacion',
         'folio',

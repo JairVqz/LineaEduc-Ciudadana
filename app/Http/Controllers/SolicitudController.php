@@ -318,47 +318,129 @@ class SolicitudController extends Controller
 
 
 
-    public function update(Request $request, $folio)
+    public function update(Request $request)
     {
         //dd($folio);
-        //
-        $solicitud = Solicitud::where('folio', $folio)->first();
+        $folioSolicitud = $request->input('folio');
 
+        DB::beginTransaction();
 
-        if (!$solicitud) {
-            return redirect()->route('solicitud.listarSolicitudes.listarSolicitudes')->with('error', 'Solicitud no encontrada');
+        try {
+
+            //CONTACTO
+            $contacto = Contacto::where('folio', $folioSolicitud)->first();
+
+            $contacto->update([
+                'correo' => $request->correo,
+                'telefonoCelular' => $request->telefonoCelular ,
+                'telefonoFijo' => $request->telefonoFijo ,
+            ]);
+
+            //LLAMADA
+            /*$llamadaObject = Llamada::where('folio', $folioSolicitud)->first()->get();*/
+            $llamada = Llamada::where('folio', $folioSolicitud)->first();
+
+            $horaInicio = \Carbon\Carbon::parse($request->horaInicio);
+            $horaTermino = \Carbon\Carbon::parse($request->horaTermino);
+
+            $llamada->update([
+                'horaInicio' => $horaInicio,
+                'horaTermino' => $horaTermino ,
+                'duracionMinutos' => $request->duracionMinutos ,
+            ]);
+
+            //UBICACIÓN
+            $ubicacion = Ubicacion::where('folio', $folioSolicitud)->first();
+
+            if ($request->nombreCct == "") {
+                $cct = "SIN ASIGNAR";
+                $nivelCct = "SIN ASIGNAR";
+                $nombrePlantel = "SIN ASIGNAR";
+                $nombreDirector = "SIN ASIGNAR";
+                $direccionCct = "SIN ASIGNAR";
+            } else {
+                $cct = $request->cct;
+                $nivelCct = $request->nivelCct;
+                $nombrePlantel = $request->nombreCct;
+                $nombreDirector = $request->nombreDirector;
+                $direccionCct = $request->direccionCct;
+            }
+
+            if ($request->nombreMunicipio == ""){
+                $municipio = "SIN ASIGNAR";
+            } else {
+                $municipio = $request->nombreMunicipio;
+            }
+
+            if ($request->nombreLocalidad == ""){
+                $localidad = "SIN ASIGNAR";
+            } else {
+                $localidad = $request->nombreLocalidad;
+            }
+
+            $ubicacion->update([
+                'cct' => $cct,
+                'nivelCct' => $nivelCct ,
+                'nombrePlantel' => $nombrePlantel ,
+                'nombreDirector' => $nombreDirector,
+                'direccionCct' => $direccionCct ,
+                'municipio' => $municipio,
+                'localidad' => $localidad ,
+            ]);
+
+            //EXTENSIÓN
+            
+            $extension = Extension::where('folio', $folioSolicitud)->first();
+
+            $extension->update([
+                'idExtensionCatalogo' => $request->idExtension,
+                'idArea' => $request->idArea ,
+            ]);
+
+            //SOLICITUD
+            $solicitud = Solicitud::where('folio', $folioSolicitud)->first();
+
+            if ($request->idEstatus == 3) {
+                $diasTranscurridos = '--';
+            } else {
+                $diasTranscurridos = '--';
+            }
+
+            $solicitud->update([
+                'nombre' => $request->nombre,
+                'apellidoPaterno' => $request->apellidoPaterno,
+                'apellidoMaterno' => $request->apellidoMaterno,
+                'idTipoSolicitud' => $request->idTipoSolicitud,
+                'idPrioridad' => $request->idPrioridad,
+                'idEstatus' => $request->idEstatus,
+                'descripcion' => $request->descripcion,
+                'diasTranscurridos' => $diasTranscurridos,
+                'curp_usuario' => $request->curpUsuario,
+                'nombre_usuario' => $request->usuario,
+                'idExtensionSolicitud' => $request->idExtensionSolicitud,
+                'idUbicacion' => $ubicacion->idUbicacion,
+                'idContacto' => $contacto->idContacto,
+                'idLlamada' => $llamada->idLlamada,
+            ]);
+
+            if ($request->idEstatus != 3) {
+                DB::statement("EXEC ActualizarDiasUnRegistro @registro=?", [$solicitud->folio]);
+            }
+
+            DB::commit();
+
+            return response()->json(['mensaje' => 'Solicitud actualizada correctamente', 'folio' => $folioSolicitud]);
+        } catch (\Exception $e) {
+
+            Log::error('Error al guardar la solicitud: ' . $e->getMessage(), [
+                //'exception' => $e,
+                //'trace' => $e->getTraceAsString(),
+                //$ubicacion->idUbicacion,
+            ]);
+
+            DB::rollBack();
+            return response()->json(['mensaje' => 'Error al guardar la solicitud']);
         }
-
-        $solicitud->nombre = $request->nombre;
-        $solicitud->apellidoPaterno = $request->apellidoPaterno;
-        $solicitud->apellidoMaterno = $request->apellidoMaterno;
-        $solicitud->correo = $request->correo;
-        $solicitud->telefonoCelular = $request->telefonoCelular;
-        $solicitud->telefonoFijo = $request->telefonoFijo;
-        $solicitud->idTipoSolicitud = $request->idTipoSolicitud;
-        $solicitud->idArea = $request->idArea;
-        $solicitud->idEstatus = $request->idEstatus;
-        $solicitud->idPrioridad = $request->idPrioridad;
-        $solicitud->descripcion = $request->descripcion;
-        $solicitud->cct = $request->cct;
-        $solicitud->municipio = $request->municipio;
-        $solicitud->localidad = $request->localidad;
-        $solicitud->nombrePlantel = $request->nombrePlantel;
-        $solicitud->direccionCct = $request->direccionCct;
-        $solicitud->nombreDirector = $request->nombreDirector;
-        $solicitud->extension = $request->extension;
-        $solicitud->areaSolicitante = $request->areaSolicitante;
-        //$solicitud->created_at = $request->created_at;
-        if ($request->idEstatus == 3) {
-            $solicitud->diasTranscurridos = '--';
-        } else {
-            DB::statement("EXEC ActualizarDiasUnRegistro @registro=?", [$solicitud->folio]);
-        }
-        //dd($solicitud);
-        $solicitud->save();
-
-
-        return redirect()->route('solicitud.listarSolicitudes')->with('success', 'Solicitud actualizada correctamente');
     }
 
     /**

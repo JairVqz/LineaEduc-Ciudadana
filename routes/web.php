@@ -40,7 +40,7 @@ Route::middleware('auth.validation')->group(function () {
 
             // Editar un registro
             Route::get('/solicitud/edit/{solicitud}', [SolicitudController::class, 'edit'])->name('edit');
-            Route::put('/solicitud/{folio}', [SolicitudController::class, 'update'])->name('update');
+            Route::post('/solicitud/update', [SolicitudController::class, 'update'])->name('update');
 
             // Buscar coincidencias de solicitudes por nombre
             Route::get('/solicitud', [SolicitudController::class, 'coincidenciasSolicitud'])->name('coincidenciasSolicitud');

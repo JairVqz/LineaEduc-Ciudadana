@@ -27,13 +27,15 @@
                     </div>
                     <div class="col-md-12 mb-3 d-flex flex-column">
                         <label for="nombreEscuela" class="form-label">Nombre de la escuela:</label>
-                        <input type="tel" name="nombreEscuela" id="nombreEscuela" class="form-control"
+                        <input type="text" name="nombreEscuela" id="nombreEscuela" class="form-control"
                             placeholder="Ingresa aquí el nombre de la escuela">
                     </div>
                     <div class="col-md-12 mb-3 d-flex flex-column">
                         <label for="municipioEscuela" class="form-label">Municipio de la escuela:</label>
-                        <input type="tel" name="municipioEscuela" id="municipioEscuela" class="form-control"
-                            placeholder="Ingresa aquí el municipio donde se ubica la escuela">
+                        <!--input type="text" name="municipioEscuela" id="municipioEscuela" class="form-control"
+                            placeholder="Ingresa aquí el municipio donde se ubica la escuela"-->
+                            <select name="municipioEscuela" id="municipioEscuela" class="form-select">
+                            </select>
                     </div>
 
                     <div class="col-md-12 mb-3 d-flex flex-column">
@@ -62,9 +64,39 @@
 
     $(document).ready(function() {
 
+        $.ajax({
+            url: 'https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/',
+            //url: '/api-municipios',
+            type: 'GET',
+            success: function(response) {
+                if (response) {
+                    var selectMunicipioEscuela = $('#municipioEscuela');
+
+                    selectMunicipioEscuela.empty();
+                    selectMunicipioEscuela.append('<option value="">Selecciona el municipio</option>');
+
+                    response.forEach(function(municipio) {
+                        selectMunicipioEscuela.append(
+                            '<option value="' + municipio.Id + '" >' + municipio.Nombre +
+                            '</option>'
+                        );
+
+                    });
+                    $('#municipioEscuela').trigger('change');
+                } else {
+                    console.error('La respuesta de la API está vacía.');
+                }
+            },
+            error: function() {
+                console.error('Hubo un error al consumir la API de municipios.');
+            }
+        });
+
         $('#nombreEscuela, #municipioEscuela').on('input', function() {
             var nombreEscuela = $('#nombreEscuela').val();
-            var municipioEscuela = $('#municipioEscuela').val();
+            //var municipioEscuela = $('#municipioEscuela').val();
+            var municipioEscuela = $('#municipioEscuela').find('option:selected').text();
+            console.log("mpioEscuela: "+municipioEscuela);
 
             if (nombreEscuela == "" && municipioEscuela == "") {
                 $('#labelResultadoBusqueda').hide();
