@@ -1,13 +1,14 @@
-.leaflet-container{
+.leaflet-container {
     background: white !important;
 }
+
 .info.legend {
     background: white;
     padding: 10px;
     font-size: 14px;
     border-radius: 5px;
     line-height: 18px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
 .info.legend i {
@@ -17,18 +18,21 @@
     margin-right: 8px;
     border: 1px solid black;
 }
+
 #btnFiltrar {
     background-color: #7A1737;
     color: white;
     border: none;
 }
-#btnFiltrar:hover{
+
+#btnFiltrar:hover {
     background-color: #501125;
 }
-  /* Estilo para el selector de mapa */
-  #mapToggle {
-        
-        
+
+/* Estilo para el selector de mapa */
+#mapToggle {
+
+
 
     background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
@@ -55,7 +59,7 @@
 }
 
 #mapToggle select:hover {
-    background:rgb(87, 17, 39);
+    background: rgb(87, 17, 39);
 }
 
 /* Estilo para la leyenda */
@@ -78,4 +82,19 @@
 
 div.dataTables_filter {
     display: none;
+}
+
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    display: none;
+}
+
+.dataTables_length {
+    display: none;
+
+}
+
+.dataTables_info {
+    display: none;
+
 }

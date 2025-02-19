@@ -68,6 +68,7 @@ Route::middleware('auth.validation')->group(function () {
 
             //EXCEL
             Route::get('/exportarExcel', [SolicitudController::class, 'exportarExcel'])->name('exportarExcel');
+            Route::get('/exportarExcelSeguimiento', [SolicitudController::class, 'exportarExcelSeguimiento'])->name('exportarExcelSeguimiento');
             
         });
     });

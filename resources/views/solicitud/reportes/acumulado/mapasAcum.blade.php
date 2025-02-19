@@ -3,7 +3,9 @@
     let solicitudesPorDelegacion = {};
     Promise.all([
         fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json').then(res => res.json()),
-        fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson').then(res => res.json())
+        fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson').then(res => res.json()),
+        //fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json').then(res => res.json()),
+        //fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson').then(res => res.json())
     ]).then(([delegacionesData, municipiosGeoJSON]) => {
         solicitudes.forEach(solicitud => {
             let nombreMunicipio = solicitud.municipio.trim().toLowerCase();
@@ -46,7 +48,7 @@
             if (!solicitudesPorDelegacion[idDelegacion]) {
                 solicitudesPorDelegacion[idDelegacion] = 0;
             }
-            solicitudesPorDelegacion[idDelegacion] =parseInt(solicitudesPorDelegacion[idDelegacion])+ parseInt(solicitud.total);
+            solicitudesPorDelegacion[idDelegacion] = parseInt(solicitudesPorDelegacion[idDelegacion]) + parseInt(solicitud.total);
             //console.log(solicitudesPorDelegacion[idDelegacion]);
             //console.log(`Municipio: ${solicitud.municipio}, Num Code: ${numCodeInt}, Delegación: ${idDelegacion}, Total: ${solicitud.total}`);
         });
@@ -75,7 +77,7 @@
     };
     const delegacionNombres = {
         "Tuxpan": "001", "Poza Rica": "002", "Martínez de la Torre": "003",
-        "Coatepec": "004", "Orizaba": "005", "veracruz": "006",
+        "Coatepec": "004", "Orizaba": "005", "Veracruz": "006",
         "Coatzacoalcos": "007", "Xalapa": "008", "Tantoyuca": "009",
         "Huayacocotla": "010", "Zongolica": "011", "Cosamaloapan": "012",
         "Acayucan": "013", "Córdoba": "014"
@@ -161,6 +163,7 @@
 
     // Cargar municipios y delegaciones
     fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json')
+        //fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json')
         .then(response => response.json())
         .then(data => {
             data.cvemun_serreg.forEach(entry => {
@@ -172,6 +175,7 @@
             });
 
             fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
+                //fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson')
                 .then(response => response.json())
                 .then(geojsonData => {
                     geoJsonMunicipios = L.geoJson(geojsonData, {
@@ -203,6 +207,7 @@
                                 <strong>Total de solicitudes:</strong> ${totalSolicitudes}
                             `);
                         }
+
                     });
 
                     // **AGREGAR LA CAPA INICIAL SEGÚN EL SELECT**
@@ -215,9 +220,13 @@
                         geoJsonMunicipios.addTo(map);
                         legendMunicipios.addTo(map);
                         map.fitBounds(geoJsonMunicipios.getBounds());
-                        tablaMunicipios.style.display = "table";
+
+
                         tablaDelegaciones.style.display = "none";
+                        tablaMunicipios.style.display = "table";
                         tituloTabla.textContent = "Solicitudes por Municipio";
+                        actualizarTablaMunicipios();
+
                     } else {
                         geoJsonDelegaciones.addTo(map);
                         legend.addTo(map);
@@ -226,6 +235,7 @@
                         tablaMunicipios.style.display = "none";
                         tablaDelegaciones.style.display = "table";
                         tituloTabla.textContent = "Solicitudes por Delegación";
+                        actualizarTablaDelegaciones();
                     }
                 })
                 .catch(error => console.error('Error al cargar el GeoJSON de municipios:', error));
@@ -233,42 +243,89 @@
         .catch(error => console.error('Error al cargar el JSON de delegaciones:', error));
 
 
-   
     document.getElementById('mapSelect').addEventListener('change', function () {
-    let tablaMunicipios = document.getElementById('tablaMunicipios');
-    let tablaDelegaciones = document.getElementById('tablaDelegaciones');
-    let filtroInput = document.getElementById('filtroTabla');
-    let tituloTabla = document.getElementById('tituloTabla');
-    
-    if (this.value === "Municipios") {
-        // Mostrar tabla de municipios y ocultar delegaciones
-        tablaMunicipios.style.display = "table";
-        tablaDelegaciones.style.display = "none";
-        tituloTabla.textContent = "Solicitudes por Municipio";
+        let tablaMunicipios = document.getElementById('tablaMunicipios');
+        let tablaDelegaciones = document.getElementById('tablaDelegaciones');
+        let filtroInput = document.getElementById('filtroTabla');
+        let tituloTabla = document.getElementById('tituloTabla');
 
-        if (map.hasLayer(geoJsonDelegaciones)) map.removeLayer(geoJsonDelegaciones);
-        geoJsonMunicipios.addTo(map);
-        legend.remove();
-        legendMunicipios.addTo(map);
-        map.fitBounds(geoJsonMunicipios.getBounds());
-    } else if (this.value === "Delegaciones") {
-        // Mostrar tabla de delegaciones y ocultar municipios
-        tablaMunicipios.style.display = "none";
-        tablaDelegaciones.style.display = "table";
-        tituloTabla.textContent = "Solicitudes por Delegación";
+        if (this.value === "Municipios") {
+            // Mostrar tabla de municipios y ocultar delegaciones
+            tablaDelegaciones.style.display = "none";
+            tablaMunicipios.style.display = "table";
+            tituloTabla.textContent = "Solicitudes por Municipio";
 
-        if (map.hasLayer(geoJsonMunicipios)) map.removeLayer(geoJsonMunicipios);
-        geoJsonDelegaciones.addTo(map);
-        legendMunicipios.remove();
-        legend.addTo(map);
-        map.fitBounds(geoJsonDelegaciones.getBounds());
+            if (map.hasLayer(geoJsonDelegaciones)) map.removeLayer(geoJsonDelegaciones);
+            geoJsonMunicipios.addTo(map);
+            legend.remove();
+            legendMunicipios.addTo(map);
+            map.fitBounds(geoJsonMunicipios.getBounds());
+
+            actualizarTablaMunicipios();
+        } else if (this.value === "Delegaciones") {
+            // Mostrar tabla de delegaciones y ocultar municipios
+            tablaMunicipios.style.display = "none";
+            tablaDelegaciones.style.display = "table";
+            tituloTabla.textContent = "Solicitudes por Delegación";
+
+            if (map.hasLayer(geoJsonMunicipios)) map.removeLayer(geoJsonMunicipios);
+            geoJsonDelegaciones.addTo(map);
+            legendMunicipios.remove();
+            legend.addTo(map);
+            map.fitBounds(geoJsonDelegaciones.getBounds());
+
+            actualizarTablaDelegaciones();
+
+        }
+
+        // Reiniciar filtro
+        filtroInput.value = '';
+        $('#tablaMunicipios, #tablaDelegaciones').DataTable().search('').columns().search('').draw();
+    });
+
+
+    function actualizarTablaDelegaciones() {
+        let tablaMunicipios = $("#tablaMunicipios");
+        tablaMunicipios.DataTable().destroy();
+
+
+        let tablaDelegaciones = $("#tablaDelegaciones");
+        if ($.fn.DataTable.isDataTable(tablaDelegaciones)) {
+            tablaDelegaciones.DataTable().destroy();
+        }
+        let tbody = tablaDelegaciones.find("tbody");
+        tbody.empty(); 
+
+        Object.keys(delegacionNombres).forEach(nombreDelegacion => {
+            let delegacionId = delegacionNombres[nombreDelegacion] || "000";
+            let totalSolicitudes = solicitudesPorDelegacion[delegacionId] || 0;
+            tbody.append(`
+            <tr>
+                <td>${nombreDelegacion}</td>
+                <td>${totalSolicitudes}</td>
+            </tr>
+        `);
+        });
+        tablaDelegaciones.DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "pageLength": -1,
+            "scrollY":        380,
+            "deferRender":    true,
+            "scroller":       true,
+
+        });
+        tablaDelegaciones.show();
     }
 
-    // Reiniciar filtro
-    filtroInput.value = '';
-    $('#tablaMunicipios, #tablaDelegaciones').DataTable().search('').columns().search('').draw();
-});
-
+    
 
 </script>
 
