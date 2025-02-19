@@ -103,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const horaTermino = button.getAttribute('data-hora-termino');
         const duracion = button.getAttribute('data-duracion');
         const extension = button.getAttribute('data-extension');
+        const usuario = button.getAttribute('data-usuario');
+
 
         document.getElementById('modalFolio').textContent = folio;
         document.getElementById('modalNombreCompleto').textContent = `${nombre} ${apellidoPaterno} ${apellidoMaterno}`;
@@ -134,6 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('modalDuracion').textContent=duracion;
         document.getElementById('modalExtension').textContent = extension;
+        document.getElementById('modalUsuario').textContent = usuario;
+
 
         //DATOS DE UBICACION
         // Obtener valores y limpiarlos de espacios extra

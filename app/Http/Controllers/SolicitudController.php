@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SolicitudesExport;
+use App\Exports\SeguimientoExport;
+
 use App\Http\Requests\StoreSolicitudRequest;
 //modelos
 use App\Models\CatalogoAreas;
@@ -316,8 +318,6 @@ class SolicitudController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
-
     public function update(Request $request, $folio)
     {
         //dd($folio);
@@ -542,7 +542,7 @@ class SolicitudController extends Controller
 
         $mpdf = new \Mpdf\Mpdf();
         $mpdf->WriteHTML($html);
-        $pdfFileName = 'ReporteAcumulado' . now()->format('Ymd_His') . '.pdf';
+        $pdfFileName = 'ReporteAcumulado_' . now()->format('Ymd_His') . '.pdf';
 
         return $mpdf->Output($pdfFileName, 'I');
     }
@@ -607,6 +607,13 @@ class SolicitudController extends Controller
     
     public function exportarExcel()
     {
-        return Excel::download(new SolicitudesExport, 'solicitudes.xlsx');
+        $nombre = 'Solicitudes_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new SolicitudesExport, $nombre);
+    }
+
+    public function exportarExcelSeguimiento()
+    {
+        $nombre = 'Seguimiento_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new SeguimientoExport, $nombre);
     }
 }

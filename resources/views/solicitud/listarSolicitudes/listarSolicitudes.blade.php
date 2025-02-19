@@ -20,7 +20,14 @@
     <!-- mi contenedor -->
     <div class="content">
         <div class="card" style="padding: 30px;">
-            <h1 class="mt-5" style="text-align: center; font-weight: bold; color: #7A1737;">Lista de Solicitudes</h1>
+            <div class="d-flex justify-content-between align-items-center mt-5">
+                <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Lista de solicitudes</h1>
+                <a href="{{ route('solicitud.exportarExcel') }}">
+                        <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
+                            style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
+                    
+                </a>
+            </div>
 
             <!-- Filtros-->
             <button class="accordion" style="font-weight:bold;"><i class="bi bi-search"
@@ -221,7 +228,9 @@
                                     data-duracion="{{ $solicitud->duracionMinutos }}"
                                     data-extension="{{ $solicitud->extension}}"
                                     data-nombrePlantel="{{ $solicitud->nombrePlantel }}"
-                                    data-nivel="{{ $solicitud->nivelCct }}">
+                                    data-nivel="{{ $solicitud->nivelCct }}"
+                                    data-usuario="{{ $solicitud->nombre_usuario }}"
+                                    >
                                     <i class="bi bi-eye text-primary"></i>
                                 </a>
 
@@ -241,7 +250,6 @@
                 </table>
             </div>
 
-            <a href="{{ route('solicitud.exportarExcel') }}" class="btn btn-primary" style="margin-top: 20px;">Exportar Excel</a>
         </div>
     </div>
 
