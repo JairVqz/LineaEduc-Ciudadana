@@ -28,10 +28,8 @@
             <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte acumulado</h1>
                 <a href="{{ url('solicitud/pdf_generator') }}">
-                    <button name="button" id="boton" style="border-radius: 8px;">
                         <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
                             style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
-                    </button>
                 </a>
             </div>
 
@@ -168,13 +166,13 @@
 
 
                 <div class="col-md-4">
-                    <div class="card" style="padding: 20px; height: 100%; overflow: hidden;">
+                    <div class="card" style="padding: 20px; max-height: 592px; min-height: 592px; overflow: hidden;">
                         <h4 style="text-align: center;" id="tituloTabla">Solicitudes por Municipio</h4><br>
                         <div class="input-group">
                             <input type="text" class="form-control" id="filtroTabla" placeholder="Buscar...">
                             <button type="button" id='botonFiltro' class="btn btn-color">Limpiar</button>
                         </div>
-                        <br><br>
+                        <br>
                         <div style="height: 100%; width: 100%;">
                             <table id="tablaDelegaciones" class="table table-striped table-bordered"
                                 style="display: none;">
@@ -185,13 +183,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>uwu</td>
-                                        <td>owo</td>
-                                    </tr>
+
                                 </tbody>
                             </table>
-
+                        </div>
+                        <div style="height: 100%; width: 100%;">
                             <table id="tablaMunicipios" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
@@ -208,8 +204,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-
                         </div>
                     </div>
                 </div>
@@ -264,25 +258,62 @@
 </script>
 
 <script>
-    //tabla del Mapa
-    // Inicializar DataTables
-    document.addEventListener('DOMContentLoaded', function () {
-        $('#tablaMunicipios, #tablaDelegaciones').DataTable({
+    function actualizarTablaMunicipios() {
+
+        let tablaDelegaciones = $("#tablaDelegaciones");
+            tablaDelegaciones.DataTable().destroy();
+
+        
+
+
+        let tablaMunicipios = $("#tablaMunicipios");
+        if ($.fn.DataTable.isDataTable(tablaMunicipios)) {
+            tablaMunicipios.DataTable().destroy();
+        }
+        
+        tablaMunicipios.DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
-            "paging": false,
             "lengthChange": false,
             "searching": true,
             "ordering": true,
             "info": false,
-            "autoWidth": true,
+            "autoWidth": false,
             "responsive": true,
-            "pageLength": 8
-        });
-    });
+            "pageLength": -1,
+            "scrollY":        380,
+            "deferRender":    true,
+            "scroller":       true,
 
-    // Filtrar contenido de la tabla activa
+        });
+        tablaMunicipios.show();
+    }
+
+
+
+
+
+   
+    /*document.addEventListener('DOMContentLoaded', function () {
+        $('#tablaMunicipios').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "pageLength": -1,
+            "scrollY":        380,
+            "deferRender":    true,
+            "scroller":       true,
+
+        });
+    });*/
+    //filtro
     document.getElementById('filtroTabla').addEventListener('input', function () {
         const filtro = this.value.toLowerCase().trim();
         if (document.getElementById('tablaMunicipios').style.display === "table") {
@@ -291,8 +322,7 @@
             $('#tablaDelegaciones').DataTable().columns(0).search(filtro).draw();
         }
     });
-
-    // Botón para limpiar el filtro
+    //limpiar filtro
     document.getElementById('botonFiltro').addEventListener('click', function () {
         document.getElementById('filtroTabla').value = '';
         $('#tablaMunicipios, #tablaDelegaciones').DataTable().search('').columns().search('').draw();

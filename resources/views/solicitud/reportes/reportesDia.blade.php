@@ -27,10 +27,8 @@
         <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte del día</h1>
                 <a href="{{ url('solicitud/pdf_generator') }}">
-                    <button name="button" id="boton" style="border-radius: 8px;">
                         <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
                             style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
-                    </button>
                 </a>
             </div>
 
