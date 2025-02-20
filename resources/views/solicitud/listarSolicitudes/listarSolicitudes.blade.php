@@ -56,28 +56,22 @@
 
                         <div class="mb-4 row">
                             <div class="col-md-3">
-                                <label for="filtroArea" class="form-label">Área que atiende:</label>
+                                <label for="idArea" class="form-label">Área que atiende:</label>
                                 <select name="idArea" id="idArea" class="form-select">
-                                    <option>Selecciona el área</option>
+                                    <option value="">Selecciona el área</option>
                                     @foreach ($listaAreas as $data)
-                                        <option value="{{ $data->idArea }}">
-                                            {{ $data->area }}
-                                        </option>
+                                        <option value="{{ $data->idArea }}">{{ $data->area }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                            
+
                             <div class="col-md-3">
                                 <label for="idTipoSolicitud" class="form-label">Tipo de solicitud:</label>
                                 <select name="idTipoSolicitud" id="idTipoSolicitud" class="form-select">
-                                    <option>Selecciona el tipo de solicitud</option>
-                                    @foreach ($listaTiposSolicitud as $data)
-                                        <option value="{{ $data->idTipoSolicitud }}">
-                                            {{ $data->tipoSolicitud }}
-                                        </option>
-                                    @endforeach
+                                    <option value="">Selecciona el tipo de solicitud</option>
                                 </select>
                             </div>
+
                             <div class="col-md-3">
                                 <label for="filtroPrioridad" class="form-label">Prioridad:</label>
                                 <select name="idPrioridad" id="idPrioridad" class="form-select">
@@ -126,9 +120,7 @@
                                 <button name="button" id="btnLimpiarFiltros" style="border-radius: 8px; 
                                 width:100%; height:75%">Limpiar filtros</button>
                             </div>
-                            <input type="hidden" name="curpUsuario" id="curpUsuario" >
-                            <input type="hidden" name="usuario" id="usuario" >
-                            <input type="hidden" name="idAreaUsuario" id="idAreaUsuario">
+                            
                         </div>
                     </div>
                 </div>
@@ -240,10 +232,7 @@
                                             <i class="bi bi-pencil text-warning"></i>
                                         </a>
                                         </a>
-
                             </td>
-                            
-
                         </tr>
                         @endforeach
                     </tbody>
@@ -264,6 +253,35 @@
 <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#idArea').change(function () {
+            var idArea = $(this).val();
+            var tipoSolicitudSelect = $('#idTipoSolicitud');
+
+            tipoSolicitudSelect.empty().append('<option value="">Cargando...</option>');
+
+            if (idArea) {
+                $.ajax({
+                    url: '/solicitud/obtenerTipos',
+                    type: 'GET',
+                    data: { idArea: idArea },
+                    dataType: 'json',
+                    success: function (data) {
+                        tipoSolicitudSelect.empty().append('<option value="">Selecciona el tipo de solicitud</option>');
+
+                        $.each(data, function (key, tipo) {
+                            tipoSolicitudSelect.append('<option value="' + tipo.idTipoSolicitud + '">' + tipo.tipoSolicitud + '</option>');
+                        });
+                    }
+                });
+            } else {
+                tipoSolicitudSelect.empty().append('<option value="">Selecciona el tipo de solicitud</option>');
+            }
+        });
+    });
+</script>
 
 <script>
 

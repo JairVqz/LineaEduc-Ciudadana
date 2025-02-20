@@ -105,50 +105,18 @@ class ReportesController extends Controller
             'parrafoTipos'
         ))->render();
 
-        
-
-        /* Agregar la imagen de la gráfica al PDF
+        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('/app/public/tempdir')]);
+        //dd($mpdf);
+        $mpdf->WriteHTML($html);
+        $mpdf->defaultfooterline = 0;
+        $mpdf->setFooter('|Página ' . '{PAGENO}' . '/' . '{nb}| {DATE j/m/Y h:i:s}');
+        $pdfFileName = 'ReporteAcumulado_' . now()->format('Ymd_His') . '.pdf';
+        return $mpdf->Output($pdfFileName, 'I');
+         /* Agregar la imagen de la gráfica al PDF
         $rutaImagenGrafica = public_path('images/grafica.png');
         if (file_exists($rutaImagenGrafica)) {
             $mpdf->Image($rutaImagenGrafica, 15, 100, 180, 85, 'png');
         }*/
-
-        //return $mpdf->Output($pdfFileName, 'D');
-
-            /*$mpdf = new \Mpdf\Mpdf([
-                'tempDir' => storage_path('app/mpdf_temp') // Directorio temporal dentro de storage
-            ]);
-            
-            $mpdf->WriteHTML($html);
-            
-            // Deshabilitar línea del pie de página
-            $mpdf->defaultfooterline = 0;
-            $mpdf->setFooter('|Página ' . '{PAGENO}' . '/' . '{nb}| {DATE j/m/Y h:i:s}');
-            
-            $pdfFileName = 'ReporteAcumulado_' . now()->format('Ymd_His') . '.pdf';
-            
-            // Devolver el PDF sin almacenarlo en el servidor
-            return response($mpdf->Output('', 'D'))
-                ->header('Content-Type', 'application/pdf')
-                ->header('Content-Disposition', 'inline; filename='.$pdfFileName);*/
-
-                $tempDir = storage_path('app/mpdf_temp');
-                if (!file_exists($tempDir)) {
-                    mkdir($tempDir, 0777, true);
-                }
-                $mpdf = new \Mpdf\Mpdf([
-                    'tempDir' => $tempDir
-                ]);
-                $mpdf->WriteHTML($html);
-                
-                $mpdf->defaultfooterline = 0;
-                $mpdf->setFooter('|Página {PAGENO}/{nb}| {DATE j/m/Y h:i:s}');
-
-                $pdfFileName = 'ReporteAcumulado_' . now()->format('Ymd_His') . '.pdf';
-
-                return response($mpdf->Output($pdfFileName, 'D'))
-                    ->header('Content-Type', 'application/pdf')
-                    ->header('Content-Disposition', 'inline; filename='.$pdfFileName);
 
     }
 

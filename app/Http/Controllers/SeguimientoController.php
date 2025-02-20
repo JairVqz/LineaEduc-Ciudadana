@@ -13,20 +13,22 @@ use Illuminate\Support\Facades\Auth;
 class SeguimientoController extends Controller
 {
 
-    public function seguimiento() //aquiiii
+    public function seguimiento()
     {
-        Solicitud::actualizarDiasTranscurridos(); // Actualizo días
+        Solicitud::actualizarDiasTranscurridos(); 
 
         if (Auth::user()->rol === "Revisor") {
             $solicitudes = DB::select('SELECT * FROM listarSolicitudes where idArea = ? order by idestatus ASC, idprioridad desc ', [Auth::user()->idArea]);
+            $listaTiposSolicitud = TipoSolicitud::all()->where('idArea',"=",Auth::user()->idArea);
+            $listaAreas = CatalogoAreas::all();
+
         } else {
             $solicitud = new Solicitud();
             $solicitudes = $solicitud->listarSolicitudesSeguimiento();
+            $listaTiposSolicitud = TipoSolicitud::all();
+            $listaAreas = CatalogoAreas::all();
         }
-
         //dd($solicitudes);
-        $listaTiposSolicitud = TipoSolicitud::all(); // Para los filtros
-        $listaAreas = CatalogoAreas::all();
         $listaPrioridades = Prioridad::all();
         $listaEstatus = Estatus::all();
 
@@ -42,27 +44,13 @@ class SeguimientoController extends Controller
         );
     }
 
-    /*public function solicitudSeguimiento($folio) //YA ESTA BIEN CON LA NUEVA BD
+    public function obtenerTipos(Request $request)
     {
-        $solicitudes = DB::select("SELECT * FROM listarSolicitudes WHERE folio = ?", [$folio]);
-        $soli = Solicitud::where('folio', $folio)->first();
+        $idArea = $request->idArea;
+        $tiposSolicitud = TipoSolicitud::where('idArea', $idArea)->get();
 
-        $listaTiposSolicitud = TipoSolicitud::all(); // Para los filtros
-        $listaAreas = CatalogoAreas::all();
-        $listaPrioridades = Prioridad::all();
-        $listaEstatus = Estatus::all();
-
-        //return response()->json($solicitud);
-        return view('solicitud.seguimiento.solicitudSeguimiento', [
-            'listaAreas' => $listaAreas,
-            'listaTiposSolicitud' => $listaTiposSolicitud,
-            'listaPrioridades' => $listaPrioridades,
-            'listaEstatus' => $listaEstatus,
-            'solicitudes' => $solicitudes,
-            'soli' => $soli,
-        ]);
-    }*/
-
+        return response()->json($tiposSolicitud);
+    }
 
 public function solicitudSeguimiento($folio)
 {
@@ -116,8 +104,8 @@ public function solicitudSeguimiento($folio)
             $seguimiento->folio = $folio;
             $seguimiento->comentario = $request->comentarios;
             //NOMBRE Y USUARIO
-            $seguimiento->nombre_usuario = $request->usuario;
-            $seguimiento->curp_usuario = $request->curpUsuario;
+            $seguimiento->nombre_usuario = Auth::user()->name;
+            $seguimiento->curp_usuario = Auth::user()->curp;
             $seguimiento->idArea = Auth::user()->idArea;
             $seguimiento->save();
             // cambio el estatus de la solicitud
