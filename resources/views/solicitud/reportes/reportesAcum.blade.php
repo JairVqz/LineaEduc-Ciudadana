@@ -27,9 +27,9 @@
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte acumulado</h1>
-                <a href="{{ url('solicitud/pdf_generator') }}">
-                        <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
-                            style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
+                <a href="{{ route('reportes.pdfReporteAcum') }}" id="pdfAcumulado">
+                    <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
+                        style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
                 </a>
             </div>
 
@@ -73,6 +73,8 @@
                         style="padding: 10px; padding-top: 20px; border: none;">
 
                         <canvas id="solicitudesPorHoraAcumuladoChart"></canvas>
+                        @include('solicitud.reportes.acumulado.sHoraAcum')
+
                         <!--<form id="formFiltro" class="flex-row d-flex align-items-center justify-content-center">
                             <label for="fecha" class="me-2">Selecciona una fecha:</label>
                             <input type="date" class="form-control me-2" id="fecha" name="fecha"
@@ -171,10 +173,9 @@
                         <div class="input-group">
                             <input type="text" class="form-control" id="filtroTabla" placeholder="Buscar...">
                             <button type="button" id='botonFiltro' class="btn btn-color">Limpiar</button>
-                        </div>
-                        <br>
+                        </div><br>
                         <div style="height: 100%; width: 100%;">
-                            <table id="tablaDelegaciones" class="table table-striped table-bordered"
+                            <table id="tablaDelegaciones" class="table table-striped table-bordered "
                                 style="display: none;">
                                 <thead>
                                     <tr>
@@ -186,8 +187,6 @@
 
                                 </tbody>
                             </table>
-                        </div>
-                        <div style="height: 100%; width: 100%;">
                             <table id="tablaMunicipios" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
@@ -213,7 +212,6 @@
     </div>
 </body>
 <!--ACUMULADO-->
-@include('solicitud.reportes.acumulado.sHoraAcum')
 @include('solicitud.reportes.acumulado.mapasAcum')
 @include('solicitud.reportes.acumulado.sPrioridadAcum')
 @include('solicitud.reportes.acumulado.sEstatusAcum')
@@ -225,52 +223,62 @@
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-/*document.getElementById("generarPDF").addEventListener("click", function() {
-    let canvas = document.getElementById("solicitudesPorHoraAcumuladoChart");
-    let chartImage = canvas.toDataURL("image/png"); // Convierte la gráfica a imagen
-    console.log(chartImage);
+    function enviarGraficaAlServidor() {//mando las 2
+        html2canvas(document.getElementById('solicitudesPorHoraAcumuladoChart')).then(canvas => {
+            let imagenBase64 = canvas.toDataURL('image/png');
+            let nombre='solicitudesPorHoraAcum'
 
-    fetch("{{ route('solicitud.pdf_generator') }}", {
-    method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-    },
-    body: JSON.stringify({ chartImage: chartImage }) // Enviar imagen al servidor
-    })
-    .then(response => response.json())
-        .then(data => {
-            window.open(data.url, '_blank'); // Abre en nueva pestaña
-        })
-        .catch(error => console.error("Error generando PDF:", error));
-});
+            //https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson
+            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre})
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Imagen enviada correctamente");
+                } else {
+                    console.error("Error al enviar la imagen");
+                }
+            }).catch(error => console.error("Error en la petición:", error));
+        });
+        html2canvas(document.getElementById('solicitudesAChart')).then(canvas => {
+            let imagenBase64 = canvas.toDataURL('image/png');
+            let nombre='solicitudesPorAreaAcum'
 
-    document.getElementById("generarPDF").addEventListener("click", function () {
-        fetch("{{ route('solicitud.pdf_generator') }}")  // Asegúrate de que esta ruta sea correcta
-            .then(response => response.json())
-            .then(data => {
-                window.open(data.url, '_blank'); // Abre en nueva pestaña
-            })
-            .catch(error => console.error("Error generando PDF:", error));
-    });*/
+            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre})
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Imagen enviada correctamente");
+                } else {
+                    console.error("Error al enviar la imagen");
+                }
+            }).catch(error => console.error("Error en la petición:", error));
+        });
+    }
+    document.addEventListener("DOMContentLoaded", setTimeout(enviarGraficaAlServidor, 2000));
 </script>
+
 
 <script>
     function actualizarTablaMunicipios() {
-
         let tablaDelegaciones = $("#tablaDelegaciones");
-            tablaDelegaciones.DataTable().destroy();
-
-        
-
-
+        tablaDelegaciones.DataTable().destroy();
         let tablaMunicipios = $("#tablaMunicipios");
         if ($.fn.DataTable.isDataTable(tablaMunicipios)) {
             tablaMunicipios.DataTable().destroy();
         }
-        
+
         tablaMunicipios.DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
@@ -282,37 +290,14 @@
             "autoWidth": false,
             "responsive": true,
             "pageLength": -1,
-            "scrollY":        380,
-            "deferRender":    true,
-            "scroller":       true,
+            "scrollY": 380,
+            "deferRender": true,
+            "scroller": true,
 
         });
         tablaMunicipios.show();
     }
 
-
-
-
-
-   
-    /*document.addEventListener('DOMContentLoaded', function () {
-        $('#tablaMunicipios').DataTable({
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-            },
-            "lengthChange": false,
-            "searching": true,
-            "ordering": true,
-            "info": false,
-            "autoWidth": false,
-            "responsive": true,
-            "pageLength": -1,
-            "scrollY":        380,
-            "deferRender":    true,
-            "scroller":       true,
-
-        });
-    });*/
     //filtro
     document.getElementById('filtroTabla').addEventListener('input', function () {
         const filtro = this.value.toLowerCase().trim();

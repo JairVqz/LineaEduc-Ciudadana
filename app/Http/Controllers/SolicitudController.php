@@ -616,4 +616,6 @@ class SolicitudController extends Controller
         $nombre = 'Seguimiento_' . now()->format('Ymd_His') . '.xlsx';
         return Excel::download(new SeguimientoExport, $nombre);
     }
+
+    
 }
