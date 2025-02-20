@@ -2,10 +2,10 @@
     const solicitudes = @json($solicitudesPorMunicipio);
     let solicitudesPorDelegacion = {};
     Promise.all([
-        fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json').then(res => res.json()),
-        fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson').then(res => res.json()),
-        //fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json').then(res => res.json()),
-        //fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson').then(res => res.json())
+        //fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json').then(res => res.json()),
+        //fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson').then(res => res.json()),
+        fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json').then(res => res.json()),
+        fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson').then(res => res.json())
     ]).then(([delegacionesData, municipiosGeoJSON]) => {
         solicitudes.forEach(solicitud => {
             let nombreMunicipio = solicitud.municipio.trim().toLowerCase();
@@ -162,8 +162,8 @@
 
 
     // Cargar municipios y delegaciones
-    fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json')
-        //fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json')
+    //fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json')
+    fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json')
         .then(response => response.json())
         .then(data => {
             data.cvemun_serreg.forEach(entry => {
@@ -174,8 +174,8 @@
                 }
             });
 
-            fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
-                //fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson')
+            //fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
+            fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson')
                 .then(response => response.json())
                 .then(geojsonData => {
                     geoJsonMunicipios = L.geoJson(geojsonData, {
