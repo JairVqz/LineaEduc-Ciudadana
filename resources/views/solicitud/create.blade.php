@@ -130,7 +130,7 @@
                                                 {{ $data->extension }}
                                             </option>
                                         @endforeach
-                                        <!--option value="otro">Otra</option-->
+                                        <option value="otro">Otra</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
@@ -143,7 +143,7 @@
                                                 {{ $data->area }}
                                             </option>
                                         @endforeach
-                                        <!--option value="otro">Otra</option-->
+                                        <option value="otro">Otra</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4">
@@ -156,7 +156,7 @@
                                                 {{ $data->tipoSolicitud }}
                                             </option>
                                         @endforeach
-                                        <!--option value="otro">Otro</option-->
+                                        <option value="otro">Otro</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -171,6 +171,40 @@
                                         @endforeach
                                     </select>
                                 </div>
+
+                            <div id="nuevosCatalogos" style="display: none">
+                                <div class="row g-3">
+                                    <div class="col-md-2">
+                                        <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
+                                            Extensión:</label>
+                                        <input type="number" name="nuevaExtension" id="nuevaExtension"
+                                            class="form-control" placeholder="" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
+                                            Área:</label>
+                                        <input type="text" name="nuevaArea" id="nuevaArea" class="form-control"
+                                            placeholder="" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="nuevoTipoSolicitud" class="form-label"
+                                            style="font-weight:bold">Nuevo tipo de solicitud:</label>
+                                        <input type="text" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud"
+                                            class="form-control" placeholder="" readonly>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="idNuevaPrioridad" class="form-label" style="font-weight:bold">Prioridad:</label>
+                                        <select name="idNuevaPrioridad" id="idNuevaPrioridad" class="form-select">
+                                            <option value="" hidden></option>
+                                            @foreach ($listaPrioridades as $data)
+                                                <option value="{{ $data->idPrioridad }}">
+                                                    {{ $data->prioridad }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
                                 <div class="col-md-12">
                                     <label for="descripcion" class="form-label"
@@ -191,18 +225,22 @@
                             </div-->
                             <div class="d-flex align-items-center justify-content-center">
 
-                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group" id="datosUbicacionSelector">
+                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group"
+                                    id="datosUbicacionSelector">
                                     <input type="radio" class="btn-check" name="btnradio" id="datosCct"
                                         autocomplete="off">
-                                    <label class="btn btn-outline-color" for="datosCct">Habilitar datos de un CCT</label>
+                                    <label class="btn btn-outline-color" for="datosCct">Habilitar datos de un
+                                        CCT</label>
 
                                     <input type="radio" class="btn-check" name="btnradio" id="snUbicacion"
                                         autocomplete="off" checked>
-                                    <label class="btn btn-outline-color" for="snUbicacion">Sin Datos de Ubicación</label>
+                                    <label class="btn btn-outline-color" for="snUbicacion">Sin Datos de
+                                        Ubicación</label>
 
                                     <input type="radio" class="btn-check" name="btnradio" id="mpioLoc"
                                         autocomplete="off">
-                                    <label class="btn btn-outline-color" for="mpioLoc">Habilitar municipio y localidad</label>
+                                    <label class="btn btn-outline-color" for="mpioLoc">Habilitar municipio y
+                                        localidad</label>
                                 </div>
                             </div>
                         </div>

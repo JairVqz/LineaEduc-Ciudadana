@@ -5,9 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Solicitudes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/config.js"></script>
     <link rel="stylesheet" href="/css/solicitud/general.css">
     <script src="/js/solicitud/listarSolicitudes.js"></script>
@@ -137,7 +139,7 @@
             <!--tabla de solicitudes-->
             <div class="table-responsive">
             <table id="tablaResultados" class="table table-striped table-bordered">
-                    <thead  style="background-color: #696968;color: white;">
+                    <thead>
                         <tr>
                             <th>Folio</th>
                             <th>Nombre del solicitante</th>
@@ -259,11 +261,12 @@
 @include('solicitud.listarSolicitudes.modalDetalleListar')
 
 <!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
 
 <script>
 
@@ -317,7 +320,13 @@
 
         $('#tablaResultados').DataTable({
             "language": {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+                "paginate": {
+                    "first": "<<",   
+                    "last": ">>",    
+                    "next": ">",    
+                    "previous": "<"
+                },
             },
             "paging": true,
             "lengthChange": true,
@@ -326,10 +335,7 @@
             "info": true,
             "autoWidth": true, //estaba en false
             "responsive": true,
-           
         });
-
-        
 
         //SCRIPTS DE FILTROS :D
         filtroFolio.addEventListener('input', function () {

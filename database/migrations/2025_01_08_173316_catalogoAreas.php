@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('tbl_catalogoAreas', function (Blueprint $table) {
             $table->id('idArea');
             $table->string('area', 100);
+            $table->foreignId('idExtensionCatalogo')->references('idExtensionCatalogo')->on('tbl_catalogoExtensiones');
             $table->timestamps();
             $table->softDeletes();
         });
