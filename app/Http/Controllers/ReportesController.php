@@ -105,7 +105,7 @@ class ReportesController extends Controller
             'parrafoTipos'
         ))->render();
 
-        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('/app/public/tempdir')]);
+        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('app/public/tempdir')]);
         //dd($mpdf);
         $mpdf->WriteHTML($html);
         $mpdf->defaultfooterline = 0;
