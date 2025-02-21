@@ -14,6 +14,7 @@ class CatalogoAreas extends Model
     protected $fillable = [
         'idArea',
         'area',
+        'idExtensionCatalogo',
     ];
 
     protected $guarded = [];

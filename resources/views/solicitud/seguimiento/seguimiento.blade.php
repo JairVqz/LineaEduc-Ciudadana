@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seguimiento</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
@@ -132,7 +134,7 @@
             <!--tabla de solicitudes-->
             <div class="table-responsive">
                 <table id="tablaResultados" class="table table-striped table-bordered">
-                    <thead style="background-color: #696968;color: white;">
+                    <thead>
                         <tr>
                             <th>Folio</th>
                             <th>Nombre del solicitante</th>
@@ -241,9 +243,6 @@
 @include('solicitud.seguimiento.modalDetalle')
 
 <!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
@@ -310,8 +309,14 @@
 <script>//TABLA
     document.addEventListener('DOMContentLoaded', function () {
         const tabla = $('#tablaResultados').DataTable({
-            language: {
-                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+                "paginate": {
+                    "first": "<<",   
+                    "last": ">>",    
+                    "next": ">",    
+                    "previous": "<"
+                },
             },
             paging: true,
             lengthChange: true,

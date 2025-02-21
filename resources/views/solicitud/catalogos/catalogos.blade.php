@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Lista de Solicitudes</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="http://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.js"></script>
     <script src="/js/config.js"></script>
@@ -58,12 +60,43 @@
         #boton:hover {
             background-color: #501125;
         }
+
+        thead {
+            background-color: #7f8081 !important;
+        }
+
+        th {
+            color: rgb(255, 255, 255) !important;
+            text-align: start !important;
+        }
+
+        td {
+            text-align: start !important;
+        }
+
+        .page-item.active .page-link {
+            color: #fff !important;
+            background-color: #7A1737 !important;
+            border-color: #7A1737 !important;
+        }
+
+        .page-link {
+            color: #000000 !important;
+            background-color: #F2F2F2 !important;
+            border: 1px solid #c9cccf !important;
+        }
+
+        .page-link:hover {
+            color: #fff !important;
+            background-color: #501125 !important;
+            border-color: #501125 !important;
+        }
     </style>
 </head>
 @include('menuNavigation')
 
 <body>
-    
+
 
     <!-- mi contenedor -->
     <div class="content">
@@ -84,7 +117,7 @@
 
                 <div class="table-responsive">
                     <table id="tablaCatalogo" class="table table-striped table-bordered">
-                        <thead class="table-dark">
+                        <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Extensión</th>
@@ -97,14 +130,14 @@
                         <tbody>
                             @foreach ($catalogo as $keyc => $registro)
                                 <tr>
-                                    <td>{{$keyc + 1}}</td>
+                                    <td>{{ $keyc + 1 }}</td>
                                     <td>{{ $registro->extension }}</td>
                                     <td>{{ $registro->area }}</td>
                                     <td>{{ $registro->tipoSolicitud }}</td>
                                     <td>{{ $registro->prioridad }}</td>
 
                                     <td class="text-center">
-                                        <a href="#" class="formEditarExtension mx-2" data-bs-toggle="modal"                                            
+                                        <a href="#" class="formEditarExtension mx-2" data-bs-toggle="modal"
                                             title="Editar">
                                             <i class="bi bi-pencil text-success"></i>
                                         </a>
@@ -124,8 +157,8 @@
                 <form action="" id="formAgregarArea" method="POST">
                     @csrf
                     <div class="input-group">
-                        <input type="text" name="area" id="area" class="form-control" placeholder="Nombre del área"
-                            required>
+                        <input type="text" name="area" id="area" class="form-control"
+                            placeholder="Nombre del área" required>
                         <button type="button" id='boton' class="btn btn-color agregarArea">Agregar</button>
                     </div>
 
@@ -133,7 +166,7 @@
                 <!--tabla de solicitudes-->
                 <div class="table-responsive">
                     <table id="tablaResultados" class="table table-striped table-bordered">
-                        <thead class="table-dark">
+                        <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Área</th>
@@ -143,14 +176,12 @@
                         <tbody>
                             @foreach ($listaAreas as $key => $area)
                                 <tr>
-                                    <td>{{$key + 1}}</td>
+                                    <td>{{ $key + 1 }}</td>
                                     <td>{{ $area->area }}</td>
                                     <td class="text-center">
                                         <a href="#" class="formEditarArea mx-2" data-bs-toggle="modal"
-                                            data-bs-target="#editarArea" 
-                                            data-idarea="{{$area->idArea}}"
-                                            data-area="{{$area->area}}" 
-                                            title="Editar">
+                                            data-bs-target="#editarArea" data-idarea="{{ $area->idArea }}"
+                                            data-area="{{ $area->area }}" title="Editar">
                                             <i class="bi bi-pencil text-success"></i>
                                         </a>
                                     </td>
@@ -194,7 +225,7 @@
                 </form> <br>
                 <div class="table-responsive">
                     <table id="tablaExtensiones" class="table table-striped table-bordered">
-                        <thead class="table-dark">
+                        <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Extensión</th>
@@ -205,15 +236,14 @@
                         <tbody>
                             @foreach ($extensiones as $keye => $extension)
                                 <tr>
-                                    <td>{{$keye + 1}}</td>
+                                    <td>{{ $keye + 1 }}</td>
                                     <td>{{ $extension->extension }}</td>
                                     <td>{{ $extension->area }}</td>
                                     <td class="text-center">
                                         <a href="#" class="formEditarExtension mx-2" data-bs-toggle="modal"
-                                            data-bs-target="#editarExtension" 
-                                            data-idextensioncatalogo="{{$extension->idExtensionCatalogo}}"
-                                            data-extension="{{$extension->extension}}" 
-                                            title="Editar">
+                                            data-bs-target="#editarExtension"
+                                            data-idextensioncatalogo="{{ $extension->idExtensionCatalogo }}"
+                                            data-extension="{{ $extension->extension }}" title="Editar">
                                             <i class="bi bi-pencil text-success"></i>
                                         </a>
                                     </td>
@@ -268,7 +298,7 @@
                 </form> <br>
                 <div class="table-responsive">
                     <table id="tablaTipoS" class="table table-striped table-bordered">
-                        <thead class="table-dark">
+                        <thead>
                             <tr>
                                 <th>No.</th>
                                 <th>Tipo de solicitud</th>
@@ -280,12 +310,12 @@
                         <tbody>
                             @foreach ($tipoS as $keyt => $tipo)
                                 <tr>
-                                    <td>{{$keyt + 1}}</td>
+                                    <td>{{ $keyt + 1 }}</td>
                                     <td>{{ $tipo->tipoSolicitud }}</td>
                                     <td>{{ $tipo->area }}</td>
                                     <td>{{ $tipo->prioridad }}</td>
                                     <td class="text-center">
-                                        <a href="#" class="formEditarExtension mx-2" data-bs-toggle="modal"                                            
+                                        <a href="#" class="formEditarExtension mx-2" data-bs-toggle="modal"
                                             title="Editar">
                                             <i class="bi bi-pencil text-success"></i>
                                         </a>
@@ -304,4 +334,10 @@
     @include('solicitud/catalogos/catalogoExtensiones')
     @include('solicitud/catalogos/modalEditarExtension')
     @include('solicitud/catalogos/catalogoTipoS')
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+
 </body>

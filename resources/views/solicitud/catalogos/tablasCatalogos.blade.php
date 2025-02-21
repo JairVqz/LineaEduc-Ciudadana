@@ -28,7 +28,13 @@
 function inicializarDataTableT() {
     $('#tablaTipoS').DataTable({
         "language": {
-            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+            "paginate": {
+                    "first": "<<",   
+                    "last": ">>",    
+                    "next": ">",    
+                    "previous": "<"
+            },
         },
         "paging": true,
         "lengthChange": true,
@@ -54,7 +60,13 @@ function recargarTablaA() {
 function inicializarDataTableA() {
     $('#tablaResultados').DataTable({
         "language": {
-            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+            "paginate": {
+                    "first": "<<",   
+                    "last": ">>",    
+                    "next": ">",    
+                    "previous": "<"
+            },
         },
         "paging": true,
         "lengthChange": true,
@@ -82,7 +94,13 @@ function recargarTablaE() {
 function inicializarDataTableE() {
     $('#tablaExtensiones').DataTable({
         "language": {
-            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+            "paginate": {
+                    "first": "<<",   
+                    "last": ">>",    
+                    "next": ">",    
+                    "previous": "<"
+            },
         },
         "paging": true,
         "lengthChange": true,
@@ -110,7 +128,13 @@ function recargarTablaC() {
 function inicializarDataTableC() {
     $('#tablaCatalogo').DataTable({
         "language": {
-            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
+            "paginate": {
+                    "first": "<<",   
+                    "last": ">>",    
+                    "next": ">",    
+                    "previous": "<"
+            },
         },
         "paging": true,
         "lengthChange": true,

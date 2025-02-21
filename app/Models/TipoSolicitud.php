@@ -14,6 +14,7 @@ class TipoSolicitud extends Model
         'idTipoSolicitud',
         'tipoSolicitud',
         'idArea',
+        'idPrioridad',
     ];
 
     protected $guarded = [];
