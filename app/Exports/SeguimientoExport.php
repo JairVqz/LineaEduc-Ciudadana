@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Auth;
 class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings, WithEvents
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         $idArea = Auth::user()->idArea;
 
-        return collect(DB::select('SELECT [folio]
+        if ($idArea === "Revisor") {
+            return collect(DB::select('SELECT [folio]
             ,[nombre]
             ,[apellidoPaterno]
             ,[apellidoMaterno]
@@ -45,55 +46,151 @@ class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings,
             ,[nombre_usuario]
         FROM [listarSolicitudes]
         WHERE [idArea] = ?', [$idArea]));
+        } else {
+            return collect(DB::select('SELECT [folio]
+            ,[nombre]
+            ,[apellidoPaterno]
+            ,[apellidoMaterno]
+            ,[correo]
+            ,[telefonoFijo]
+            ,[telefonoCelular]
+            ,[tipoSolicitud]
+            ,[prioridad]
+            ,[estatus]
+            ,[descripcion]
+            ,[extension]
+            ,[area]
+            ,[cct]
+            ,[nivelCct]
+            ,[nombrePlantel]
+            ,[nombreDirector]
+            ,[municipio]
+            ,[localidad]
+            ,[direccionCct]
+            ,[horaInicio]
+            ,[horaTermino]
+            ,[duracionMinutos]
+            ,[created_at]
+            ,[diasTranscurridos]
+            ,[nombre_usuario]
+        FROM [listarSolicitudes]'));
+        }
     }
 
     public function headings(): array
     {
-        return ["FOLIO", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO","CORREO", 
-        "TELÉFONO FIJO", "TELÉFONO CELULAR",
-        "TIPO DE SOLICITUD", "PRIORIDAD", "ESTATUS", "DESCRIPCION", 
-        "EXTENSION",
-        "CCT", "NIVEL", "NOMBRE DEL PLANTEL", "NOMBRE DEL DIRECTOR",
-        "MUNICIPIO", "LOCALIDAD", "DIRECCIÓN DEL CCT",
-        "HORA DE INICIO", "HORA DE FIN", 
-        "DURACIÓN DE LA LLAMADA",
-        "FECHA DE SOLICITUD", "DIAS TRANSCURRIDOS", "OPERADORA QUE ATENDIÓ"];
+
+        $idArea = Auth::user()->idArea;
+        if ($idArea === "Revisor") {
+            return [
+                "FOLIO",
+                "NOMBRE",
+                "APELLIDO PATERNO",
+                "APELLIDO MATERNO",
+                "CORREO",
+                "TELÉFONO FIJO",
+                "TELÉFONO CELULAR",
+                "TIPO DE SOLICITUD",
+                "PRIORIDAD",
+                "ESTATUS",
+                "DESCRIPCION",
+                "EXTENSION",
+                "CCT",
+                "NIVEL",
+                "NOMBRE DEL PLANTEL",
+                "NOMBRE DEL DIRECTOR",
+                "MUNICIPIO",
+                "LOCALIDAD",
+                "DIRECCIÓN DEL CCT",
+                "HORA DE INICIO",
+                "HORA DE FIN",
+                "DURACIÓN DE LA LLAMADA",
+                "FECHA DE SOLICITUD",
+                "DIAS TRANSCURRIDOS",
+                "OPERADORA QUE ATENDIÓ"
+            ];
+        } else {
+            return ["FOLIO", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO","CORREO", 
+            "TELÉFONO FIJO", "TELÉFONO CELULAR",
+            "TIPO DE SOLICITUD", "PRIORIDAD", "ESTATUS", "DESCRIPCION", 
+            "EXTENSION",
+            "ÁREA A LA QUE PERTENECE",
+            "CCT", "NIVEL", "NOMBRE DEL PLANTEL", "NOMBRE DEL DIRECTOR",
+            "MUNICIPIO", "LOCALIDAD", "DIRECCIÓN DEL CCT",
+            "HORA DE INICIO", "HORA DE FIN", 
+            "DURACIÓN DE LA LLAMADA",
+            "FECHA DE SOLICITUD", "DIAS TRANSCURRIDOS", "OPERADORA QUE ATENDIÓ"];
+        }
     }
 
     public function registerEvents(): array
     {
-        return [
-            AfterSheet::class => function(AfterSheet $event) {
-                $sheet = $event->sheet;
+        $idArea = Auth::user()->idArea;
+        if ($idArea === "Revisor") {
+            return [
+                AfterSheet::class => function (AfterSheet $event) {
+                    $sheet = $event->sheet;
 
-                $cellRange = 'A1:Y1'; 
-                $lastRow = $sheet->getHighestRow();
+                    $cellRange = 'A1:Y1';
+                    $lastRow = $sheet->getHighestRow();
 
-                $sheet->getStyle($cellRange)->applyFromArray([
-                    'font' => ['bold' => true],
-                    'fill' => [
-                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                        'startColor' => ['rgb' => 'CCCCCC'],
-                    ],
-                    'alignment' => ['horizontal' => 'center'],
-                ]);
-
-                // bordes
-                $sheet->getStyle("A1:Y{$lastRow}")->applyFromArray([
-                    'borders' => [
-                        'allBorders' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                            'color' => ['rgb' => '000000'],
+                    $sheet->getStyle($cellRange)->applyFromArray([
+                        'font' => ['bold' => true],
+                        'fill' => [
+                            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                            'startColor' => ['rgb' => 'CCCCCC'],
                         ],
-                    ],
-                ]);
+                        'alignment' => ['horizontal' => 'center'],
+                    ]);
 
-                // filtros
-                $sheet->setAutoFilter($cellRange);
-            },
-        ];
+                    // bordes
+                    $sheet->getStyle("A1:Y{$lastRow}")->applyFromArray([
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                                'color' => ['rgb' => '000000'],
+                            ],
+                        ],
+                    ]);
+
+                    // filtros
+                    $sheet->setAutoFilter($cellRange);
+                },
+            ];
+        }else{
+            return [
+                AfterSheet::class => function(AfterSheet $event) {
+                    $sheet = $event->sheet;
+    
+                    $cellRange = 'A1:Z1'; 
+                    $lastRow = $sheet->getHighestRow();
+    
+                    $sheet->getStyle($cellRange)->applyFromArray([
+                        'font' => ['bold' => true],
+                        'fill' => [
+                            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                            'startColor' => ['rgb' => 'CCCCCC'],
+                        ],
+                        'alignment' => ['horizontal' => 'center'],
+                    ]);
+    
+                    // bordes
+                    $sheet->getStyle("A1:Z{$lastRow}")->applyFromArray([
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                                'color' => ['rgb' => '000000'],
+                            ],
+                        ],
+                    ]);
+    
+                    // filtros
+                    $sheet->setAutoFilter($cellRange);
+                },
+            ];
+        }
     }
 }
-   
-    
+
+
 
