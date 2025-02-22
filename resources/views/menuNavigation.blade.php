@@ -59,10 +59,10 @@
             </div>
         </div>
 
-        <a href="{{ route('catalogos.catalogos') }}"
-            class="{{ request()->routeIs('catalogos.catalogos') ? 'active' : '' }}">
+        {{--<a href="{{ route('directorio.index') }}"
+            class="{{ request()->routeIs('directorio.index') ? 'active' : '' }}">
             <i class="bi bi-collection me-2"></i>Catálogos
-        </a>
+        </a>--}}
         <a href="{{ route('user.index') }}"
             class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
             <i class="bi bi-people me-2"></i>Usuarios

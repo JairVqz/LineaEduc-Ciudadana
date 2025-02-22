@@ -1,6 +1,6 @@
 <?php
 use App\Http\Controllers\APIsController;
-use App\Http\Controllers\CatalogosController;
+use App\Http\Controllers\DirectorioController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\SolicitudController;
@@ -113,22 +113,14 @@ Route::middleware('auth.validation')->group(function () {
         });
     });
 
-    //CATALOGOS
-    Route::controller(CatalogosController::class)->group(function () {
-        Route::name('catalogos.')->group(function () {
-            //vista de catalogos crud de extension, area, tipo solicitud, usuarios
-            Route::get('/solicitud/catalogos', [CatalogosController::class, 'catalogos'])->name('catalogos');
-            //areas
-            Route::post('/agregarArea', [CatalogosController::class, 'agregarArea'])->name('agregarArea');
-            Route::post('/editarArea', [CatalogosController::class, 'editarArea'])->name('editarArea');
-            //select de areas
-            Route::get('/obtener-areas', [CatalogosController::class, 'obtenerAreas'])->name('obtenerAreas');
-            //extensiones
-            Route::post('/agregarExtension', [CatalogosController::class, 'agregarExtension'])->name('agregarExtension');
-            Route::post('/editarExtension', [CatalogosController::class, 'editarExtension'])->name('editarExtension');
-            //tipoSolicitud
-            Route::post('/agregarTipoS', [CatalogosController::class, 'agregarTipoS'])->name('agregarTipoS');
-            Route::post('/editarTipoS', [CatalogosController::class, 'editarTipoS'])->name('editarTipoS');
+    //DIRECTORIO
+    Route::controller(DirectorioController::class)->group(function () {
+        Route::name('directorio.')->group(function () {
+            Route::get('/directorio/index', [DirectorioController::class, 'index'])->name('index');
+            Route::get('/directorio', [DirectorioController::class, 'store'])->name('store');
+            Route::get('/directorio/update', [DirectorioController::class, 'update'])->name('update');
+            Route::post('/directorio/destroy',  [DirectorioController::class,'destroy'])->name('destroy');
+            Route::post('/directorio/restore', [DirectorioController::class, 'restore'])->name('restore');
         });
     });
     

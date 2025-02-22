@@ -106,6 +106,7 @@ class ReportesController extends Controller
         ))->render();
 
         $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('app/public/tempdir')]);
+        $mpdf->showImageErrors = true;
         //dd($mpdf);
         $mpdf->WriteHTML($html);
         $mpdf->defaultfooterline = 0;

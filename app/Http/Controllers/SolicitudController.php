@@ -738,8 +738,16 @@ class SolicitudController extends Controller
 
     public function fetchExtensionAreas(Request $request)
     {
-        $data['extensionAreas'] = CatalogoAreas::where('idExtensionCatalogo', '=', $request->idExtension)
+        $idExtension = $request->idExtension;
+
+        Log::info("idExtensionRecibido: ".$idExtension);
+
+        if ($idExtension == "otro"){
+            $data['extensionAreas'] = CatalogoAreas::all();
+        } else {
+            $data['extensionAreas'] = CatalogoAreas::where('idExtensionCatalogo', '=', $idExtension)
             ->get();
+        }
 
         return response()->json($data);
     }

@@ -69,7 +69,9 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#nuevaArea').val('');
             $('#nuevoTipoSolicitud').val('');
             document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            $('#idNuevaPrioridad').trigger('change')
+            $('#idNuevaPrioridad').trigger('change');
+
+            fetchExtensionArea(idExtensionSeleccionada);
 
         } else if ($('#idExtension').val() == null) {
             console.log("entro a null");
@@ -101,29 +103,13 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("idNuevaPrioridad").selectedIndex = -1;
             $('#idNuevaPrioridad').trigger('change');
 
-        } else {
-        $.ajax({
-            url: apiFetchExtensionAreas,
-            method: 'POST',
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                idExtension: idExtensionSeleccionada,
-            },
-            success: function (data) {
-                $.each(data.extensionAreas, function (key, data) {
-                    $("#idArea").append('<option value="' + data.idArea + '">' + data.area + '</option>');
-                });
-                $("#idArea").append('<option value="otro">OTRA</option>');
-                $('#idArea').trigger('change');
-            },
-            error: function (xhr, status, error) {
-                console.error('Error al enviar la petición:', error);
+            fetchExtensionArea(idExtensionSeleccionada);
 
-            }
-        });
+        } else {
+            $("#idArea").html('');
+            $("#idTipoSolicitud").html('');
+
+            fetchExtensionArea(idExtensionSeleccionada);
 
     }
 
@@ -166,7 +152,78 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("idNuevaPrioridad").selectedIndex = -1;
             $('#idNuevaPrioridad').trigger('change');
         } else {
+            $("#idTipoSolicitud").html('');
+            fetchAreaTipoSolicitud(idAreaSeleccionada);
+    }
 
+    });
+
+    $('#idTipoSolicitud').on('change', function () {
+        var idTipoSolicitudSeleccionado = this.value;
+
+        if ($('#idTipoSolicitud').val() == "otro"){
+            //Por Default los demás select están vacios o indice 0
+            document.getElementById("idPrioridad").selectedIndex = -1;
+            $('#idPrioridad').trigger('change');
+
+            //Se quitan que se sean requeridos los select principales
+            $('#idTipoSolicitud').prop('required',false);
+            $('#idPrioridad').prop('required',false);
+
+            //Se habilita y hacen requeridos los inputs de los nuevos catalogos            
+            $('#nuevoTipoSolicitud').prop("readonly",false);
+            $('#nuevoTipoSolicitud').prop('required',true);
+
+            /*Se habilita la sección para ingresar los valores de los nuevos catálogos y se 
+            refleja el valor de la extension y área seleccionada*/
+            $('#nuevosCatalogos').css("display", "block");
+            var valorArea = $('#idArea').find('option:selected').text();
+            $('#nuevaArea').val(valorArea);
+
+        } else if ($('#idTipoSolicitud').val() == null) {
+            //Remover el valor de los inputs principales
+            document.getElementById("idPrioridad").selectedIndex = -1;
+            $('#idPrioridad').trigger('change');
+
+            //Remover el valor de los inputs de los nuevos catálogos
+            document.getElementById("idNuevaPrioridad").selectedIndex = -1;
+            $('#idNuevaPrioridad').trigger('change');
+        } else {
+
+            fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado);
+            
+        }
+
+    });
+
+    function fetchExtensionArea(idExtensionSeleccionada){
+
+        $.ajax({
+            url: apiFetchExtensionAreas,
+            method: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                idExtension: idExtensionSeleccionada,
+            },
+            success: function (data) {
+                $.each(data.extensionAreas, function (key, data) {
+                    $("#idArea").append('<option value="' + data.idArea + '">' + data.area + '</option>');
+                });
+                $("#idArea").append('<option value="otro">OTRA</option>');
+                $('#idArea').trigger('change');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al enviar la petición:', error);
+
+            }
+        });
+
+    }
+
+    function fetchAreaTipoSolicitud(idAreaSeleccionada){
         $.ajax({
             url: apiFetchAreaTipoSolicitudes,
             method: 'POST',
@@ -191,69 +248,32 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    });
-
-    $('#idTipoSolicitud').on('change', function () {
-        var idTipoSolicitudSeleccionado = this.value;
-
-        if ($('#idTipoSolicitud').val() == "otro"){
-            //Por Default los demás select están vacios o indice 0
-            document.getElementById("idPrioridad").selectedIndex = -1;
-            $('#idPrioridad').trigger('change');
-
-            /*Se habilita la sección para ingresar los valores de los nuevos catálogos y se 
-            refleja el valor de la extension y área seleccionada*/
-            $('#nuevosCatalogos').css("display", "block");
-            var valorExtension = Number($('#idExtension').find('option:selected').text());
-            var valorArea = $('#idArea').find('option:selected').text();
-            $('#nuevaExtension').val(valorExtension);
-            $('#nuevaArea').val(valorArea);
-
-            //Se quitan que se sean requeridos los select principales
-            $('#idTipoSolicitud').prop('required',false);
-            $('#idPrioridad').prop('required',false);
-
-            //Se habilita y hacen requeridos los inputs de los nuevos catalogos            
-            $('#nuevoTipoSolicitud').prop("readonly",false);
-            $('#nuevoTipoSolicitud').prop('required',true);
-
-        } else if ($('#idTipoSolicitud').val() == null) {
-            //Remover el valor de los inputs principales
-            document.getElementById("idPrioridad").selectedIndex = -1;
-            $('#idPrioridad').trigger('change');
-
-            //Remover el valor de los inputs de los nuevos catálogos
-            document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            $('#idNuevaPrioridad').trigger('change');
-        } else {
-
-            $.ajax({
-                url: apiFetchTipoSolicitudPrioridad,
-                method: 'POST',
-                dataType: 'json',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    idPrioridad: idTipoSolicitudSeleccionado,
-                },
-                success: function (data) {
-                    for (var i = 0; i < listaPrioridades.length; i++) {
-                        if (listaPrioridades[i].idPrioridad === data.tipoSolicitudPrioridad[0].idPrioridad) {
-                            document.getElementById('idPrioridad').selectedIndex = i;
-                            document.getElementById('idPrioridad').dispatchEvent(new Event('change'));
-                            break;
-                        }
+    function fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado){
+        $.ajax({
+            url: apiFetchTipoSolicitudPrioridad,
+            method: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                idPrioridad: idTipoSolicitudSeleccionado,
+            },
+            success: function (data) {
+                for (var i = 0; i < listaPrioridades.length; i++) {
+                    if (listaPrioridades[i].idPrioridad === data.tipoSolicitudPrioridad[0].idPrioridad) {
+                        document.getElementById('idPrioridad').selectedIndex = i;
+                        document.getElementById('idPrioridad').dispatchEvent(new Event('change'));
+                        break;
                     }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error al enviar la petición:', error);
-
                 }
-            });
-        }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al enviar la petición:', error);
 
-    });
+            }
+        });
+    }
 
     $('#municipio').on('change', function () {
         var municipioSeleccionado = $(this).find('option:selected').text();
