@@ -52,7 +52,7 @@ class SolicitudController extends Controller
         $listaExtensiones = CatalogoExtensiones::all();
 
         return view(
-            'solicitud.create',
+            'solicitud.nuevaSolicitud.create',
             [
                 'listaPrioridades' => $listaPrioridades,
                 'listaTiposSolicitud' => $listaTiposSolicitud,
@@ -126,20 +126,22 @@ class SolicitudController extends Controller
             $idPrioridad = $request->idPrioridad;
 
             //NUEVOS CATÁLOGOS
-            if ($idExtension == "otro"){             
-
-                $extensionCatalogo = new CatalogoExtensiones();
-                $extensionCatalogo->extension = $request->nuevaExtension;
-                $extensionCatalogo->save();
-
-                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=',$request->nuevaExtension)->first();
+            if ($idExtension == "otro") {
 
                 $areaCatalogo = new CatalogoAreas();
                 $areaCatalogo->area = $request->nuevaArea;
-                $areaCatalogo->idExtensionCatalogo = $extensionCatalogoGuardada->idExtensionCatalogo;
                 $areaCatalogo->save();
 
-                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->nuevaArea)->first();   
+                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->nuevaArea)->first();
+
+                $extensionCatalogo = new CatalogoExtensiones();
+                $extensionCatalogo->extension = $request->nuevaExtension;
+                $extensionCatalogo->nombreTitular = $request->nuevoNombreTitular;
+                $extensionCatalogo->idArea = $areaCatalogoGuardada->idArea;
+                $extensionCatalogo->idPuesto = $request->nuevaExtension;
+                $extensionCatalogo->save();
+
+                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $request->nuevaExtension)->first();
 
                 $tipoSolicitudCatalogo = new TipoSolicitud();
                 $tipoSolicitudCatalogo->tipoSolicitud = $request->nuevoTipoSolicitud;
@@ -153,14 +155,13 @@ class SolicitudController extends Controller
                 $idArea = $areaCatalogoGuardada->idArea;
                 $idTipoSolicitud = $tipoSolicitudCatalogoGuardada->idTipoSolicitud;
                 $idPrioridad = $request->idNuevaPrioridad;
-
-            } else if ($idExtension != "otro" && $idArea == "otro"){
+            } else if ($idExtension != "otro" && $idArea == "otro") {
                 $areaCatalogo = new CatalogoAreas();
                 $areaCatalogo->area = $request->nuevaArea;
                 $areaCatalogo->idExtensionCatalogo = $request->idExtension;
                 $areaCatalogo->save();
 
-                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->nuevaArea)->first();                
+                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->nuevaArea)->first();
 
                 $tipoSolicitudCatalogo = new TipoSolicitud();
                 $tipoSolicitudCatalogo->tipoSolicitud = $request->nuevoTipoSolicitud;
@@ -169,12 +170,11 @@ class SolicitudController extends Controller
                 $tipoSolicitudCatalogo->save();
 
                 $tipoSolicitudCatalogoGuardada = TipoSolicitud::where('tipoSolicitud', $request->nuevoTipoSolicitud)->first();
-                
+
                 $idArea = $areaCatalogoGuardada->idArea;
                 $idTipoSolicitud = $tipoSolicitudCatalogoGuardada->idTipoSolicitud;
                 $idPrioridad = $request->idNuevaPrioridad;
-
-            } else if ($idExtension != "otro" && $idArea != "otro" && $idTipoSolicitud == "otro"){
+            } else if ($idExtension != "otro" && $idArea != "otro" && $idTipoSolicitud == "otro") {
                 $tipoSolicitudCatalogo = new TipoSolicitud();
                 $tipoSolicitudCatalogo->tipoSolicitud = $request->nuevoTipoSolicitud;
                 $tipoSolicitudCatalogo->idArea = $request->idArea;
@@ -240,13 +240,13 @@ class SolicitudController extends Controller
                 $ubicacion->direccionCct = $request->direccionCct;
             }
 
-            if ($request->nombreMunicipio == ""){
+            if ($request->nombreMunicipio == "") {
                 $ubicacion->municipio = "SIN ASIGNAR";
             } else {
                 $ubicacion->municipio = $request->nombreMunicipio;
             }
 
-            if ($request->nombreLocalidad == ""){
+            if ($request->nombreLocalidad == "") {
                 $ubicacion->localidad = "SIN ASIGNAR";
             } else {
                 $ubicacion->localidad = $request->nombreLocalidad;
@@ -274,7 +274,7 @@ class SolicitudController extends Controller
             $solicitud->apellidoPaterno = $request->apellidoPaterno;
             $solicitud->apellidoMaterno = $request->apellidoMaterno;
             $solicitud->idTipoSolicitud = $idTipoSolicitud;
-            $solicitud->idPrioridad = $idPrioridad;
+            $solicitud->idPrioridad = 2;
             $solicitud->idEstatus = 1;
             $solicitud->descripcion = $request->descripcion;
             $solicitud->diasTranscurridos = "0";
@@ -352,7 +352,7 @@ class SolicitudController extends Controller
     }
 
 
-    
+
     /**
      *
      * Show the form for editing the specified resource.
@@ -408,8 +408,8 @@ class SolicitudController extends Controller
 
             $contacto->update([
                 'correo' => $request->correo,
-                'telefonoCelular' => $request->telefonoCelular ,
-                'telefonoFijo' => $request->telefonoFijo ,
+                'telefonoCelular' => $request->telefonoCelular,
+                'telefonoFijo' => $request->telefonoFijo,
             ]);
 
             //LLAMADA
@@ -421,8 +421,8 @@ class SolicitudController extends Controller
 
             $llamada->update([
                 'horaInicio' => $horaInicio,
-                'horaTermino' => $horaTermino ,
-                'duracionMinutos' => $request->duracionMinutos ,
+                'horaTermino' => $horaTermino,
+                'duracionMinutos' => $request->duracionMinutos,
             ]);
 
             //UBICACIÓN
@@ -442,13 +442,13 @@ class SolicitudController extends Controller
                 $direccionCct = $request->direccionCct;
             }
 
-            if ($request->nombreMunicipio == ""){
+            if ($request->nombreMunicipio == "") {
                 $municipio = "SIN ASIGNAR";
             } else {
                 $municipio = $request->nombreMunicipio;
             }
 
-            if ($request->nombreLocalidad == ""){
+            if ($request->nombreLocalidad == "") {
                 $localidad = "SIN ASIGNAR";
             } else {
                 $localidad = $request->nombreLocalidad;
@@ -456,21 +456,21 @@ class SolicitudController extends Controller
 
             $ubicacion->update([
                 'cct' => $cct,
-                'nivelCct' => $nivelCct ,
-                'nombrePlantel' => $nombrePlantel ,
+                'nivelCct' => $nivelCct,
+                'nombrePlantel' => $nombrePlantel,
                 'nombreDirector' => $nombreDirector,
-                'direccionCct' => $direccionCct ,
+                'direccionCct' => $direccionCct,
                 'municipio' => $municipio,
-                'localidad' => $localidad ,
+                'localidad' => $localidad,
             ]);
 
             //EXTENSIÓN
-            
+
             $extension = Extension::where('folio', $folioSolicitud)->first();
 
             $extension->update([
                 'idExtensionCatalogo' => $request->idExtension,
-                'idArea' => $request->idArea ,
+                'idArea' => $request->idArea,
             ]);
 
             //SOLICITUD
@@ -600,7 +600,7 @@ class SolicitudController extends Controller
         }
     }
 
-    
+
     public function coincidenciasSolicitud(Request $request)
     {
         $parametroBusqueda = $request->query('parametroBusqueda');
@@ -631,7 +631,7 @@ class SolicitudController extends Controller
         }
     }
 
-    
+
     public function pdf_generator(Request $request)
     {
         $fechaGeneracionReporte = now()->format('d-m-Y');
@@ -641,31 +641,31 @@ class SolicitudController extends Controller
         $fechaGeneracionReporteQuery = now()->format('Y-m-d');
 
         $llamadasRecibidasPorDia = DB::table('listarSolicitudes')
-        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
-        ->count();
+            ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+            ->count();
 
         $primeraLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
-        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
-        ->value('created_at');
-        
+            ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+            ->value('created_at');
+
         $primeraLlamadaPorDiaFormateada = Carbon::parse($primeraLlamadaRecibidaPorDia)->format('H:i:s');
 
         $minutosEfectivosPorDia = DB::table('listarSolicitudes')
-        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
-        ->selectRaw('SUM(CAST( duracionMinutos AS INT)) as total_duracion')
-        ->value('total_duracion');
+            ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+            ->selectRaw('SUM(CAST( duracionMinutos AS INT)) as total_duracion')
+            ->value('total_duracion');
 
         $ultimaLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
-        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
-        ->orderBy('folio', 'desc')
-        ->value('created_at');
+            ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+            ->orderBy('folio', 'desc')
+            ->value('created_at');
 
         $ultimaLlamadaPorDiaFormateada = Carbon::parse($ultimaLlamadaRecibidaPorDia)->format('H:i:s');
 
         $llamadaMasMinutosPorDia = DB::table('listarSolicitudes')
-        ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
-        ->selectRaw('MAX(duracionMinutos)')
-        ->value('duracionMinutos');
+            ->whereDate('created_at', '=', $fechaGeneracionReporteQuery)
+            ->selectRaw('MAX(duracionMinutos)')
+            ->value('duracionMinutos');
 
         //SOLICITUDES POR HORA
         $fechaSeleccionada = now()->toDateString();
@@ -693,10 +693,17 @@ class SolicitudController extends Controller
 
         //dd($encodedLabels);
 
-        $html = view('pdf_template', compact('fechaGeneracionReporte','solicitudes',
-                                                                    'llamadasRecibidasPorDia', 'primeraLlamadaPorDiaFormateada',
-                                                                    'minutosEfectivosPorDia','ultimaLlamadaPorDiaFormateada',
-                                                                    'llamadaMasMinutosPorDia','labelsHora', 'valuesHora'))->render();
+        $html = view('pdf_template', compact(
+            'fechaGeneracionReporte',
+            'solicitudes',
+            'llamadasRecibidasPorDia',
+            'primeraLlamadaPorDiaFormateada',
+            'minutosEfectivosPorDia',
+            'ultimaLlamadaPorDiaFormateada',
+            'llamadaMasMinutosPorDia',
+            'labelsHora',
+            'valuesHora'
+        ))->render();
 
         $mpdf = new \Mpdf\Mpdf();
         $mpdf->WriteHTML($html);
@@ -740,13 +747,14 @@ class SolicitudController extends Controller
     {
         $idExtension = $request->idExtension;
 
-        Log::info("idExtensionRecibido: ".$idExtension);
+        Log::info("idExtensionRecibido: " . $idExtension);
 
-        if ($idExtension == "otro"){
+        if ($idExtension == "otro") {
             $data['extensionAreas'] = CatalogoAreas::all();
         } else {
-            $data['extensionAreas'] = CatalogoAreas::where('idExtensionCatalogo', '=', $idExtension)
-            ->get();
+            $data['extensionAreas'] = CatalogoAreas::join('tbl_catalogoExtensiones', 'tbl_catalogoExtensiones.idArea', '=', 'tbl_catalogoAreas.idArea')
+                ->where('tbl_catalogoExtensiones.idExtensionCatalogo', '=', $idExtension)
+                ->get(['tbl_catalogoAreas.idArea','tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular']);
         }
 
         return response()->json($data);
@@ -769,7 +777,7 @@ class SolicitudController extends Controller
         return response()->json($data);
     }
 
-    
+
     public function exportarExcel()
     {
         $nombre = 'Solicitudes_' . now()->format('Ymd_His') . '.xlsx';
@@ -781,6 +789,4 @@ class SolicitudController extends Controller
         $nombre = 'Seguimiento_' . now()->format('Ymd_His') . '.xlsx';
         return Excel::download(new SeguimientoExport, $nombre);
     }
-
-    
 }

@@ -133,6 +133,12 @@
                                         <option value="otro">Otra</option>
                                     </select>
                                 </div>
+                                <div class="col-md-2">
+                                    <label for="nombreTitular" class="form-label"
+                                        style="font-weight:bold">Funcionario:</label>
+                                        <input type="text" name="nombreTitular" id="nombreTitular" class="form-control"
+                                        placeholder="" readonly>
+                                </div>
                                 <div class="col-md-4">
                                     <label for="idArea" class="form-label" style="font-weight:bold">Área que
                                         atiende:</label>
@@ -159,7 +165,7 @@
                                         <option value="otro">Otro</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
+                                {{--<div class="col-md-2">
                                     <label for="idPrioridad" class="form-label"
                                         style="font-weight:bold">Prioridad:</label>
                                     <select name="idPrioridad" id="idPrioridad" class="form-select select2-bootstrap"
@@ -170,7 +176,9 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div>--}}
+
+                                @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
 
                             <div id="nuevosCatalogos" style="display: none">
                                 <div class="row g-3">

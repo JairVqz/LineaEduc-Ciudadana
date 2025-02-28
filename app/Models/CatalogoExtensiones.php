@@ -12,6 +12,9 @@ class CatalogoExtensiones extends Model
     protected $fillable = [
         'idExtensionCatalogo',
         'extension',
+        'nombreTitular',
+        'idArea',
+        'idPuesto',
     ];
 
     protected $guarded = [];
