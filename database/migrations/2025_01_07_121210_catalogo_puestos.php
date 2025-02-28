@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_catalogoExtensiones', function (Blueprint $table) {
-            $table->id('idExtensionCatalogo');
-            $table->string('extension', 10);
-            $table->string('nombreTitular', 255);
-            $table->foreignId('idArea')->references('idArea')->on('tbl_catalogoAreas');
-            $table->foreignId('idPuesto')->references('idPuesto')->on('tbl_catalogoPuestos');
-
+        Schema::create('tbl_catalogoPuestos', function (Blueprint $table) {
+            $table->id('idPuesto');
+            $table->string('puesto', 100);
+            //$table->foreignId('idExtensionCatalogo')->references('idExtensionCatalogo')->on('tbl_catalogoExtensiones');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,7 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_catalogoExtensiones');
-
+        Schema::dropIfExists('tbl_catalogoPuestos');
     }
 };

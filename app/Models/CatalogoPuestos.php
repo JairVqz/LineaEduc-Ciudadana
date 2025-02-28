@@ -4,18 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CatalogoExtensiones extends Model
+class CatalogoPuestos extends Model
 {
-    use HasFactory;
-    protected $table = 'tbl_catalogoExtensiones';
+    use HasFactory,  SoftDeletes;
+    protected $table = 'tbl_catalogoPuestos';
     protected $fillable = [
-        'idExtensionCatalogo',
-        'extension',
-        'nombreTitular',
-        'idArea',
         'idPuesto',
+        'puesto',
+        //'idExtensionCatalogo',
     ];
-
     protected $guarded = [];
 }

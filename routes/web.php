@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\APIsController;
 use App\Http\Controllers\CatalogosController;
+use App\Http\Controllers\DirectorioController;
+use App\Http\Controllers\PuestosController;
 use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\SolicitudController;
@@ -115,10 +117,10 @@ Route::middleware('auth.validation')->group(function () {
         });
     });
 
-    //CATALOGOS
+    //AREAS
     Route::controller(CatalogosController::class)->group(function () {
         Route::name('catalogos.')->group(function () {
-            //vista de catalogos crud de extension, area, tipo solicitud, usuarios
+            /*vista de catalogos crud de extension, area, tipo solicitud, usuarios
             Route::get('/solicitud/catalogos', [CatalogosController::class, 'catalogos'])->name('catalogos');
             //areas
             Route::post('/agregarArea', [CatalogosController::class, 'agregarArea'])->name('agregarArea');
@@ -130,8 +132,36 @@ Route::middleware('auth.validation')->group(function () {
             Route::post('/editarExtension', [CatalogosController::class, 'editarExtension'])->name('editarExtension');
             //tipoSolicitud
             Route::post('/agregarTipoS', [CatalogosController::class, 'agregarTipoS'])->name('agregarTipoS');
-            Route::post('/editarTipoS', [CatalogosController::class, 'editarTipoS'])->name('editarTipoS');
+            Route::post('/editarTipoS', [CatalogosController::class, 'editarTipoS'])->name('editarTipoS');*/
+
+            Route::get('/solicitud/areas', [CatalogosController::class, 'areas'])->name('areas');
+            Route::post('/areas', [CatalogosController::class, 'store'])->name('store');
+            Route::post('/areas/update', [CatalogosController::class, 'update'])->name('update');
+            Route::post('/areas/destroy',  [CatalogosController::class,'destroy'])->name('destroy');
+            Route::post('/areas/restore', [CatalogosController::class, 'restore'])->name('restore');
         });
     });
+    //PUESTOS
+    Route::controller(PuestosController::class)->group(function () {
+        Route::name('puestos.')->group(function () {
+            Route::get('/solicitud/puestos', [PuestosController::class, 'puestos'])->name('puestos');
+            Route::post('/puestos', [PuestosController::class, 'store'])->name('store');
+            Route::post('/puestos/update', [PuestosController::class, 'update'])->name('update');
+            Route::post('/puestos/destroy',  [PuestosController::class,'destroy'])->name('destroy');
+            Route::post('/puestos/restore', [PuestosController::class, 'restore'])->name('restore');
+        });
+    });
+
+    //DIRECTORIO
+    Route::controller(DirectorioController::class)->group(function () {
+        Route::name('directorio.')->group(function () {
+            Route::get('/directorio/collection', [DirectorioController::class, 'collection'])->name('collection');
+            Route::post('/directorio', [DirectorioController::class, 'store'])->name('store');
+            Route::post('/directorio/update', [DirectorioController::class, 'update'])->name('update');
+            Route::post('/directorio/destroy',  [DirectorioController::class,'destroy'])->name('destroy');
+            Route::post('/directorio/restore', [DirectorioController::class, 'restore'])->name('restore');
+        });
+    });
+
     
 });

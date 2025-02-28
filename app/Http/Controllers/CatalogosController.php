@@ -15,7 +15,7 @@ class CatalogosController extends Controller
 {
 
     //CATALOGOS
-    public function catalogos()
+    /*public function catalogos()
     {
         $solicitud = new Solicitud();
         $listaTiposSolicitud = TipoSolicitud::all();
@@ -128,7 +128,7 @@ class CatalogosController extends Controller
             'status' => 'success',
 
         ]);
-    }
+    }*/
 
 
 
@@ -137,9 +137,17 @@ class CatalogosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function areas()
     {
-        //
+        $listaAreas = CatalogoAreas::withTrashed()->get();
+        
+
+        return view(
+            'solicitud.directorio.areas.areas',
+            [
+                'listaAreas' => $listaAreas,
+            ]
+        );
     }
 
     /**
@@ -160,7 +168,15 @@ class CatalogosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $nuevaArea = $request->input('area');
+            $area = new CatalogoAreas();
+            $area->area = $nuevaArea;
+            $area->save();
+            return response()->json(['message' => 'Área registrada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un error al registrar el área: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -192,9 +208,23 @@ class CatalogosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $idArea = $request->input('idArea');
+
+        try {
+            $area = CatalogoAreas::where('idArea','=',$idArea);
+            $areaNueva = $request->input('area');
+            
+
+            $area->update([
+                'area' => $areaNueva,
+            ]);
+
+            return response()->json(['message' => 'Área actualizada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un error al actualizar el área: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -203,8 +233,32 @@ class CatalogosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $idArea = $request->input('idArea');
+
+        try {
+            $area = CatalogoAreas::where('idArea','=',$idArea);
+            $area->delete();
+
+            return response()->json(['message' => 'Área eliminada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un error al eliminar el área: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function restore(Request $request)
+    {
+        $idArea = $request->idArea;
+
+        try {
+            $area = CatalogoAreas::withTrashed()->where('idArea','=',$idArea);
+            $area->restore();
+
+            return response()->json(['message' => 'Área reactivada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un error al reactivar el área: ' . $e->getMessage()], 500);
+        }
+
     }
 }
