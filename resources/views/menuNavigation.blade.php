@@ -43,8 +43,8 @@
         @endphp
 
         <div class="dropdown">
-            <a href="#" class="dropdown-toggle" data-bs-toggle="collapse"
-                data-bs-target="#submenuReportes" aria-expanded="{{ $isReportesActive ? 'true' : 'false' }}">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#submenuReportes"
+                aria-expanded="{{ $isReportesActive ? 'true' : 'false' }}">
                 <i class="bi bi-bar-chart me-2"></i>Reportes
             </a>
             <div id="submenuReportes" class="collapse {{ $isReportesActive ? 'show' : '' }}">
@@ -59,12 +59,35 @@
             </div>
         </div>
 
-        <a href="{{ route('catalogos.catalogos') }}"
-            class="{{ request()->routeIs('catalogos.catalogos') ? 'active' : '' }}">
-            <i class="bi bi-collection me-2"></i>Catálogos
-        </a>
-        <a href="{{ route('user.index') }}"
-            class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
+
+
+        @php
+            $isCatalogosActive = request()->routeIs('catalogos.areas') || request()->routeIs('catalogos.puestos') || request()->routeIs('directorio.collection');
+        @endphp
+
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#submenuCatalogos"
+                aria-expanded="{{ $isCatalogosActive ? 'true' : 'false' }}">
+                <i class="bi bi-collection me-2"></i>Catálogos
+            </a>
+
+            <div id="submenuCatalogos" class="collapse {{ $isCatalogosActive ? 'show' : '' }}">
+                <a href="{{ route('directorio.collection') }}"
+                    class="ms-3 {{ request()->routeIs('directorio.collection') ? 'active' : '' }}">
+                    <i class="bi bi-telephone me-2"></i>Directorio
+                </a><!--DIRECTORIO, AREAS, PUESTOS-->
+                <a href="{{ route('catalogos.areas') }}"
+                    class="ms-3 {{ request()->routeIs('catalogos.areas.areas') ? 'active' : '' }}">
+                    <i class="bi bi-building-gear me-2"></i>Áreas
+                </a>
+                <a href="{{ route('puestos.puestos') }}"
+                    class="ms-3 {{ request()->routeIs('puestos.puestos') ? 'active' : '' }}">
+                    <i class="bi bi-person-gear me-2"></i>Puestos
+                </a>
+            </div>
+        </div>
+
+        <a href="{{ route('user.index') }}" class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
             <i class="bi bi-people me-2"></i>Usuarios
         </a>
     @endif
@@ -84,8 +107,8 @@
         @endphp
 
         <div class="dropdown">
-            <a href="#" class="dropdown-toggle" data-bs-toggle="collapse"
-                data-bs-target="#submenuReportes" aria-expanded="{{ $isReportesActive ? 'true' : 'false' }}">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#submenuReportes"
+                aria-expanded="{{ $isReportesActive ? 'true' : 'false' }}">
                 <i class="bi bi-bar-chart me-2"></i>Reportes
             </a>
             <div id="submenuReportes" class="collapse {{ $isReportesActive ? 'show' : '' }}">
