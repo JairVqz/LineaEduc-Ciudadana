@@ -751,6 +751,8 @@ class SolicitudController extends Controller
 
         if ($idExtension == "otro") {
             $data['extensionAreas'] = CatalogoAreas::all();
+        } elseif ($idExtension == "") {
+            $data['extensionAreas'] = CatalogoAreas::all();
         } else {
             $data['extensionAreas'] = CatalogoAreas::join('tbl_catalogoExtensiones', 'tbl_catalogoExtensiones.idArea', '=', 'tbl_catalogoAreas.idArea')
                 ->where('tbl_catalogoExtensiones.idExtensionCatalogo', '=', $idExtension)

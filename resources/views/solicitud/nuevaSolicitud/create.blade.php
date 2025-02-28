@@ -178,9 +178,9 @@
                                     </select>
                                 </div>--}}
 
-                                @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
+                            {{--@include('solicitud.nuevaSolicitud.modalAgregarDirectorio')--}}
 
-                            <div id="nuevosCatalogos" style="display: none">
+                            {{--<div id="nuevosCatalogos" style="display: none">
                                 <div class="row g-3">
                                     <div class="col-md-2">
                                         <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
@@ -212,7 +212,7 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--}}
 
                                 <div class="col-md-12">
                                     <label for="descripcion" class="form-label"
