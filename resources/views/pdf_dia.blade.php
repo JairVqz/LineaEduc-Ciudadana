@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Acumulado</title>
+    <title>Reporte del día</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,7 +82,7 @@
             style="float: left; margin-left: -20px; margin-top: -20px;" />
         <img src="{{ public_path('images/LEC.png') }}" width="80px" style="float: right; margin-top: -20px;" />
         <h3 style="text-aling: center; margin-left: 230px; margin-top: -20px;margin-bottom:-10px">Línea Educativa Ciudadana</h3>
-        <h5 style="text-aling: center; margin-left: 280px; margin-top: -180px;">Reporte Acumulado</h5>
+        <h5 style="text-aling: center; margin-left: 260px; margin-top: -180px;">Reporte del día: {{ $fechaR }}</h5>
     </div>
     <!--CUADRADOS DE INDICADORES-->
     <div id="indicadores" style="align-items: center">
@@ -111,16 +111,16 @@
     <h4 style="text-align: center; margin-bottom: -1px;">Llamada con más minutos de atención</h4>
     <h2 style="text-align: center; margin-top: -15px;">{{ $llamadaMasMinutosPorDia }}</h2>
     <!--GRAFICA DE BARRAS-->
-    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}" alt="Gráfica de solicitudes por hora"
+    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraDia.png') }}" alt="Gráfica de solicitudes por hora"
         style="width: 100%; height: auto;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
     <div id="areas">
         <div id="grafica" style="float: left; margin-left: 15px">
-            <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorAreaAcum.png') }}" alt="Gráfica de solicitudes por hora"
+            <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorAreaDia.png') }}" alt="Gráfica de solicitudes por hora"
                 style="width: 100%; height: auto;">
         </div>
         <div id="parrafo" style="float: right; margin-right: 15px">
-            <p style="margin-top:80px;">Acumulado a la fecha, la mayoría de llamadas estuvieron relacionadas con temas de  
+            <p style="margin-top:80px;">El día de hoy, la mayoría de llamadas estuvieron relacionadas con temas de  
                 @foreach ($parrafoAreas as $index => $data)
                     @if ($index === count($parrafoAreas) - 1 && $index !== 0)
                         y {{ $data->nombre }} ({{ $data->porcentaje }}%),  

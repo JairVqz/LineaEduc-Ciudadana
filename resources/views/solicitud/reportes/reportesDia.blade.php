@@ -26,7 +26,7 @@
         <div class="card" style="padding: 30px;">
         <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte del día</h1>
-                <a href="{{ url('solicitud/pdf_generator') }}">
+                <a href="{{ route('reportes.pdfReporteDia') }}">
                         <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
                             style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
                 </a>
@@ -165,15 +165,14 @@
 
 
                 <div class="col-md-4">
-                    <div class="card" style="padding: 20px; height: 100%; overflow: hidden;">
+                    <div class="card" style="padding: 20px; max-height: 592px; min-height: 592px; overflow: hidden;">
                         <h4 style="text-align: center;" id="tituloTabla">Solicitudes por Municipio</h4><br>
                         <div class="input-group">
                             <input type="text" class="form-control" id="filtroTabla" placeholder="Buscar...">
                             <button type="button" id='botonFiltro' class="btn btn-color">Limpiar</button>
-                        </div>
-                        <br><br>
+                        </div><br>
                         <div style="height: 100%; width: 100%;">
-                            <table id="tablaDelegaciones" class="table table-striped table-bordered"
+                            <table id="tablaDelegaciones" class="table table-striped table-bordered "
                                 style="display: none;">
                                 <thead>
                                     <tr>
@@ -182,13 +181,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>uwu</td>
-                                        <td>owo</td>
-                                    </tr>
+
                                 </tbody>
                             </table>
-
                             <table id="tablaMunicipios" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
@@ -205,17 +200,10 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
-
-
         </div>
     </div>
 </body>
@@ -228,4 +216,106 @@
 @include('solicitud.reportes.dia.sEstatusDia')
 @include('solicitud.reportes.dia.sAreaDia')
 @include('solicitud.reportes.dia.sDuracionMinutosDia')
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    function enviarGraficaAlServidorP() {//mando las 2
+        html2canvas(document.getElementById('solicitudesPorHoraChart'), { willReadFrequently: true })
+        .then(canvas => {
+            let imagenBase64 = canvas.toDataURL('image/png');
+            let nombre = 'solicitudesPorHoraDia';
+
+            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
+            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Imagen enviada correctamente");
+                } else {
+                    console.error("Error al enviar la imagen");
+                }
+            }).catch(error => console.error("Error en la petición:", error));
+        });
+        html2canvas(document.getElementById('solicitudesAChart'), { willReadFrequently: true })
+        .then(canvas => {
+            let imagenBase64 = canvas.toDataURL('image/png');
+            let nombre = 'solicitudesPorAreaDia';
+
+            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
+            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
+            }).then(response => {
+                if (response.ok) {
+                    console.log("Imagen enviada correctamente");
+                } else {
+                    console.error("Error al enviar la imagen");
+                }
+            }).catch(error => console.error("Error en la petición:", error));
+        });
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(enviarGraficaAlServidorP, 2000);
+    });
+</script>
+
+
+<script>
+    function actualizarTablaMunicipios() {
+        let tablaDelegaciones = $("#tablaDelegaciones");
+        tablaDelegaciones.DataTable().destroy();
+        let tablaMunicipios = $("#tablaMunicipios");
+        if ($.fn.DataTable.isDataTable(tablaMunicipios)) {
+            tablaMunicipios.DataTable().destroy();
+        }
+
+        tablaMunicipios.DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+            },
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": false,
+            "autoWidth": false,
+            "responsive": true,
+            "pageLength": -1,
+            "scrollY": 380,
+            "deferRender": true,
+            "scroller": true,
+
+        });
+        tablaMunicipios.show();
+    }
+
+    //filtro
+    document.getElementById('filtroTabla').addEventListener('input', function () {
+        const filtro = this.value.toLowerCase().trim();
+        if (document.getElementById('tablaMunicipios').style.display === "table") {
+            $('#tablaMunicipios').DataTable().columns(0).search(filtro).draw();
+        } else {
+            $('#tablaDelegaciones').DataTable().columns(0).search(filtro).draw();
+        }
+    });
+    //limpiar filtro
+    document.getElementById('botonFiltro').addEventListener('click', function () {
+        document.getElementById('filtroTabla').value = '';
+        $('#tablaMunicipios, #tablaDelegaciones').DataTable().search('').columns().search('').draw();
+    });
+</script>
+
 </html>
