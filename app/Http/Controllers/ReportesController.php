@@ -13,6 +13,119 @@ use Carbon\Carbon;
 
 class ReportesController extends Controller
 {
+    public function pdfReporteDia(Request $request)
+    {
+        $fechaR = now()->format('d-m-Y');
+        //dd($fechaR);
+        $fechaGeneracionReporte = now()->format('Y-m-d');
+        $solicitudes = DB::table('listarSolicitudes')->get();
+
+        //QUERY'S REPORTE DIARIO
+        $fechaGeneracionReporteQuery = now()->format('Y-m-d');
+
+        $llamadasRecibidasPorDia = DB::table('listarSolicitudes')
+            ->whereDate('created_at', '=', $fechaGeneracionReporte)
+            ->count();
+
+        $primeraLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+            ->whereDate('created_at', '=', $fechaGeneracionReporte)
+            ->value('created_at');
+
+        $primeraLlamadaPorDiaFormateada = Carbon::parse($primeraLlamadaRecibidaPorDia)->format('H:i:s');
+
+        $minutosEfectivosPorDia = DB::table('listarSolicitudes')
+            ->whereDate('created_at', '=', $fechaGeneracionReporte)
+            ->selectRaw('SUM(CAST( duracionMinutos AS INT)) as total_duracion')
+            ->value('total_duracion');
+
+        $ultimaLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+            ->whereDate('created_at', '=', $fechaGeneracionReporte)
+            ->orderBy('folio', 'desc')
+            ->value('created_at');
+
+        $ultimaLlamadaPorDiaFormateada = Carbon::parse($ultimaLlamadaRecibidaPorDia)->format('H:i:s');
+
+        $llamadaMasMinutosPorDia = DB::table('listarSolicitudes')
+            ->whereDate('created_at', '=', $fechaGeneracionReporte)
+            ->selectRaw('MAX(duracionMinutos)')
+            ->value('duracionMinutos');
+
+        //SOLICITUDES POR HORA
+        $fechaSeleccionada = now()->toDateString();
+        // consulta :D
+        $solicitudesPorHora = DB::table('listarSolicitudes')
+            ->select(DB::raw("DATEPART(HOUR, horaInicio) as hora"), DB::raw("COUNT(*) as total"))
+            ->whereDate('created_at', '=', $fechaGeneracionReporte)
+            ->whereRaw('DATEPART(HOUR, horaInicio) BETWEEN 8 AND 19')
+            ->groupBy(DB::raw("DATEPART(HOUR, horaInicio)"))
+            ->orderBy('hora')
+            ->get();
+        $labelsHora = [];
+        $valuesHora = [];
+        for ($i = 8; $i <= 19; $i++) {
+            $labelsHora[] = sprintf('%02d:00', $i);
+            $valuesHora[] = 0;
+        }
+        //lo cambio por lo que obtuve de la consultas
+        foreach ($solicitudesPorHora as $solicitud) {
+            $indice = array_search(sprintf('%02d:00', $solicitud->hora), $labelsHora);
+            if ($indice !== false) {
+                $valuesHora[$indice] = $solicitud->total;
+            }
+        }
+
+        //dd($encodedLabels);
+        //PARRAFO DE AREAS Y TIPOS
+        $parrafoAreas = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM [LineaEduC].[dbo].[listarSolicitudes]
+        WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)), 
+        TopAreas AS (
+            SELECT TOP 5 area,
+                COUNT(*) AS cantidad, 
+                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje
+            FROM [LineaEduC].[dbo].[listarSolicitudes]
+            WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)
+            GROUP BY area
+            ORDER BY cantidad DESC
+        )
+        SELECT 'area' AS categoria, area AS nombre, porcentaje FROM TopAreas");
+        //dd($parrafoAreas);
+        $parrafoTipos = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM [LineaEduC].[dbo].[listarSolicitudes]
+        WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)), 
+        TopTipos AS (
+            SELECT TOP 5 tipoSolicitud, --top 3 de tipos de solicitud mas requeridos :D
+                COUNT(*) AS cantidad, 
+                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje
+            FROM [LineaEduC].[dbo].[listarSolicitudes]
+            WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)
+            GROUP BY tipoSolicitud
+            ORDER BY cantidad DESC
+        )
+        SELECT 'tipoSolicitud' AS categoria, tipoSolicitud AS nombre, porcentaje FROM TopTipos");
+
+        $html = view('pdf_dia', compact(
+            'fechaGeneracionReporte',
+            'solicitudes',
+            'llamadasRecibidasPorDia',
+            'primeraLlamadaPorDiaFormateada',
+            'minutosEfectivosPorDia',
+            'ultimaLlamadaPorDiaFormateada',
+            'llamadaMasMinutosPorDia',
+            'labelsHora',
+            'valuesHora', 
+            'parrafoAreas',
+            'parrafoTipos',
+            'fechaR'
+        ))->render();
+
+        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('app/public/tempdir')]);
+        //dd($mpdf);
+        $mpdf->showImageErrors = true;
+        $mpdf->WriteHTML($html);
+        $mpdf->defaultfooterline = 0;
+        $mpdf->setFooter('|Página ' . '{PAGENO}' . '/' . '{nb}| {DATE j/m/Y h:i:s}');
+        $pdfFileName = 'ReporteDiario_' . now()->format('Ymd_His') . '.pdf';
+        return $mpdf->Output($pdfFileName, 'D');
+    }
 
     public function pdfReporteAcum(Request $request)
     {
@@ -107,20 +220,15 @@ class ReportesController extends Controller
 
         $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('app/public/tempdir')]);
         //dd($mpdf);
+        $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
         $mpdf->defaultfooterline = 0;
         $mpdf->setFooter('|Página ' . '{PAGENO}' . '/' . '{nb}| {DATE j/m/Y h:i:s}');
         $pdfFileName = 'ReporteAcumulado_' . now()->format('Ymd_His') . '.pdf';
-        return $mpdf->Output($pdfFileName, 'I');
-         /* Agregar la imagen de la gráfica al PDF
-        $rutaImagenGrafica = public_path('images/grafica.png');
-        if (file_exists($rutaImagenGrafica)) {
-            $mpdf->Image($rutaImagenGrafica, 15, 100, 180, 85, 'png');
-        }*/
-
+        return $mpdf->Output($pdfFileName, 'D');
     }
 
-    public function guardarGrafica(Request $request)
+    /*public function guardarGrafica(Request $request)
     {
         $imagenBase64 = $request->input('imagen');
 
@@ -129,15 +237,34 @@ class ReportesController extends Controller
             $imagen = str_replace(' ', '+', $imagen);
             $imagenDecodificada = base64_decode($imagen);
 
-            $rutaImagen = public_path('images/' . $request->input('nombre') . '.png');
+            $rutaImagen = storage_path('app/public/tempdir/mpdf/ttfontdata/' . $request->input('nombre') . '.png');
             file_put_contents($rutaImagen, $imagenDecodificada);
 
             return response()->json(['mensaje' => 'Imagen guardada correctamente']);
         }
 
         return response()->json(['mensaje' => 'Error al guardar la imagen'], 400);
+    }*/
+    public function guardarGrafica(Request $request)
+    {
+        $imagenBase64 = $request->input('imagen');
+        if ($imagenBase64) {
+            $imagen = str_replace('data:image/png;base64,', '', $imagenBase64);
+            $imagen = str_replace(' ', '+', $imagen);
+            $imagenDecodificada = base64_decode($imagen);
+    
+            $directorio = storage_path('app/public/tempdir/mpdf/ttfontdata/');
+            if (!file_exists($directorio)) {
+                mkdir($directorio, 0775, true);
+            }
+    
+            $rutaImagen = $directorio . $request->input('nombre') . '.png';
+            file_put_contents($rutaImagen, $imagenDecodificada);
+    
+            return response()->json(['mensaje' => 'Imagen guardada correctamente']);
+        }
+        return response()->json(['mensaje' => 'Error al guardar la imagen'], 400);
     }
-
 
 
     public function reportesDia(Request $request)

@@ -109,6 +109,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-md-3" style="padding: 5px;">
                     <div class="card justify-content-center align-items-center" style="padding: 10px;">
                         <canvas id="solicitudesPChart"></canvas>
@@ -225,19 +226,20 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-    function enviarGraficaAlServidor() {//mando las 2
-        html2canvas(document.getElementById('solicitudesPorHoraAcumuladoChart')).then(canvas => {
+    function enviarGraficaAlServidorP() {//mando las 2
+        html2canvas(document.getElementById('solicitudesPorHoraAcumuladoChart'), { willReadFrequently: true })
+        .then(canvas => {
             let imagenBase64 = canvas.toDataURL('image/png');
-            let nombre='solicitudesPorHoraAcum'
+            let nombre = 'solicitudesPorHoraAcum';
 
-            //https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson
-            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica",{
+            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
+            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
-                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre})
+                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
             }).then(response => {
                 if (response.ok) {
                     console.log("Imagen enviada correctamente");
@@ -246,17 +248,19 @@
                 }
             }).catch(error => console.error("Error en la petición:", error));
         });
-        html2canvas(document.getElementById('solicitudesAChart')).then(canvas => {
+        html2canvas(document.getElementById('solicitudesAChart'), { willReadFrequently: true })
+        .then(canvas => {
             let imagenBase64 = canvas.toDataURL('image/png');
-            let nombre='solicitudesPorAreaAcum'
+            let nombre = 'solicitudesPorAreaAcum';
 
             fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
+            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
-                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre})
+                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
             }).then(response => {
                 if (response.ok) {
                     console.log("Imagen enviada correctamente");
@@ -266,7 +270,9 @@
             }).catch(error => console.error("Error en la petición:", error));
         });
     }
-    document.addEventListener("DOMContentLoaded", setTimeout(enviarGraficaAlServidor, 2000));
+    document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(enviarGraficaAlServidorP, 2000);
+    });
 </script>
 
 
