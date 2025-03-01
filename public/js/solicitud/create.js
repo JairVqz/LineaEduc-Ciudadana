@@ -50,27 +50,19 @@ document.addEventListener('DOMContentLoaded', function () {
             //document.getElementById("idPrioridad").selectedIndex = -1;
             //$('#idPrioridad').trigger('change');
 
-            //Se habilita la sección para ingresar los valores de los nuevos catálogos y se quita que sean requeridos los select principales.
-            //$('#nuevosCatalogos').css("display", "block")
+            //Se muestra el modal para ingresar los valores del nuevo directorio.
             $('#modalAgregarDirectorio').modal('show');
-            $('#idExtension').prop('required',false);
-            $('#idArea').prop('required',false);
-            $('#idTipoSolicitud').prop('required',false);
             //$('#idPrioridad').prop('required',false);
             //$('#idPrioridad').trigger('change');
             
-            //Se habilita y hacen requeridos los inputs de los nuevos catalogos
-            $('#nuevaExtension').prop("readonly",false);
-            $('#nuevaArea').prop("readonly",false);
-            $('#nuevoTipoSolicitud').prop("readonly",false);
-            $('#nuevaExtension').prop('required',true);
-            $('#nuevaArea').prop('required',true);
-            $('#nuevoTipoSolicitud').prop('required',true);
-
             //En caso de que previamente se hayan llenado y ocultado, se limpian de los valores que tengan anteriormente.
             $('#nuevaExtension').val('');
             $('#nuevaArea').val('');
             $('#nuevoTipoSolicitud').val('');
+            $('#idNuevaExtension').val('').trigger('change'); 
+            $('#idNuevaArea').val('').trigger('change'); 
+            $('#idNuevoTipoSolicitud').val('').trigger('change'); 
+            $('#idNuevaPrioridad').val('').trigger('change'); 
             //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
             //$('#idNuevaPrioridad').trigger('change');
 
@@ -85,28 +77,22 @@ document.addEventListener('DOMContentLoaded', function () {
             $("#idTipoSolicitud").html('');
             $("#nombreTitular").val('');
             $("#idTipoSolicitud").trigger('change');
+            $('#idArea').val(null);
+            $("#idTipoSolicitud").html('');
+            $("#idArea").trigger('change');
+            $("#idTipoSolicitud").trigger('change');
             //document.getElementById("idPrioridad").selectedIndex = -1;
             //$('#idPrioridad').trigger('change');
-
-            //Se habilitan como requeridos select principales y se quitan los de los nuevos catalogos.
-            $('#idExtension').prop('required',true);
-            $('#idArea').prop('required',true);
-            $('#idTipoSolicitud').prop('required',true);
-            //$('#idPrioridad').prop('required',true);
-            
-            //Se regresan como solo lectura los inputs de los nuevos catálogos y se quitan como requeridos
-            $('#nuevaExtension').prop("readonly",true);
-            $('#nuevaArea').prop("readonly",true);
-            $('#nuevoTipoSolicitud').prop("readonly",false);
-            $('#nuevaExtension').prop('required',false);
-            $('#nuevaArea').prop('required',false);
-            $('#nuevoTipoSolicitud').prop('required',false);
 
             //Ocultar la sección de los nuevos catálogos y remover el valor que tengan asignado los inputs de la seccioón
             //$('#nuevosCatalogos').css("display", "none")
             $('#nuevaExtension').val('');
             $('#nuevaArea').val('');
             $('#nuevoTipoSolicitud').val('');
+            $('#idNuevaExtension').val('').trigger('change'); 
+            $('#idNuevaArea').val('').trigger('change'); 
+            $('#idNuevoTipoSolicitud').val('').trigger('change'); 
+            $('#idNuevaPrioridad').val('').trigger('change'); 
             //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
             //$('#idNuevaPrioridad').trigger('change');
 
@@ -134,25 +120,25 @@ document.addEventListener('DOMContentLoaded', function () {
             //document.getElementById("idPrioridad").selectedIndex = -1;
             //$('#idPrioridad').trigger('change');
 
-            //Se habilita la sección para ingresar los valores de los nuevos catálogos y se refleja el valor de la extension seleccionada
-            //$('#nuevosCatalogos').css("display", "block")
-            $('#modalAgregarDirectorio').modal('show');
-
-            if ($('#idExtension').val() != null){
-                var valorExtension = Number($('#idExtension').find('option:selected').text());
+            if ($('#idExtension').val() != null) {
+                var valorExtension = Number($('#idExtension').find('option:selected').text());  // Obtiene el valor numérico de la opción seleccionada
+                var indexExtension = $("#idExtension option:selected").index();  // Obtiene el índice de la opción seleccionada
+            
+                // Establece el valor en #nuevaExtension (input de texto)
                 $('#nuevaExtension').val(valorExtension);
+            
+                // Establece la opción seleccionada en #idNuevaExtension usando el valor
+                $("#idNuevaExtension").val($('#idExtension').val()).trigger('change');  // Aquí usamos .val() para seleccionar la opción y .trigger('change') para que Select2 lo actualice
             }
+            
 
             //Se quitan que se sean requeridos los select principales
             $('#idArea').prop('required',false);
             $('#idTipoSolicitud').prop('required',false);
             //$('#idPrioridad').prop('required',false);
 
-            //Se habilita y hacen requeridos los inputs de los nuevos catalogos
-            $('#nuevaArea').prop("readonly",false);
-            $('#nuevoTipoSolicitud').prop("readonly",false);
-            $('#nuevaArea').prop('required',true);
-            $('#nuevoTipoSolicitud').prop('required',true);
+            //Se habilita la sección para ingresar los valores de los nuevos catálogos y se refleja el valor de la extension seleccionada
+            $('#modalAgregarDirectorio').modal('show');
 
         } else if ($('#idArea').val() == null) {
             //Remover el valor de los inputs principales
@@ -181,13 +167,19 @@ document.addEventListener('DOMContentLoaded', function () {
             //document.getElementById("idPrioridad").selectedIndex = -1;
             //$('#idPrioridad').trigger('change');
 
-            //Se quitan que se sean requeridos los select principales
-            $('#idTipoSolicitud').prop('required',false);
-            //$('#idPrioridad').prop('required',false);
+            if ($('#idExtension').val() != null){
+                var valorExtension = Number($('#idExtension').find('option:selected').text());
+                var indexExtension = $("#idExtension option:selected").index();
+                $('#nuevaExtension').val(valorExtension);
+                $('#idNuevaExtension').selectedIndex = indexExtension;
+            }
 
-            //Se habilita y hacen requeridos los inputs de los nuevos catalogos            
-            $('#nuevoTipoSolicitud').prop("readonly",false);
-            $('#nuevoTipoSolicitud').prop('required',true);
+            if ($('#idArea').val() != null){
+                var valorArea = $('#idArea').find('option:selected').text();
+                var indexArea = $("#idArea option:selected").index();
+                $('#nuevaArea').val(valorArea);
+                $('#idNuevaArea').selectedIndex = indexArea;
+            }
 
             //Se habilita la sección para ingresar los valores de los nuevos catálogos y se refleja el valor de la extension y área seleccionada
             //$('#nuevosCatalogos').css("display", "block");

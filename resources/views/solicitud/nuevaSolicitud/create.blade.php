@@ -178,7 +178,7 @@
                                     </select>
                                 </div>--}}
 
-                            {{--@include('solicitud.nuevaSolicitud.modalAgregarDirectorio')--}}
+                            @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
 
                             {{--<div id="nuevosCatalogos" style="display: none">
                                 <div class="row g-3">
