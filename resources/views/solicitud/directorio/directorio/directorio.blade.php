@@ -1,3 +1,6 @@
+@php
+use App\Models\CatalogoExtensiones;
+@endphp
 <!DOCTYPE html>
 <html lang="es">
 
@@ -29,23 +32,22 @@
     <!-- mi contenedor -->
     <div class="content">
         <div class="card" style="padding: 30px;">
-
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-center">
-                        <h1 class="mt-5 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Directorio</h1>
+                        <h1 class="mt-5 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Directorio
+                        </h1>
                     </div>
                 </div>
 
-                <!--<div class="col-md-12">
+                <div class="col-md-12">
                     <div class="text-center">
                         <button type="submit" class="btn btn-color" style="width:180px;" id="btnAgregarUsuario"
                             data-bs-toggle="modal" data-bs-target="#modalAgregarUsuario">Agregar Directorio</button>
                     </div>
-                </div>-->
+                </div>
             </div>
-
+            @include('solicitud/directorio/directorio/agregarDirectorio')
 
             <!--tabla de solicitudes-->
             <div class="table-responsive">
@@ -62,16 +64,37 @@
                     </thead>
                     <tbody>
                         @foreach ($listaDirectorio as $key => $directorio)
-                                                <tr>
-                                                    <td>{{ $key+1 }} </td>
-                                                    <td>{{ $directorio->extension }} </td>
-                                                    <td>{{ $directorio->nombreTitular }}</td>
-                                                    <td>{{ $directorio->puesto }}</td>
-                                                    <td>{{ $directorio->area }}</td>
+                            <tr>
+                                <td>{{ $key + 1 }} </td>
+                                <td>{{ $directorio->extension }} </td>
+                                <td>{{ $directorio->nombreTitular }}</td>
+                                <td>{{ $directorio->puesto }}</td>
+                                <td>{{ $directorio->area }}</td>
 
-                                                    <td class="text-center">
-                                                    </td>
-                                                </tr>
+                                <td class="text-center">
+                                    <button type="button" id="btnEditarUsuario" class="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditarUsuario{{ $directorio->idExtensionCatalogo }}"
+                                        title="Editar"><i class="bi bi-pencil"></i></button>
+                                        
+                                    @if (optional(CatalogoExtensiones::withTrashed()->where('idExtensionCatalogo', $directorio->idExtensionCatalogo)->first())->trashed())                                        
+                                    <button type="button" id="btnActivarUsuario" class="btn btn-success"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalActivarUsuario{{ $directorio->idExtensionCatalogo }}"
+                                            title="Activar">
+                                            <i class="bi bi-check-lg"></i></button>
+                                    @else
+                                        <button type="button" id="btnEliminarUsuario" class="btn btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalEliminarUsuario{{ $directorio->idExtensionCatalogo }}"
+                                            title="Desactivar">
+                                            <i class="bi bi-x-lg"></i></button>
+                                    @endif
+                                </td>
+                            </tr>
+                            @include('solicitud.directorio.directorio.editarDirectorio')
+                            @include('solicitud.directorio.directorio.eliminarDirectorio')
+                            @include('solicitud.directorio.directorio.activarDirectorio')
                         @endforeach
                     </tbody>
                 </table>
@@ -92,15 +115,14 @@
 
 <script>
     //TABLA
-
     document.addEventListener('DOMContentLoaded', function () {
         $('#tablaUsuarios').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
                 "paginate": {
-                    "first": "<<",   
-                    "last": ">>",    
-                    "next": ">",    
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
                     "previous": "<"
                 },
             },
