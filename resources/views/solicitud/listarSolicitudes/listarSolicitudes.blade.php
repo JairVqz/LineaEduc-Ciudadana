@@ -12,8 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="/js/config.js"></script>
     <link rel="stylesheet" href="/css/solicitud/general.css">
-    <script src="/js/solicitud/listarSolicitudes.js"></script>
     <script src="/js/solicitud/general.js"></script>
+    <script src="/js/solicitud/listarSolicitudes.js"></script>
     <link rel="stylesheet" href="/css/solicitud/listarSolicitudes.css">
 </head>
 @include('menuNavigation')
@@ -251,7 +251,6 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
