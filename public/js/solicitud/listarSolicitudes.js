@@ -1,85 +1,4 @@
-src="https://code.jquery.com/jquery-3.6.0.min.js";
-src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js";
-src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js";
-src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js";
-src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js";
 
-  /*          
-            
-            document.addEventListener('DOMContentLoaded', () => {
-                const modalDetalle = document.getElementById('modalDetalle');
-                modalDetalle.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-
-                    const folio = button.getAttribute('data-folio');
-                    const nombre = button.getAttribute('data-nombre');
-                    const apellidoPaterno = button.getAttribute('data-apellido-paterno');
-                    const apellidoMaterno = button.getAttribute('data-apellido-materno');
-                    const tipoSolicitud = button.getAttribute('data-tipo-solicitud');
-                    const area = button.getAttribute('data-area');
-                    const prioridad = button.getAttribute('data-prioridad');
-                    const estatus = button.getAttribute('data-estatus');
-                    const cct = button.getAttribute('data-cct');
-                    const municipio = button.getAttribute('data-municipio');
-                    const localidad = button.getAttribute('data-localidad');
-                    const direccionCct = button.getAttribute('data-direccion');
-                    const nombreDirector = button.getAttribute('data-nombre-director');
-                    const correo = button.getAttribute('data-correo');
-                    const telefonoFijo = button.getAttribute('data-telefono-fijo');
-                    const telefonoCelular = button.getAttribute('data-telefono-celular');
-                    const descripcion = button.getAttribute('data-descripcion');
-                    const created_at = button.getAttribute('data-created-at');
-                    const diasTranscurridos = button.getAttribute('data-dias-transcurridos');
-                    const horaInicio = button.getAttribute('data-hora-inicio');
-                    const horaTermino = button.getAttribute('data-hora-termino');
-                    const duracion = button.getAttribute('data-duracion');
-                    const extension = button.getAttribute('data-extension');
-                    const nombrePlantel = button.getAttribute('data-nombrePlantel');
-                    const nivel = button.getAttribute('data-nivel');
-
-
-                    document.getElementById('modalFolio').textContent = folio;
-                    document.getElementById('modalNombreCompleto').textContent = `${nombre} ${apellidoPaterno} ${apellidoMaterno}`;
-                    document.getElementById('modalTipoSolicitud').textContent = tipoSolicitud;
-                    document.getElementById('modalArea').textContent = area;
-                    document.getElementById('modalPrioridad').textContent = prioridad;
-                    
-                    const estatusElement = document.getElementById('modalEstatus');
-                    estatusElement.textContent = estatus;
-                    estatusElement.className = ''; 
-                    
-                    if (estatus === 'EN PROCESO') {
-                        estatusElement.classList.add('text-warning'); 
-                    } else if (estatus === 'TERMINADO') {
-                        estatusElement.classList.add('text-success'); 
-                    } else if (estatus === 'PENDIENTE') {
-                        estatusElement.classList.add('text-danger'); 
-                    }
-
-                    document.getElementById('modalCct').textContent = cct;
-                    document.getElementById('modalMunicipio').textContent = municipio;
-                    document.getElementById('modalLocalidad').textContent = localidad;
-                    document.getElementById('modalDireccionCct').textContent = direccionCct;
-                    document.getElementById('modalNombreDirector').textContent = nombreDirector;
-                    document.getElementById('modalCorreo').textContent = correo;
-                    document.getElementById('modalTelefonoFijo').textContent = telefonoFijo;
-                    document.getElementById('modalTelefonoCelular').textContent = telefonoCelular;
-                    document.getElementById('modalDescripcion').value = descripcion;
-                    document.getElementById('modalFecha').textContent=created_at;
-                    document.getElementById('modalDias').textContent=diasTranscurridos;
-                    if (modalHoraI && modalHoraT) {
-                        modalHoraI.textContent = horaInicio;
-                        modalHoraT.textContent = horaTermino;
-                    }
-                    document.getElementById('modalDuracion').textContent=duracion;
-                    document.getElementById('modalExtension').textContent = extension;
-                    document.getElementById('modalNombrePlantel').textContent = nombrePlantel;
-                    document.getElementById('modalNivel').textContent = nivel;
-
-
-                });
-            });*/
-            
 document.addEventListener('DOMContentLoaded', () => {
     const modalDetalle = document.getElementById('modalDetalle');
     modalDetalle.addEventListener('show.bs.modal', function (event) {
@@ -104,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const duracion = button.getAttribute('data-duracion');
         const extension = button.getAttribute('data-extension');
         const usuario = button.getAttribute('data-usuario');
-
 
         document.getElementById('modalFolio').textContent = folio;
         document.getElementById('modalNombreCompleto').textContent = `${nombre} ${apellidoPaterno} ${apellidoMaterno}`;
@@ -140,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         //DATOS DE UBICACION
-        // Obtener valores y limpiarlos de espacios extra
         var cct = (button.getAttribute('data-cct') || "").trim().toUpperCase();
         var nivel = (button.getAttribute('data-nivel') || "").trim().toUpperCase();
         var municipio = (button.getAttribute('data-municipio') || "").trim().toUpperCase();
@@ -149,12 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
         var nombreDirector = (button.getAttribute('data-nombre-director') || "").trim().toUpperCase();
         var direccionCct = (button.getAttribute('data-direccion') || "").trim().toUpperCase();
 
-        // Función auxiliar para verificar si un valor está vacío o es "SIN ASIGNAR"
         function esVacio(valor) {
             return valor === "" || valor === "SIN ASIGNAR";
         }
 
-        // Asignar valores a los elementos del modal
         document.getElementById('modalCct').textContent = esVacio(cct) ? "" : cct;
         document.getElementById('modalNivel').textContent = esVacio(nivel) ? "" : nivel;
         document.getElementById('modalMunicipio').textContent = esVacio(municipio) ? "" : municipio;
@@ -167,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modalMunicipio2').textContent = esVacio(municipio) ? "" : municipio;
         document.getElementById('modalLocalidad2').textContent = esVacio(localidad) ? "" : localidad;
 
-        // Obtener referencias a los divs contenedores
         var divDatosUbicacion = document.getElementById('divDatosUbicacion');
         var divDatosMunicipio = document.getElementById('divDatosMunicipio');
 
@@ -183,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         var divMunicipio2 = document.getElementById('divMunicipio2');
         var divLocalidad2 = document.getElementById('divLocalidad2');
 
-        // Ocultar todos los divs por defecto
         divDatosUbicacion.style.display = "none";
         divDatosMunicipio.style.display = "none";
 
@@ -198,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         divMunicipio2.style.display = "none";
         divLocalidad2.style.display = "none";
 
-        // Verificar si TODOS los valores están vacíos o "SIN ASIGNAR"
         if (
             esVacio(cct) && esVacio(nivel) && esVacio(municipio) && esVacio(localidad) &&
             esVacio(nombrePlantel) && esVacio(nombreDirector) && esVacio(direccionCct)

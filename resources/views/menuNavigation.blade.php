@@ -40,6 +40,7 @@
 
         @php
             $isReportesActive = request()->routeIs('reportes.reportesDia') || request()->routeIs('reportes.reportesAcumulado');
+            $isCatalogosActive =  request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
         @endphp
 
         <div class="dropdown">
@@ -59,12 +60,6 @@
             </div>
         </div>
 
-
-
-        @php
-            $isCatalogosActive = request()->routeIs('catalogos.areas') || request()->routeIs('catalogos.puestos') || request()->routeIs('directorio.collection');
-        @endphp
-
         <div class="dropdown">
             <a href="#" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#submenuCatalogos"
                 aria-expanded="{{ $isCatalogosActive ? 'true' : 'false' }}">
@@ -77,7 +72,7 @@
                     <i class="bi bi-telephone me-2"></i>Directorio
                 </a><!--DIRECTORIO, AREAS, PUESTOS-->
                 <a href="{{ route('catalogos.areas') }}"
-                    class="ms-3 {{ request()->routeIs('catalogos.areas.areas') ? 'active' : '' }}">
+                    class="ms-3 {{ request()->routeIs('catalogos.areas') ? 'active' : '' }}">
                     <i class="bi bi-building-gear me-2"></i>Áreas
                 </a>
                 <a href="{{ route('puestos.puestos') }}"
@@ -87,6 +82,7 @@
             </div>
         </div>
 
+        
         <a href="{{ route('user.index') }}" class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
             <i class="bi bi-people me-2"></i>Usuarios
         </a>
