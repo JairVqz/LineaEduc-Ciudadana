@@ -10,6 +10,7 @@ use App\Http\Requests\StoreSolicitudRequest;
 //modelos
 use App\Models\CatalogoAreas;
 use App\Models\CatalogoExtensiones;
+use App\Models\CatalogoPuestos;
 use App\Models\Contacto;
 use App\Models\Estatus;
 use App\Models\Extension;
@@ -50,6 +51,7 @@ class SolicitudController extends Controller
         $listaTiposSolicitud = TipoSolicitud::all();
         $listaAreas = CatalogoAreas::all();
         $listaExtensiones = CatalogoExtensiones::all();
+        $listaPuestos = CatalogoPuestos::all();
 
         return view(
             'solicitud.nuevaSolicitud.create',
@@ -58,6 +60,7 @@ class SolicitudController extends Controller
                 'listaTiposSolicitud' => $listaTiposSolicitud,
                 'listaAreas' => $listaAreas,
                 'listaExtensiones' => $listaExtensiones,
+                'listaPuestos' => $listaPuestos,
             ]
         );
     }
@@ -756,7 +759,7 @@ class SolicitudController extends Controller
         } else {
             $data['extensionAreas'] = CatalogoAreas::join('tbl_catalogoExtensiones', 'tbl_catalogoExtensiones.idArea', '=', 'tbl_catalogoAreas.idArea')
                 ->where('tbl_catalogoExtensiones.idExtensionCatalogo', '=', $idExtension)
-                ->get(['tbl_catalogoAreas.idArea','tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular']);
+                ->get(['tbl_catalogoAreas.idArea','tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular','tbl_catalogoExtensiones.idPuesto']);
         }
 
         return response()->json($data);

@@ -41,30 +41,27 @@ document.addEventListener('DOMContentLoaded', function () {
         var idExtensionSeleccionada = this.value;
         console.log("Extension: "+idExtensionSeleccionada);
 
+        document.getElementById("idNuevoPuesto").selectedIndex = -1;
+        $('#idNuevoPuesto').trigger('change');
+
         if ($('#idExtension').val() == "otro"){
             //Por Default los demás select están vacios o indice 0
             $('#idArea').val(null);
             $("#idTipoSolicitud").html('');
             $("#idArea").trigger('change');
             $("#idTipoSolicitud").trigger('change');
-            //document.getElementById("idPrioridad").selectedIndex = -1;
-            //$('#idPrioridad').trigger('change');
 
             //Se muestra el modal para ingresar los valores del nuevo directorio.
             $('#modalAgregarDirectorio').modal('show');
-            //$('#idPrioridad').prop('required',false);
-            //$('#idPrioridad').trigger('change');
-            
+
             //En caso de que previamente se hayan llenado y ocultado, se limpian de los valores que tengan anteriormente.
             $('#nuevaExtension').val('');
             $('#nuevaArea').val('');
             $('#nuevoTipoSolicitud').val('');
-            $('#idNuevaExtension').val('').trigger('change'); 
-            $('#idNuevaArea').val('').trigger('change'); 
-            $('#idNuevoTipoSolicitud').val('').trigger('change'); 
-            $('#idNuevaPrioridad').val('').trigger('change'); 
-            //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            //$('#idNuevaPrioridad').trigger('change');
+            $('#idNuevaExtension').val('').trigger('change');
+            $('#idNuevaArea').val('').trigger('change');
+            $('#idNuevoTipoSolicitud').val('').trigger('change');
+            $('#idNuevaPrioridad').val('').trigger('change');
 
             $("#nombreTitular").val('');
 
@@ -73,6 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         } else if ($('#idExtension').val() == null) {
             console.log("entro a null");
+            $('#divNuevoFuncionario').css('display', 'none');
+            $('#divIdNuevoPuesto').css('display', 'none');
             //Remover el valor que tengan asignado los inputs principales
             $("#idTipoSolicitud").html('');
             $("#nombreTitular").val('');
@@ -81,20 +80,15 @@ document.addEventListener('DOMContentLoaded', function () {
             $("#idTipoSolicitud").html('');
             $("#idArea").trigger('change');
             $("#idTipoSolicitud").trigger('change');
-            //document.getElementById("idPrioridad").selectedIndex = -1;
-            //$('#idPrioridad').trigger('change');
 
             //Ocultar la sección de los nuevos catálogos y remover el valor que tengan asignado los inputs de la seccioón
-            //$('#nuevosCatalogos').css("display", "none")
             $('#nuevaExtension').val('');
             $('#nuevaArea').val('');
             $('#nuevoTipoSolicitud').val('');
-            $('#idNuevaExtension').val('').trigger('change'); 
-            $('#idNuevaArea').val('').trigger('change'); 
-            $('#idNuevoTipoSolicitud').val('').trigger('change'); 
-            $('#idNuevaPrioridad').val('').trigger('change'); 
-            //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            //$('#idNuevaPrioridad').trigger('change');
+            $('#idNuevaExtension').val('').trigger('change');
+            $('#idNuevaArea').val('').trigger('change');
+            $('#idNuevoTipoSolicitud').val('').trigger('change');
+            $('#idNuevaPrioridad').val('').trigger('change');
 
             var banderaSeleccionar = false;
             fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
@@ -116,26 +110,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if ($('#idArea').val() == "otro"){
             //Por Default los demás select están vacios o indice 0
+            document.getElementById("idNuevaArea").selectedIndex = -1;
+            $('#idNuevaArea').trigger('change');
+            document.getElementById("idNuevoPuesto").selectedIndex = -1;
+            $('#idNuevoPuesto').trigger('change');
+            $('#divNuevoFuncionario').css('display', 'block');
+            $('#divIdNuevoPuesto').css('display', 'block');
+            document.getElementById("idNuevoTipoSolicitud").selectedIndex = -1;
+            $('#idNuevoTipoSolicitud').trigger('change');
             $("#idTipoSolicitud").html('');
-            //document.getElementById("idPrioridad").selectedIndex = -1;
-            //$('#idPrioridad').trigger('change');
 
             if ($('#idExtension').val() != null) {
-                var valorExtension = Number($('#idExtension').find('option:selected').text());  // Obtiene el valor numérico de la opción seleccionada
-                var indexExtension = $("#idExtension option:selected").index();  // Obtiene el índice de la opción seleccionada
-            
-                // Establece el valor en #nuevaExtension (input de texto)
-                $('#nuevaExtension').val(valorExtension);
-            
-                // Establece la opción seleccionada en #idNuevaExtension usando el valor
-                $("#idNuevaExtension").val($('#idExtension').val()).trigger('change');  // Aquí usamos .val() para seleccionar la opción y .trigger('change') para que Select2 lo actualice
+
+                $("#idNuevaExtension").val($('#idExtension').val()).trigger('change');
             }
-            
 
             //Se quitan que se sean requeridos los select principales
             $('#idArea').prop('required',false);
             $('#idTipoSolicitud').prop('required',false);
-            //$('#idPrioridad').prop('required',false);
 
             //Se habilita la sección para ingresar los valores de los nuevos catálogos y se refleja el valor de la extension seleccionada
             $('#modalAgregarDirectorio').modal('show');
@@ -143,14 +135,10 @@ document.addEventListener('DOMContentLoaded', function () {
         } else if ($('#idArea').val() == null) {
             //Remover el valor de los inputs principales
             $("#idTipoSolicitud").html('');
-            //document.getElementById("idPrioridad").selectedIndex = -1;
-            //$('#idPrioridad').trigger('change');
 
             //Remover el valor de los inputs de los nuevos catálogos
             $('#nuevaArea').val('');
             $('#nuevoTipoSolicitud').val('');
-            //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            //$('#idNuevaPrioridad').trigger('change');
 
         } else {
             $("#idTipoSolicitud").html('');
@@ -162,43 +150,33 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#idTipoSolicitud').on('change', function () {
         var idTipoSolicitudSeleccionado = this.value;
 
+        document.getElementById("idNuevoPuesto").selectedIndex = -1;
+        $('#idNuevoPuesto').trigger('change');
+
         if ($('#idTipoSolicitud').val() == "otro"){
             //Por Default los demás select están vacios o indice 0
-            //document.getElementById("idPrioridad").selectedIndex = -1;
-            //$('#idPrioridad').trigger('change');
+            document.getElementById("idNuevoTipoSolicitud").selectedIndex = -1;
+            $('#idNuevoTipoSolicitud').trigger('change');
 
             if ($('#idExtension').val() != null){
-                var valorExtension = Number($('#idExtension').find('option:selected').text());
-                var indexExtension = $("#idExtension option:selected").index();
-                $('#nuevaExtension').val(valorExtension);
-                $('#idNuevaExtension').selectedIndex = indexExtension;
+                $("#idNuevaExtension").val($('#idExtension').val()).trigger('change');
             }
 
-            if ($('#idArea').val() != null){
-                var valorArea = $('#idArea').find('option:selected').text();
-                var indexArea = $("#idArea option:selected").index();
-                $('#nuevaArea').val(valorArea);
-                $('#idNuevaArea').selectedIndex = indexArea;
+            if ($('#idArea').val() != null && $('#idArea').val() != 'otro') {
+                $("#idNuevaArea").val($('#idArea').val()).trigger('change');
             }
 
             //Se habilita la sección para ingresar los valores de los nuevos catálogos y se refleja el valor de la extension y área seleccionada
-            //$('#nuevosCatalogos').css("display", "block");
             $('#modalAgregarDirectorio').modal('show');
             var valorArea = $('#idArea').find('option:selected').text();
             $('#nuevaArea').val(valorArea);
 
         } else if ($('#idTipoSolicitud').val() == null) {
-            //Remover el valor de los inputs principales
-            //document.getElementById("idPrioridad").selectedIndex = -1;
-            //$('#idPrioridad').trigger('change');
 
-            //Remover el valor de los inputs de los nuevos catálogos
-            //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            //$('#idNuevaPrioridad').trigger('change');
         } else {
 
             fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado);
-            
+
         }
 
     });
@@ -224,9 +202,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
                 $("#idArea").append('<option value="otro">Otra</option>');
                 if (banderaSeleccionar == false){
-                    $('#idArea').val(null); 
+                    $('#idArea').val(null);
                 }
-                $('#idArea').trigger('change');    
+                $('#idArea').trigger('change');
             },
             error: function (xhr, status, error) {
                 console.error('Error al enviar la petición:', error);
@@ -253,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     $("#idTipoSolicitud").append('<option value="' + data.idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
                 });
                 $("#idTipoSolicitud").append('<option value="otro">Otro</option>');
-                $('#idTipoSolicitud').val(null); 
+                $('#idTipoSolicitud').val(null);
                 $('#idTipoSolicitud').trigger('change');
             },
             error: function (xhr, status, error) {

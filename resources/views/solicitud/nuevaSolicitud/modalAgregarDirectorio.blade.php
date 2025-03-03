@@ -62,12 +62,13 @@
                             <option value="otro">Otra</option>
                         </select>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" id="divNuevaExtension" style="display: none">
                         <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
                             Extensión:</label>
                         <input type="number" name="nuevaExtension" id="nuevaExtension"
-                            class="form-control" placeholder="" readonly>
+                            class="form-control" placeholder="">
                     </div>
+
                     <div class="col-md-12">
                         <label for="idNuevaArea" class="form-label" style="font-weight:bold">Área que
                             atiende:</label>
@@ -80,11 +81,33 @@
                             <option value="otro">Otra</option>
                         </select>
                     </div>
-                    <div class="col-md-12" style="display: none">
+                    <div class="col-md-12" id="divNuevaArea" style="display: none">
                         <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
                             Área:</label>
                         <input type="text" name="nuevaArea" id="nuevaArea" class="form-control"
-                            placeholder="" readonly>
+                            placeholder="">
+                    </div>
+
+                    <div class="col-md-12" id="divNuevoFuncionario">
+                        <label for="nuevoFuncionario" class="form-label" style="font-weight:bold">Funcionario:</label>
+                        <input type="text" name="nuevoFuncionario" id="nuevoFuncionario" class="form-control"
+                            placeholder="">
+                    </div>
+                    <div class="col-md-12" id="divIdNuevoPuesto">
+                        <label for="idNuevoPuesto" class="form-label" style="font-weight:bold">Puesto:</label>
+                            <select name="idNuevoPuesto" id="idNuevoPuesto" class="form-select select2-bootstrap">
+                                @foreach ($listaPuestos as $data)
+                                    <option value="{{ $data->idPuesto }}">
+                                        {{ $data->puesto }}
+                                    </option>
+                                @endforeach
+                                <option value="otro">Otro</option>
+                            </select>
+                    </div>
+                    <div class="col-md-12" id="divNuevoPuesto" style="display: none">
+                        <label for="nuevoPuesto" class="form-label" style="font-weight:bold">Nuevo Puesto:</label>
+                        <input type="text" name="nuevoPuesto" id="nuevoPuesto" class="form-control"
+                            placeholder="">
                     </div>
 
                     <div class="col-md-12">
@@ -99,11 +122,11 @@
                             <option value="otro">Otro</option>
                         </select>
                     </div>
-                    <div class="col-md-12" style="display: none">
+                    <div class="col-md-12" id="divNuevoTipoSolicitud" style="display: none">
                         <label for="nuevoTipoSolicitud" class="form-label"
                             style="font-weight:bold">Nuevo tipo de solicitud:</label>
                         <input type="text" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud"
-                            class="form-control" placeholder="" readonly>
+                            class="form-control" placeholder="">
                     </div>
 
                     <div class="col-md-12">
@@ -117,12 +140,11 @@
                             @endforeach
                         </select>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
@@ -131,67 +153,122 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
+    window.Laravel = <?php echo json_encode([
+        'apiFetchExtensionAreas' => route('solicitud.fetchExtensionAreas'),
+        'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
+    ]); ?>
+
+    const apiFetchExtensionAreas = window.Laravel.apiFetchExtensionAreas;
+    const apiFetchAreaTipoSolicitudes = window.Laravel.apiFetchAreaTipoSolicitudes;
+
     //SELECTS DINÁMICOS EXTENSIÓN-ÁREA-TIPO_SOLICITUD_-PRIORIDAD
-    $('#idExtension').on('change', function () {
-        var idExtensionSeleccionada = this.value;
-        console.log("Extension: "+idExtensionSeleccionada);
+    $('#idNuevaExtension').on('change', function () {
+        var idNuevaExtensionSeleccionada = this.value;
+        console.log("Extension: "+idNuevaExtensionSeleccionada);
 
-        if ($('#idExtension').val() == "otro"){
-            
-            var banderaSeleccionar = false;
-            fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
+        if ($('#idNuevaExtension').val() == "otro"){
 
-        } else if ($('#idExtension').val() == null) {
-            
+            $('#divNuevaExtension').css('display', 'block');
+            $('#divNuevoFuncionario').css('display', 'block');
+            $('#divIdNuevoPuesto').css('display', 'block');
 
-            var banderaSeleccionar = false;
-            fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
-            $('#idArea').trigger('change');
+            var banderaSeleccionarNuevaArea = false;
+            fetchNuevaExtensionArea(idNuevaExtensionSeleccionada, banderaSeleccionarNuevaArea);
+
+        } else if ($('#idNuevaExtension').val() == null) {
+
+            $('#divNuevaExtension').css('display', 'none');
+            $('#divNuevoFuncionario').css('display', 'none');
+            $('#divIdNuevoPuesto').css('display', 'none');
+
+            var banderaSeleccionarNuevaArea = false;
+            fetchNuevaExtensionArea(idNuevaExtensionSeleccionada, banderaSeleccionarNuevaArea);
+            $('#idNuevaArea').trigger('change');
 
         } else {
-            $("#idArea").html('');
-            $("#idTipoSolicitud").html('');
+            $('#divNuevaExtension').css('display', 'none');
+            document.getElementById("idNuevaArea").selectedIndex = -1;
+            $('#idNuevaArea').trigger('change');
+            document.getElementById("idNuevoTipoSolicitud").selectedIndex = -1;
+            $('#idNuevoTipoSolicitud').trigger('change');
 
-            var banderaSeleccionar = true;
-            fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
+            var banderaSeleccionarNuevaArea = true;
+            fetchNuevaExtensionArea(idNuevaExtensionSeleccionada, banderaSeleccionarNuevaArea);
 
     }
 
     });
 
-    $('#idArea').on('change', function () {
+    $('#idNuevaArea').on('change', function () {
         var idAreaSeleccionada = this.value;
 
-        if ($('#idArea').val() == "otro"){
-            
+        if ($('#idNuevaArea').val() == "otro"){
 
-        } else if ($('#idArea').val() == null) {
-           
+            $('#divNuevaArea').css('display', 'block');
+            $('#divNuevoFuncionario').css('display', 'block');
+            $("#nuevoFuncionario").val('');
+            $('#divIdNuevoPuesto').css('display', 'block');
+            document.getElementById("idNuevoPuesto").selectedIndex = -1;
+            $('#idNuevoPuesto').trigger('change');
+
+
+        } else if ($('#idNuevaArea').val() == null) {
+
+            $('#divNuevaArea').css('display', 'none');
+            $('#divNuevoFuncionario').css('display', 'none');
+            $("#nuevoFuncionario").val('');
+            $('#divIdNuevoPuesto').css('display', 'none');
+            document.getElementById("idNuevoPuesto").selectedIndex = -1;
+            $('#idNuevoPuesto').trigger('change');
+
+
 
         } else {
-            $("#idTipoSolicitud").html('');
-            fetchAreaTipoSolicitud(idAreaSeleccionada);
+            document.getElementById("idNuevoTipoSolicitud").selectedIndex = -1;
+            $('#idNuevoTipoSolicitud').trigger('change');
+            fetchNuevaAreaTipoSolicitud(idAreaSeleccionada);
     }
 
     });
 
-    $('#idTipoSolicitud').on('change', function () {
-        var idTipoSolicitudSeleccionado = this.value;
+    $('#idNuevoPuesto').on('change', function () {
 
-        if ($('#idTipoSolicitud').val() == "otro"){
-            
+        if ($('#idNuevoPuesto').val() == "otro"){
 
-        } else if ($('#idTipoSolicitud').val() == null) {
-            
+            $('#divNuevoPuesto').css('display', 'block');
+
+
+        } else if ($('#idNuevoPuesto').val() == null) {
+
+            $('#divNuevoPuesto').css('display', 'block');
+
+
         } else {
+            $('#divNuevoPuesto').css('display', 'none');
 
-            fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado);
-            
-        }
+    }
 
     });
 
-    function fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar){
+    $('#idNuevoTipoSolicitud').on('change', function () {
+
+        if ($('#idNuevoTipoSolicitud').val() == "otro"){
+
+            $('#divNuevoTipoSolicitud').css('display', 'block');
+
+        } else if ($('#idNuevoTipoSolicitud').val() == null) {
+
+            $('#divNuevoTipoSolicitud').css('display', 'block');
+
+
+        } else {
+            $('#divNuevoTipoSolicitud').css('display', 'none');
+
+    }
+
+    });
+
+    function fetchNuevaExtensionArea(idExtensionSeleccionada, banderaSeleccionar){
 
         $.ajax({
             url: apiFetchExtensionAreas,
@@ -204,17 +281,19 @@
                 idExtension: idExtensionSeleccionada,
             },
             success: function (data) {
-                $("#idArea").html('');
+                console.log("DATA: "+data);
+                $("#idNuevaArea").html('');
                 $.each(data.extensionAreas, function (key, data) {
-                    $("#idArea").append('<option value="' + data.idArea + '">' + data.area + '</option>');
+                    $("#idNuevaArea").append('<option value="' + data.idArea + '">' + data.area + '</option>');
 
-                    $("#nombreTitular").val(data.nombreTitular);
+                    $("#nuevoFuncionario").val(data.nombreTitular);
+                    $("#idNuevoPuesto").val(data.idPuesto).trigger('change');
                 });
-                $("#idArea").append('<option value="otro">Otra</option>');
+                $("#idNuevaArea").append('<option value="otro">Otra</option>');
                 if (banderaSeleccionar == false){
-                    $('#idArea').val(null); 
+                    $('#idNuevaArea').val(null);
                 }
-                $('#idArea').trigger('change');    
+                $('#idNuevaArea').trigger('change');
             },
             error: function (xhr, status, error) {
                 console.error('Error al enviar la petición:', error);
@@ -224,7 +303,7 @@
 
     }
 
-    function fetchAreaTipoSolicitud(idAreaSeleccionada){
+    function fetchNuevaAreaTipoSolicitud(idAreaSeleccionada){
         $.ajax({
             url: apiFetchAreaTipoSolicitudes,
             method: 'POST',
@@ -236,13 +315,13 @@
                 idArea: idAreaSeleccionada,
             },
             success: function (data) {
-                $("#idTipoSolicitud").html('');
+                $("#idNuevoTipoSolicitud").html('');
                 $.each(data.areaTipoSolicitudes, function (key, data) {
-                    $("#idTipoSolicitud").append('<option value="' + data.idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
+                    $("#idNuevoTipoSolicitud").append('<option value="' + data.idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
                 });
-                $("#idTipoSolicitud").append('<option value="otro">Otro</option>');
-                $('#idTipoSolicitud').val(null); 
-                $('#idTipoSolicitud').trigger('change');
+                $("#idNuevoTipoSolicitud").append('<option value="otro">Otro</option>');
+                $('#idNuevoTipoSolicitud').val(null);
+                $('#idNuevoTipoSolicitud').trigger('change');
             },
             error: function (xhr, status, error) {
                 console.error('Error al enviar la petición:', error);
