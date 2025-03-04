@@ -113,6 +113,8 @@ Route::middleware('auth.validation')->group(function () {
 
             Route::get('/solicitud/pdfReporteDia', [ReportesController::class, 'pdfReporteDia'])->name('pdfReporteDia');
             Route::get('/solicitud/pdfReporteAcum', [ReportesController::class, 'pdfReporteAcum'])->name('pdfReporteAcum');
+            Route::get('/solicitud/pdfReportePeriodo', [ReportesController::class, 'pdfReportePeriodo'])->name('pdfReportePeriodo');
+
             Route::post('/solicitud/guardarGrafica', [ReportesController::class, 'guardarGrafica'])->name('guardarGrafica');
 
 

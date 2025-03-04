@@ -27,7 +27,7 @@
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte por periodo</h1>
-                <a href="{{ route('reportes.pdfReporteDia') }}">
+                <a href="{{ route('reportes.pdfReportePeriodo') }}">
                     <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
                         style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
                 </a>
@@ -162,61 +162,7 @@
             </div>
 
 
-            <div class="row g-3 flex-row d-flex mt-2">
-                <div class="col-md-8">
-                    <div class="card" style="padding: 20px; position: relative;">
-                        <div id="mapToggle">
-                            <select id="mapSelect">
-                                <option value="Delegaciones">Delegaciones</option>
-                                <option value="Municipios">Municipios</option>
-                            </select>
-                        </div>
-                        <div id="map" style="height: 550px;"></div>
-                    </div>
-                </div>
-
-
-
-                <div class="col-md-4">
-                    <div class="card" style="padding: 20px; max-height: 592px; min-height: 592px; overflow: hidden;">
-                        <h4 style="text-align: center;" id="tituloTabla">Solicitudes por Municipio</h4><br>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="filtroTabla" placeholder="Buscar...">
-                            <button type="button" id='botonFiltro' class="btn btn-color">Limpiar</button>
-                        </div><br>
-                        <div style="height: 100%; width: 100%;">
-                            <table id="tablaDelegaciones" class="table table-striped table-bordered "
-                                style="display: none;">
-                                <thead>
-                                    <tr>
-                                        <th>Delegación</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                            <table id="tablaMunicipios" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Municipio</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($solicitudesPorMunicipio as $solicitud)
-                                        <tr>
-                                            <td>{{ $solicitud->municipio }}</td>
-                                            <td>{{ $solicitud->total }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
     </div>
 </body>
@@ -226,7 +172,6 @@
 @include('solicitud.reportes.periodo.sEstatusPeriodo')
 @include('solicitud.reportes.periodo.sAreaPeriodo')
 @include('solicitud.reportes.periodo.sDuracionMinutosPeriodo')
-@include('solicitud.reportes.periodo.mapasPeriodo')
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -238,14 +183,14 @@
 
 <script>
     $(function () {
-        var start = moment().subtract(29, 'days');
-        var end = moment();
+        var start = moment().startOf('month');
+        var end = moment().endOf('month');
 
         function cb(start, end) {
             $('#reportrange span').html('Desde ' + start.format('DD-MM-YYYY') + ' hasta ' + end.format('DD-MM-YYYY'));
 
             $.ajax({
-                url: '/solicitud/reportesPeriodo',
+                url: 'https://callcenter.sev.gob.mx/index.php/solicitud/reportesPeriodo',
                 type: 'GET',
                 data: {
                     start_date: start.format('YYYY-MM-DD'),
@@ -338,10 +283,10 @@
         html2canvas(document.getElementById('solicitudesPorHoraChart'), { willReadFrequently: true })
         .then(canvas => {
             let imagenBase64 = canvas.toDataURL('image/png');
-            let nombre = 'solicitudesPorHoraDia';
+            let nombre = 'solicitudesPorHoraPeriodo';
 
-            //fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
+            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -359,10 +304,10 @@
         html2canvas(document.getElementById('solicitudesAChart'), { willReadFrequently: true })
         .then(canvas => {
             let imagenBase64 = canvas.toDataURL('image/png');
-            let nombre = 'solicitudesPorAreaDia';
+            let nombre = 'solicitudesPorAreaPeriodo';
 
-            //fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
+            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -413,7 +358,7 @@
     }
 
     //filtro
-    document.getElementById('filtroTabla').addEventListener('input', function () {
+    /*document.getElementById('filtroTabla').addEventListener('input', function () {
         const filtro = this.value.toLowerCase().trim();
         if (document.getElementById('tablaMunicipios').style.display === "table") {
             $('#tablaMunicipios').DataTable().columns(0).search(filtro).draw();
@@ -425,7 +370,7 @@
     document.getElementById('botonFiltro').addEventListener('click', function () {
         document.getElementById('filtroTabla').value = '';
         $('#tablaMunicipios, #tablaDelegaciones').DataTable().search('').columns().search('').draw();
-    });
+    });*/
 </script>
 
 </html>
