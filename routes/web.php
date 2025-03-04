@@ -159,6 +159,7 @@ Route::middleware('auth.validation')->group(function () {
         Route::name('directorio.')->group(function () {
             Route::get('/directorio/collection', [DirectorioController::class, 'collection'])->name('collection');
             Route::post('/directorio', [DirectorioController::class, 'store'])->name('store');
+            Route::post('/directorio/directorioDinamico', [DirectorioController::class, 'storeDirectorioDinamico'])->name('storeDirectorioDinamico');
             Route::post('/directorio/update', [DirectorioController::class, 'update'])->name('update');
             Route::post('/directorio/destroy',  [DirectorioController::class,'destroy'])->name('destroy');
             Route::post('/directorio/restore', [DirectorioController::class, 'restore'])->name('restore');

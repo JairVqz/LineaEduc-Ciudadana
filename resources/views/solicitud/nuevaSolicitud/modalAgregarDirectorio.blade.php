@@ -152,7 +152,7 @@
 
 <script>
     window.Laravel = <?php echo json_encode([
-        'guardarDirectorio' => route('directorio.store'),
+        'guardarDirectorio' => route('directorio.storeDirectorioDinamico'),
     ]); ?>
 
     const guardarDirectorioRoute = window.Laravel.guardarDirectorio;
