@@ -228,6 +228,144 @@ class ReportesController extends Controller
         return $mpdf->Output($pdfFileName, 'D');
     }
 
+    public function pdfReportePeriodo(Request $request)
+    {
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        dd($start_date,$end_date);
+        $solicitudes = DB::table('listarSolicitudes')->get();
+
+        //SELECT * FROM tbl_solicitudesGeneral WHERE CAST(created_at AS DATE) BETWEEN '2025-02-28' AND '2025-03-03'
+        //->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+        // Si no hay fechas en la petición, usamos el rango predeterminado (últimos 30 días)
+        if (!$start_date || !$end_date) {
+            $start_date = now()->startOfMonth()->format('Y-m-d');
+            $end_date = now()->endOfMonth()->format('Y-m-d');
+        }
+        //dd($start_date, $end_date);
+
+        //RECUADROS
+        $llamadasRecibidasPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->count();
+
+        $primeraLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->value('created_at');
+
+        $primeraLlamadaPorDiaFormateada = Carbon::parse($primeraLlamadaRecibidaPorDia)->format('H:i:s');
+
+        $minutosEfectivosPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->selectRaw('SUM(CAST( duracionMinutos AS INT)) as total_duracion')
+            ->value('total_duracion');
+
+        $ultimaLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->orderBy('folio', 'desc')
+            ->value('created_at');
+
+        $ultimaLlamadaPorDiaFormateada = Carbon::parse($ultimaLlamadaRecibidaPorDia)->format('H:i:s');
+
+        $llamadaMasMinutosPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->selectRaw('MAX(duracionMinutos)')
+            ->value('duracionMinutos');
+
+        //BARRAS SOLICITUDES POR HORA
+        $solicitudesPorHora = DB::table('listarSolicitudes')
+            ->select(DB::raw("DATEPART(HOUR, horaInicio) as hora"), DB::raw("COUNT(*) as total"))
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->whereRaw('DATEPART(HOUR, horaInicio) BETWEEN 8 AND 19')
+            ->groupBy(DB::raw("DATEPART(HOUR, horaInicio)"))
+            ->orderBy('hora')
+            ->get();
+        $labelsHora = [];
+        $valuesHora = [];
+
+        for ($i = 8; $i <= 19; $i++) {
+            $labelsHora[] = sprintf('%02d:00', $i);
+            $valuesHora[] = 0;
+        }
+
+        foreach ($solicitudesPorHora as $solicitud) {
+            $indice = array_search(sprintf('%02d:00', $solicitud->hora), $labelsHora);
+            if ($indice !== false) {
+                $valuesHora[$indice] = $solicitud->total;
+            }
+        }
+
+
+        //soluciones x Area
+        $areas = Extension::select('tbl_catalogoAreas.area', DB::raw('count(tbl_extensionSolicitud.idArea) as total'))
+            ->join('tbl_catalogoAreas', 'tbl_extensionSolicitud.idArea', '=', 'tbl_catalogoAreas.idArea')
+            ->whereRaw("CAST(tbl_extensionSolicitud.created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->groupBy('tbl_catalogoAreas.area')
+            ->get();
+
+        $labelsArea = [];
+        $valuesArea = [];
+
+        foreach ($areas as $area) {
+            $labelsArea[] = $area->area;
+            $valuesArea[] = $area->total;
+        }
+
+        //PARRAFO DE AREAS Y TIPOS
+        $parrafoAreas = DB::select("WITH Totales AS (
+        SELECT COUNT(*) AS total 
+        FROM [LineaEduC].[dbo].[listarSolicitudes]
+        WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'
+        ),
+        TopAreas AS (
+            SELECT TOP 5 area,
+                COUNT(*) AS cantidad, 
+                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje
+            FROM [LineaEduC].[dbo].[listarSolicitudes]
+            WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'
+            GROUP BY area
+            ORDER BY cantidad DESC
+        )
+        SELECT 'area' AS categoria, area AS nombre, porcentaje FROM TopAreas");
+
+        $parrafoTipos = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM [LineaEduC].[dbo].[listarSolicitudes]
+        WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'),
+        TopTipos AS (
+            SELECT TOP 5 tipoSolicitud, --top 3 de tipos de solicitud mas requeridos :D
+                COUNT(*) AS cantidad, 
+                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje
+            FROM [LineaEduC].[dbo].[listarSolicitudes]
+            WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'
+            GROUP BY tipoSolicitud
+            ORDER BY cantidad DESC
+        )
+        SELECT 'tipoSolicitud' AS categoria, tipoSolicitud AS nombre, porcentaje FROM TopTipos");
+
+        $html = view('pdf_periodo', compact(
+            'end_date',
+            'start_date',
+            'solicitudes',
+            'llamadasRecibidasPorDia',
+            'primeraLlamadaPorDiaFormateada',
+            'minutosEfectivosPorDia',
+            'ultimaLlamadaPorDiaFormateada',
+            'llamadaMasMinutosPorDia',
+            'labelsHora',
+            'valuesHora',
+            'parrafoAreas',
+            'parrafoTipos',
+        ))->render();
+
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        //dd($mpdf);
+        $mpdf->showImageErrors = true;
+        $mpdf->WriteHTML($html);
+        $mpdf->defaultfooterline = 0;
+        $mpdf->setFooter('|Página ' . '{PAGENO}' . '/' . '{nb}| {DATE j/m/Y h:i:s}');
+        $pdfFileName = 'ReportePeriodo_' . now()->format('Ymd_His') . '.pdf';
+        return $mpdf->Output($pdfFileName, 'D');
+    }
+
     /*public function guardarGrafica(Request $request)
     {
         $imagenBase64 = $request->input('imagen');
@@ -556,11 +694,12 @@ class ReportesController extends Controller
         $end_date = $request->input('end_date');
         //SELECT * FROM tbl_solicitudesGeneral WHERE CAST(created_at AS DATE) BETWEEN '2025-02-28' AND '2025-03-03'
         //->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
-         // Si no hay fechas en la petición, usamos el rango predeterminado (últimos 30 días)
+        // Si no hay fechas en la petición, usamos el rango predeterminado (últimos 30 días)
         if (!$start_date || !$end_date) {
-            $start_date = now()->subDays(29)->format('Y-m-d');
-            $end_date = now()->format('Y-m-d');
+            $start_date = now()->startOfMonth()->format('Y-m-d');
+            $end_date = now()->endOfMonth()->format('Y-m-d');
         }
+        //dd($start_date, $end_date);
 
         //RECUADROS
         $llamadasRecibidasPorDia = DB::table('listarSolicitudes')
@@ -584,7 +723,7 @@ class ReportesController extends Controller
             ->value('created_at');
 
         $ultimaLlamadaPorDiaFormateada = Carbon::parse($ultimaLlamadaRecibidaPorDia)->format('H:i:s');
- 
+
         //BARRAS SOLICITUDES POR HORA
         $solicitudesPorHora = DB::table('listarSolicitudes')
             ->select(DB::raw("DATEPART(HOUR, horaInicio) as hora"), DB::raw("COUNT(*) as total"))
@@ -607,7 +746,7 @@ class ReportesController extends Controller
                 $valuesHora[$indice] = $solicitud->total;
             }
         }
-        
+
 
         //PASTEL
         //Solicitudes x prioridad
