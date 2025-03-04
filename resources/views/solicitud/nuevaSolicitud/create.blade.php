@@ -126,7 +126,7 @@
                                     <select name="idExtension" id="idExtension" class="form-select select2-bootstrap"
                                         required>
                                         @foreach ($listaExtensiones as $data)
-                                            <option value="{{ $data->idExtensionCatalogo }}">
+                                            <option value="{{ $data->idExtensionCatalogo }}" data-idpuesto="{{ $data->idPuesto }}">
                                                 {{ $data->extension }}
                                             </option>
                                         @endforeach
@@ -178,7 +178,7 @@
                                     </select>
                                 </div>--}}
 
-                            {{--@include('solicitud.nuevaSolicitud.modalAgregarDirectorio')--}}
+                            @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
 
                             {{--<div id="nuevosCatalogos" style="display: none">
                                 <div class="row g-3">
