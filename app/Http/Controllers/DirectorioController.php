@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 use App\Models\CatalogoPuestos;
 use App\Models\CatalogoAreas;
+use App\Models\TipoSolicitud;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\CatalogoExtensiones;
 use Illuminate\Http\Request;
@@ -126,29 +128,107 @@ class DirectorioController extends Controller
 
     public function storeDirectorioDinamico(Request $request)
     {
-        try {
-            $extension = $request->input('extension');
-            $nombreTitular = $request->input('nombreTitular');
-            $idPuesto = $request->input('idPuesto');
-            $idArea = $request->input('idArea');
+        Log::info("entro: " . $request->input('idNuevaExtension') . $request->input('nuevaExtension') . $request->input('nuevoFuncionario') .
+        $request->input('idNuevaArea') . $request->input('nuevaArea') .
+        $request->input('idNuevoPuesto') . $request->input('nuevoPuesto') .
+        $request->input('idNuevoTipoSolicitud') . $request->input('nuevoTipoSolicitud') );
+        DB::beginTransaction();
 
-            // Validar si los campos necesarios están presentes
-            if (!$extension || !$nombreTitular || !$idPuesto || !$idArea) {
-                return response()->json(['error' => 'Faltan parámetros necesarios.', $extension, $nombreTitular, $idPuesto, $idArea], 400);
+        try {
+
+            $idExtension = $request->input('idNuevaExtension');
+            $idArea = $request->input('idNuevaArea');
+            $idPuesto = $request->input('idNuevoPuesto');
+            $idTipoSolicitud = $request->input('idNuevoTipoSolicitud');
+            
+            
+
+            //NUEVOS CATÁLOGOS
+            if ($idArea == "otro") {
+
+                $areaCatalogo = new CatalogoAreas();
+                $areaCatalogo->area = $request->input('nuevaArea');
+                $areaCatalogo->save();
+
+                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->input('nuevaArea'))->first();
+
+                $idArea = $areaCatalogoGuardada->idArea;
+
+            } else {
+                $idArea = $request->input('idNuevaArea');
             }
 
-            $directorio = new CatalogoExtensiones();
+            if ($idPuesto == "otro") {
 
-            $directorio->extension = $extension;
-            $directorio->nombreTitular = $nombreTitular;
-            $directorio->idPuesto = $idPuesto;
-            $directorio->idArea = $idArea;
+                $puestoCatalogo = new CatalogoPuestos();
+                $puestoCatalogo->puesto = $request->input('nuevoPuesto');
+                $puestoCatalogo->save();
 
-            $directorio->save();
+                $puestoCatalogoGuardado = CatalogoPuestos::where('puesto', $request->input('nuevoPuesto'))->first();
 
-            return response()->json(['message' => 'Directorio registrado correctamente']);
+                $idPuesto = $puestoCatalogoGuardado->idPuesto;
+
+            } else {
+                $idPuesto = $request->input('idNuevoPuesto');
+            }
+
+            if ($idExtension == "otro") {
+
+                $extensionCatalogo = new CatalogoExtensiones();
+                $extensionCatalogo->extension = $request->input('nuevaExtension');
+                $extensionCatalogo->nombreTitular = $request->input('nuevoFuncionario');
+                $extensionCatalogo->idArea = $idArea;
+                $extensionCatalogo->idPuesto = $idPuesto;
+                $extensionCatalogo->save();
+
+                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $request->input('nuevaExtension'))->first();
+
+                $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
+
+            } else {
+                $extensionBuscada = CatalogoExtensiones::where('idExtensionCatalogo', '=', $idExtension)->first();
+
+                Log::info("extensionBuscada: " . $extensionBuscada);
+
+                $extensionCatalogo = new CatalogoExtensiones();
+                $extensionCatalogo->extension = $extensionBuscada->extension;
+                $extensionCatalogo->nombreTitular = $request->input('nuevoFuncionario');
+                $extensionCatalogo->idArea = $idArea;
+                $extensionCatalogo->idPuesto = $idPuesto;
+                $extensionCatalogo->save();
+
+                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $extensionBuscada->extension)->first();
+
+                $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
+            }
+
+            if ($idTipoSolicitud == "otro") {
+
+                $tipoSolicitudCatalogo = new TipoSolicitud();
+                $tipoSolicitudCatalogo->tipoSolicitud = $request->input('nuevoTipoSolicitud');
+                $tipoSolicitudCatalogo->idArea = $idArea;
+                $tipoSolicitudCatalogo->idPrioridad = 2;
+                $tipoSolicitudCatalogo->save();
+
+                $tipoSolicitudCatalogoGuardada = TipoSolicitud::where('tipoSolicitud', $request->input('nuevoTipoSolicitud'))->first();
+
+                $idTipoSolicitud = $tipoSolicitudCatalogoGuardada->idTipoSolicitud;
+
+            }
+
+            DB::commit();
+
+            return response()->json(['mensaje' => 'directorio guardado correctamente', 'idArea' => $idArea,
+                                    'idPuesto' => $idPuesto, 'idExtension' => $idExtension, 'idTipoSolicitud' => $idTipoSolicitud]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Hubo un error al registrar el directorio: ' . $e->getMessage()], 500);
+
+            Log::error('Error al guardar el directorio: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            DB::rollBack();
+            return response()->json(['mensaje' => 'Error al guardar el directorio']);
         }
     }
 }
