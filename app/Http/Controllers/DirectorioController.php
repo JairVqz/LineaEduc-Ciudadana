@@ -61,6 +61,8 @@ class DirectorioController extends Controller
             $idArea = $request->input('idNuevaArea');
             $idPuesto = $request->input('idNuevoPuesto');
             $idTipoSolicitud = $request->input('idNuevoTipoSolicitud');
+            
+            
 
             //NUEVOS CATÁLOGOS
             if ($idArea == "otro") {
@@ -73,6 +75,8 @@ class DirectorioController extends Controller
 
                 $idArea = $areaCatalogoGuardada->idArea;
 
+            } else {
+                $idArea = $request->input('idNuevaArea');
             }
 
             if ($idPuesto == "otro") {
@@ -85,6 +89,8 @@ class DirectorioController extends Controller
 
                 $idPuesto = $puestoCatalogoGuardado->idPuesto;
 
+            } else {
+                $idPuesto = $request->input('idNuevoPuesto');
             }
 
             if ($idExtension == "otro") {
@@ -92,21 +98,36 @@ class DirectorioController extends Controller
                 $extensionCatalogo = new CatalogoExtensiones();
                 $extensionCatalogo->extension = $request->input('nuevaExtension');
                 $extensionCatalogo->nombreTitular = $request->input('nuevoFuncionario');
-                $extensionCatalogo->idArea = $areaCatalogoGuardada->idArea;
-                $extensionCatalogo->idPuesto = $puestoCatalogoGuardado->idPuesto;
+                $extensionCatalogo->idArea = $idArea;
+                $extensionCatalogo->idPuesto = $idPuesto;
                 $extensionCatalogo->save();
 
                 $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $request->input('nuevaExtension'))->first();
 
                 $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
 
+            } else {
+                $extensionBuscada = CatalogoExtensiones::where('idExtensionCatalogo', '=', $idExtension)->first();
+
+                Log::info("extensionBuscada: " . $extensionBuscada);
+
+                $extensionCatalogo = new CatalogoExtensiones();
+                $extensionCatalogo->extension = $extensionBuscada->extension;
+                $extensionCatalogo->nombreTitular = $request->input('nuevoFuncionario');
+                $extensionCatalogo->idArea = $idArea;
+                $extensionCatalogo->idPuesto = $idPuesto;
+                $extensionCatalogo->save();
+
+                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $extensionBuscada->extension)->first();
+
+                $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
             }
 
             if ($idTipoSolicitud == "otro") {
 
                 $tipoSolicitudCatalogo = new TipoSolicitud();
                 $tipoSolicitudCatalogo->tipoSolicitud = $request->input('nuevoTipoSolicitud');
-                $tipoSolicitudCatalogo->idArea = $areaCatalogoGuardada->idArea;
+                $tipoSolicitudCatalogo->idArea = $idArea;
                 $tipoSolicitudCatalogo->idPrioridad = 2;
                 $tipoSolicitudCatalogo->save();
 

@@ -271,6 +271,33 @@
                             localStorage.setItem('idNuevoTipoSolicitud', data
                                 .idTipoSolicitud);
 
+                            /*$('#idExtension').trigger('change');
+                            $('#idArea').trigger('change');
+                            $('#idTipoSolicitud').trigger('change');*/
+
+
+                            document.getElementById('idArea').dispatchEvent(new Event(
+                                'change'));
+
+                            if (nuevaExtension != null) {
+                                $("#idExtension").append('<option value="' + data
+                                    .idExtension + '">' + nuevaExtension + '</option>');
+                                $("#idExtension").val(data.idExtension).trigger('change');
+
+                            } else {
+                                $("#idExtension").val($("#idNuevaExtension").val()).trigger(
+                                    'change');
+
+                                if (nuevaArea != null) {
+                                    document.getElementById('idArea').dispatchEvent(new Event('change'));
+                                    $('#idArea').val(data.idArea).trigger('change');
+                                } else {
+                                    $('#idArea').val($("#idArea").val()).trigger('change');
+                                }
+                            }
+
+
+
                             if (result.isConfirmed) {
                                 Swal.close();
 
@@ -304,7 +331,7 @@
                 });
         });
 
-        $('#modalAgregarDirectorio').on('click', function(e) {
+        /*$('#modalAgregarDirectorio').on('click', function(e) {
 
             if ($(e.target).parent().attr("data-dismiss")) {
                 //console.log("by Corner X");
@@ -316,25 +343,25 @@
                 //console.log("by Background Overlay");
             }
 
-        });
+        });*/
 
-        const modalNuevoDirectorio = document.getElementById("modalAgregarDirectorio");
+        //const modalNuevoDirectorio = document.getElementById("modalAgregarDirectorio");
 
         // Cierra el modal si se hace clic fuera del contenido
-        window.addEventListener("click", (event) => {
+        /*window.addEventListener("click", (event) => {
             if (event.target === modalNuevoDirectorio) {
                 //modalNuevoDirectorio.style.display = "none";
                 console.log("cerrar clic fuera");
                 reflejarValoresModalenFormulario();
             }
-        });
+        });*/
 
-        function reflejarValoresModalenFormulario() {
+        /*function reflejarValoresModalenFormulario() {
             $('#idExtension').val(localStorage.getItem('idNuevaExtension')).trigger('change');
             $('#idArea').val(localStorage.getItem('idNuevaArea')).trigger('change');
             $('#idTipoSolicitud').val(localStorage.getItem('idNuevoTipoSolicitud')).trigger('change');
 
-        }
+        }*/
 
     });
 </script>
