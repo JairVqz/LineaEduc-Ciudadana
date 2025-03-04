@@ -111,13 +111,13 @@ class ReportesController extends Controller
             'ultimaLlamadaPorDiaFormateada',
             'llamadaMasMinutosPorDia',
             'labelsHora',
-            'valuesHora', 
+            'valuesHora',
             'parrafoAreas',
             'parrafoTipos',
             'fechaR'
         ))->render();
 
-        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('app/public/tempdir')]);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         //dd($mpdf);
         $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
@@ -213,13 +213,12 @@ class ReportesController extends Controller
             'ultimaLlamadaPorDiaFormateada',
             'llamadaMasMinutosPorDia',
             'labelsHora',
-            'valuesHora', 
+            'valuesHora',
             'parrafoAreas',
             'parrafoTipos'
         ))->render();
 
-        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('app/public/tempdir')]);
-        $mpdf->showImageErrors = true;
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         //dd($mpdf);
         $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
@@ -253,15 +252,15 @@ class ReportesController extends Controller
             $imagen = str_replace('data:image/png;base64,', '', $imagenBase64);
             $imagen = str_replace(' ', '+', $imagen);
             $imagenDecodificada = base64_decode($imagen);
-    
+
             $directorio = storage_path('app/public/tempdir/mpdf/ttfontdata/');
             if (!file_exists($directorio)) {
                 mkdir($directorio, 0775, true);
             }
-    
+
             $rutaImagen = $directorio . $request->input('nombre') . '.png';
             file_put_contents($rutaImagen, $imagenDecodificada);
-    
+
             return response()->json(['mensaje' => 'Imagen guardada correctamente']);
         }
         return response()->json(['mensaje' => 'Error al guardar la imagen'], 400);
@@ -551,80 +550,170 @@ class ReportesController extends Controller
         );
     }
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function reportesPeriodo(Request $request)
     {
-        //
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        //SELECT * FROM tbl_solicitudesGeneral WHERE CAST(created_at AS DATE) BETWEEN '2025-02-28' AND '2025-03-03'
+        //->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+         // Si no hay fechas en la petición, usamos el rango predeterminado (últimos 30 días)
+        if (!$start_date || !$end_date) {
+            $start_date = now()->subDays(29)->format('Y-m-d');
+            $end_date = now()->format('Y-m-d');
+        }
+
+        //RECUADROS
+        $llamadasRecibidasPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->count();
+
+        $primeraLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->value('created_at');
+
+        $primeraLlamadaPorDiaFormateada = Carbon::parse($primeraLlamadaRecibidaPorDia)->format('H:i:s');
+
+        $minutosEfectivosPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->selectRaw('SUM(CAST( duracionMinutos AS INT)) as total_duracion')
+            ->value('total_duracion');
+
+        $ultimaLlamadaRecibidaPorDia = DB::table('listarSolicitudes')
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->orderBy('folio', 'desc')
+            ->value('created_at');
+
+        $ultimaLlamadaPorDiaFormateada = Carbon::parse($ultimaLlamadaRecibidaPorDia)->format('H:i:s');
+ 
+        //BARRAS SOLICITUDES POR HORA
+        $solicitudesPorHora = DB::table('listarSolicitudes')
+            ->select(DB::raw("DATEPART(HOUR, horaInicio) as hora"), DB::raw("COUNT(*) as total"))
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->whereRaw('DATEPART(HOUR, horaInicio) BETWEEN 8 AND 19')
+            ->groupBy(DB::raw("DATEPART(HOUR, horaInicio)"))
+            ->orderBy('hora')
+            ->get();
+        $labelsHora = [];
+        $valuesHora = [];
+
+        for ($i = 8; $i <= 19; $i++) {
+            $labelsHora[] = sprintf('%02d:00', $i);
+            $valuesHora[] = 0;
+        }
+
+        foreach ($solicitudesPorHora as $solicitud) {
+            $indice = array_search(sprintf('%02d:00', $solicitud->hora), $labelsHora);
+            if ($indice !== false) {
+                $valuesHora[$indice] = $solicitud->total;
+            }
+        }
+        
+
+        //PASTEL
+        //Solicitudes x prioridad
+        $prioridades = Solicitud::select('tbl_prioridad.prioridad', DB::raw('count(tbl_solicitudesGeneral.idPrioridad) as total'))
+            ->join('tbl_prioridad', 'tbl_solicitudesGeneral.idPrioridad', '=', 'tbl_prioridad.idPrioridad')
+            ->whereRaw("CAST(tbl_solicitudesGeneral.created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->groupBy('tbl_prioridad.prioridad')
+            ->get();
+
+        $labelsPrioridad = [];
+        $valuesPrioridad = [];
+
+        foreach ($prioridades as $prioridad) {
+            $labelsPrioridad[] = $prioridad->prioridad;
+            $valuesPrioridad[] = $prioridad->total;
+        }
+
+        //soluciones x Estatus
+        $estatus = Solicitud::select('tbl_estatus.estatus', DB::raw('count(tbl_solicitudesGeneral.idEstatus) as total'))
+            ->join('tbl_estatus', 'tbl_solicitudesGeneral.idEstatus', '=', 'tbl_estatus.idEstatus')
+            ->whereRaw("CAST(tbl_solicitudesGeneral.created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->groupBy('tbl_estatus.estatus')
+            ->get();
+
+        $labelsEstatus = [];
+        $valuesEstatus = [];
+
+        foreach ($estatus as $estado) {
+            $labelsEstatus[] = $estado->estatus;
+            $valuesEstatus[] = $estado->total;
+        }
+        //soluciones x Area
+        $areas = Extension::select('tbl_catalogoAreas.area', DB::raw('count(tbl_extensionSolicitud.idArea) as total'))
+            ->join('tbl_catalogoAreas', 'tbl_extensionSolicitud.idArea', '=', 'tbl_catalogoAreas.idArea')
+            ->whereRaw("CAST(tbl_extensionSolicitud.created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->groupBy('tbl_catalogoAreas.area')
+            ->get();
+
+        $labelsArea = [];
+        $valuesArea = [];
+
+        foreach ($areas as $area) {
+            $labelsArea[] = $area->area;
+            $valuesArea[] = $area->total;
+        }
+
+        //solicitudes por minuto
+        $solicitudesPorMinutoACUM = Llamada::select('duracionMinutos', DB::raw('count(*) as total'))
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->groupBy('duracionMinutos')
+            ->get();
+        $labelsMinutoACUM = [];
+        $valuesMinutoACUM = [];
+
+        foreach ($solicitudesPorMinutoACUM as $ACUMm) {
+            $labelsMinutoACUM[] = $ACUMm->duracionMinutos;
+            $valuesMinutoACUM[] = $ACUMm->total;
+        }
+
+        //mapa
+        $solicitudesPorMunicipio = Ubicacion::select('municipio', DB::raw('count(*) as total'))
+            ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+            ->groupBy('municipio')
+            ->get();
+
+        //AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'llamadasRecibidasPorDia' => $llamadasRecibidasPorDia,
+                'primeraLlamadaPorDiaFormateada' => $primeraLlamadaPorDiaFormateada,
+                'minutosEfectivosPorDia' => $minutosEfectivosPorDia,
+                'ultimaLlamadaPorDiaFormateada' => $ultimaLlamadaPorDiaFormateada,
+                'labelsHora' => $labelsHora,
+                'valuesHora' => $valuesHora,
+                'labelsPrioridad' => $labelsPrioridad,
+                'valuesPrioridad' => $valuesPrioridad,
+                'labelsEstatus' => $labelsEstatus,
+                'valuesEstatus' => $valuesEstatus,
+                'labelsArea' => $labelsArea,
+                'valuesArea' => $valuesArea,
+                'labelsMinutoACUM' => $labelsMinutoACUM,
+                'valuesMinutoACUM' => $valuesMinutoACUM,
+                'solicitudesPorMunicipio' => $solicitudesPorMunicipio,
+            ]);
+        }
+        return view(
+            'solicitud.reportes.reportesPeriodo',
+            compact(
+                'llamadasRecibidasPorDia',
+                'primeraLlamadaPorDiaFormateada',
+                'minutosEfectivosPorDia',
+                'ultimaLlamadaPorDiaFormateada',
+                'labelsHora',
+                'valuesHora',
+                'labelsPrioridad',
+                'valuesPrioridad',
+                'labelsEstatus',
+                'valuesEstatus',
+                'labelsArea',
+                'valuesArea',
+                'labelsMinutoACUM',
+                'valuesMinutoACUM',
+                'solicitudesPorMunicipio',
+            )
+        );
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

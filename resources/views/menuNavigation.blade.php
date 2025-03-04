@@ -57,6 +57,10 @@
                     class="ms-3 {{ request()->routeIs('reportes.reportesAcumulado') ? 'active' : '' }}">
                     <i class="bi bi-calendar3 me-2"></i>Reporte acumulado
                 </a>
+                <a href="{{ route('reportes.reportesPeriodo') }}"
+                    class="ms-3 {{ request()->routeIs('reportes.reportesPeriodo') ? 'active' : '' }}">
+                    <i class="bi bi-calendar4-week me-2"></i>Reporte periódico
+                </a>
             </div>
         </div>
 
@@ -134,3 +138,24 @@
     @endif
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    let toggles = document.querySelectorAll(".dropdown-toggle");
+
+    toggles.forEach(function (toggle) {
+        toggle.addEventListener("click", function () {
+            let target = document.querySelector(this.getAttribute("data-bs-target"));
+
+            // Cierra cualquier otro menú abierto
+            document.querySelectorAll(".collapse.show").forEach(function (openMenu) {
+                if (openMenu !== target) {
+                    bootstrap.Collapse.getInstance(openMenu)?.hide();
+                }
+            });
+        });
+    });
+});
+</script>
