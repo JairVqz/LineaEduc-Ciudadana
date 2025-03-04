@@ -12,9 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- SweetAlert2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css" rel="stylesheet">
-    <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.js"></script>
     <script src="/js/config.js"></script>
     <link rel="stylesheet" href="/css/solicitud/general.css">
@@ -49,7 +47,6 @@
 
             @include('usuario/modalAgregar')
 
-            <!--tabla de solicitudes-->
             <div class="table-responsive">
                 <table id="tablaUsuarios" class="table table-striped table-bordered">
                     <thead>
