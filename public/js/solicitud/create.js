@@ -37,9 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     //SELECTS DINÁMICOS EXTENSIÓN-ÁREA-TIPO_SOLICITUD_-PRIORIDAD
-    $('#idExtension').on('change', function () {
+    $('#idExtension').on('change', function (event) {
+
         var idExtensionSeleccionada = this.value;
-        console.log("Extension: "+idExtensionSeleccionada);
 
         document.getElementById("idNuevoPuesto").selectedIndex = -1;
         $('#idNuevoPuesto').trigger('change');
@@ -67,9 +67,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var banderaSeleccionar = false;
             fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
+        
 
         } else if ($('#idExtension').val() == null) {
-            console.log("entro a null");
             $('#divNuevoFuncionario').css('display', 'none');
             $('#divIdNuevoPuesto').css('display', 'none');
             //Remover el valor que tengan asignado los inputs principales
@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if ($('#idExtension').val() != null) {
 
                 $("#idNuevaExtension").val($('#idExtension').val()).trigger('change');
+                $("#nuevaExtension").val(Number($('#idExtension').find('option:selected').text()));
             }
 
             //Se quitan que se sean requeridos los select principales
@@ -141,8 +142,14 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#nuevoTipoSolicitud').val('');
 
         } else {
-            $("#idTipoSolicitud").html('');
-            fetchAreaTipoSolicitud(idAreaSeleccionada);
+            if($('#idNuevaExtension').val() != null){
+                return;
+            } else {
+                $("#idTipoSolicitud").html('');
+                fetchAreaTipoSolicitud(idAreaSeleccionada);
+                
+        }
+            
     }
 
     });
@@ -168,14 +175,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //Se habilita la sección para ingresar los valores de los nuevos catálogos y se refleja el valor de la extension y área seleccionada
             $('#modalAgregarDirectorio').modal('show');
-            var valorArea = $('#idArea').find('option:selected').text();
-            $('#nuevaArea').val(valorArea);
+            //var valorArea = $('#idArea').find('option:selected').text();
+            //$('#nuevaArea').val(valorArea);
 
         } else if ($('#idTipoSolicitud').val() == null) {
 
         } else {
 
-            fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado);
+            //fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado);
 
         }
 
@@ -391,7 +398,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 param: parametro
             },
             success: function (response) {
-                console.log(response);
 
                 if (!response ||
                     !response['Ubicacion'] ||
