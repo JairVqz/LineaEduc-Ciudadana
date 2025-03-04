@@ -128,81 +128,6 @@ class SolicitudController extends Controller
             $idTipoSolicitud = $request->idTipoSolicitud;
             //$idPrioridad = $request->idPrioridad;
 
-            //NUEVOS CATÁLOGOS
-            if ($idExtension == "otro") {
-
-                $areaCatalogo = new CatalogoAreas();
-                $areaCatalogo->area = $request->nuevaArea;
-                $areaCatalogo->save();
-
-                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->nuevaArea)->first();
-
-                $puestoCatalogo = new CatalogoPuestos();
-                $puestoCatalogo->puesto = $request->nuevoPuesto;
-                $puestoCatalogo->save();
-
-                $puestoCatalogoGuardado = CatalogoPuestos::where('puesto', $request->nuevoPuesto)->first();
-
-                $extensionCatalogo = new CatalogoExtensiones();
-                $extensionCatalogo->extension = $request->nuevaExtension;
-                $extensionCatalogo->nombreTitular = $request->nombreTitular;
-                $extensionCatalogo->idArea = $areaCatalogoGuardada->idArea;
-                $extensionCatalogo->idPuesto = $puestoCatalogoGuardado->idPuesto;
-                $extensionCatalogo->save();
-
-                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $request->nuevaExtension)->first();
-
-                $tipoSolicitudCatalogo = new TipoSolicitud();
-                $tipoSolicitudCatalogo->tipoSolicitud = $request->nuevoTipoSolicitud;
-                $tipoSolicitudCatalogo->idArea = $areaCatalogoGuardada->idArea;
-                $tipoSolicitudCatalogo->idPrioridad = 2;
-                $tipoSolicitudCatalogo->save();
-
-                $tipoSolicitudCatalogoGuardada = TipoSolicitud::where('tipoSolicitud', $request->nuevoTipoSolicitud)->first();
-
-                $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
-                $idArea = $areaCatalogoGuardada->idArea;
-                $idTipoSolicitud = $tipoSolicitudCatalogoGuardada->idTipoSolicitud;
-                //$idPrioridad = $request->idNuevaPrioridad;
-
-            } else if ($idExtension != "otro" && $idArea == "otro") {
-
-                $areaCatalogo = new CatalogoAreas();
-                $areaCatalogo->area = $request->nuevaArea;
-                $areaCatalogo->save();
-
-                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->nuevaArea)->first();
-
-                $puestoCatalogo = new CatalogoPuestos();
-                $puestoCatalogo->puesto = $request->nuevoPuesto;
-                $puestoCatalogo->save();
-
-                $puestoCatalogoGuardado = CatalogoPuestos::where('puesto', $request->nuevoPuesto)->first();
-
-                $tipoSolicitudCatalogo = new TipoSolicitud();
-                $tipoSolicitudCatalogo->tipoSolicitud = $request->nuevoTipoSolicitud;
-                $tipoSolicitudCatalogo->idArea = $areaCatalogoGuardada->idArea;
-                $tipoSolicitudCatalogo->idPrioridad = 2;
-                $tipoSolicitudCatalogo->save();
-
-                $tipoSolicitudCatalogoGuardada = TipoSolicitud::where('tipoSolicitud', $request->nuevoTipoSolicitud)->first();
-
-                $idArea = $areaCatalogoGuardada->idArea;
-                $idTipoSolicitud = $tipoSolicitudCatalogoGuardada->idTipoSolicitud;
-                //$idPrioridad = $request->idNuevaPrioridad;
-            } else if ($idExtension != "otro" && $idArea != "otro" && $idTipoSolicitud == "otro") {
-                $tipoSolicitudCatalogo = new TipoSolicitud();
-                $tipoSolicitudCatalogo->tipoSolicitud = $request->nuevoTipoSolicitud;
-                $tipoSolicitudCatalogo->idArea = $request->idArea;
-                $tipoSolicitudCatalogo->idPrioridad = 2;
-                $tipoSolicitudCatalogo->save();
-
-                $tipoSolicitudCatalogoGuardada = TipoSolicitud::where('tipoSolicitud', $request->nuevoTipoSolicitud)->first();
-
-                $idTipoSolicitud = $tipoSolicitudCatalogoGuardada->idTipoSolicitud;
-                //$idPrioridad = $request->idNuevaPrioridad;
-            }
-
             //FOLIO
             $folio = new Folio();
 
@@ -763,7 +688,7 @@ class SolicitudController extends Controller
     {
         $idExtension = $request->idExtension;
 
-        Log::info("idExtensionRecibido: " . $idExtension);
+        //Log::info("idExtensionRecibido: " . $idExtension);
 
         if ($idExtension == "otro") {
             $data['extensionAreas'] = CatalogoAreas::all();

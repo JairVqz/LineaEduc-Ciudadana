@@ -71,7 +71,7 @@ Route::middleware('auth.validation')->group(function () {
             //EXCEL
             Route::get('/exportarExcel', [SolicitudController::class, 'exportarExcel'])->name('exportarExcel');
             Route::get('/exportarExcelSeguimiento', [SolicitudController::class, 'exportarExcelSeguimiento'])->name('exportarExcelSeguimiento');
-            
+
         });
     });
     //RUTAS API'S
@@ -92,7 +92,7 @@ Route::middleware('auth.validation')->group(function () {
             Route::post('/usuario/restore', [UsuarioController::class, 'restore'])->name('restore');
         });
     });
-    
+
     //SEGUIMIENTO
     Route::controller(SeguimientoController::class)->group(function () {
         Route::name('seguimiento.')->group(function () {
@@ -163,5 +163,5 @@ Route::middleware('auth.validation')->group(function () {
         });
     });
 
-    
+
 });

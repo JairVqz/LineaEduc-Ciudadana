@@ -126,7 +126,7 @@
                                     <select name="idExtension" id="idExtension" class="form-select select2-bootstrap"
                                         required>
                                         @foreach ($listaExtensiones as $data)
-                                            <option value="{{ $data->idExtensionCatalogo }}">
+                                            <option value="{{ $data->idExtensionCatalogo }}" data-idpuesto="{{ $data->idPuesto }}">
                                                 {{ $data->extension }}
                                             </option>
                                         @endforeach
