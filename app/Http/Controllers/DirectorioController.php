@@ -123,4 +123,32 @@ class DirectorioController extends Controller
         }
 
     }
+
+    public function storeDirectorioDinamico(Request $request)
+    {
+        try {
+            $extension = $request->input('extension');
+            $nombreTitular = $request->input('nombreTitular');
+            $idPuesto = $request->input('idPuesto');
+            $idArea = $request->input('idArea');
+
+            // Validar si los campos necesarios están presentes
+            if (!$extension || !$nombreTitular || !$idPuesto || !$idArea) {
+                return response()->json(['error' => 'Faltan parámetros necesarios.', $extension, $nombreTitular, $idPuesto, $idArea], 400);
+            }
+
+            $directorio = new CatalogoExtensiones();
+
+            $directorio->extension = $extension;
+            $directorio->nombreTitular = $nombreTitular;
+            $directorio->idPuesto = $idPuesto;
+            $directorio->idArea = $idArea;
+
+            $directorio->save();
+
+            return response()->json(['message' => 'Directorio registrado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un error al registrar el directorio: ' . $e->getMessage()], 500);
+        }
+    }
 }
