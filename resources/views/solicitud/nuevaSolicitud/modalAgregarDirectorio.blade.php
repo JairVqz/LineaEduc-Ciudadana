@@ -141,7 +141,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="guardarNuevoDirectorio">Guardar</button>
+                <button type="button" class="btn btn-color" id="guardarNuevoDirectorio">Guardar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
@@ -270,31 +270,35 @@
                                 'change'));
 
                             if ($("#idNuevaExtension").val() == "otro") {
-                                $("#idExtension").append('<option value="' + data.idExtension + '">' + nuevaExtension + '</option>');
+                                $("#idExtension").append('<option value="' + data
+                                    .idExtension + '">' + nuevaExtension + '</option>');
                                 $("#idExtension").val(data.idExtension).trigger('change');
                             } else {
 
                                 if ($("#idNuevaArea").val() == "otro") {
-                                    
+
                                     /*document.getElementById('idArea').dispatchEvent(new Event('change'));
                                     $('#idArea').val(data.idArea).trigger('change');*/
-                                    $("#idExtension").append('<option value="' + data.idExtension +'">' + $("#idNuevaExtension option:selected").text() +'</option>');
-                                    $("#idExtension").val(data.idExtension).trigger('change');
+                                    $("#idExtension").append('<option value="' + data
+                                        .idExtension + '">' + $(
+                                            "#idNuevaExtension option:selected")
+                                        .text() + '</option>');
+                                    $("#idExtension").val(data.idExtension).trigger(
+                                        'change');
 
                                 } else {
-                                    $("#idExtension").val($("#idNuevaExtension").val()).trigger('change');
+                                    $("#idExtension").val($("#idNuevaExtension").val())
+                                        .trigger('change');
 
                                 }
                             }
 
                             if (result.isConfirmed) {
                                 Swal.close();
-
-                                //window.location.href = indexUsuario;
-
+                                $("#modalAgregarDirectorio").modal('hide');
                             } else {
                                 Swal.close();
-                                //window.location.href = indexUsuario;
+                                $("#modalAgregarDirectorio").modal('hide');
                             }
                         });
 
@@ -319,6 +323,66 @@
                     //alert('Hubo un error al enviar la notificación');
                 });
         });
+
+        $('#idNuevaExtension').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona una extensión",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
+
+        $('#idNuevaArea').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona una área",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
+
+        $('#idNuevoPuesto').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona un puesto",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
+
+        $('#idNuevoTipoSolicitud').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona un tipo de solicitud",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
 
     });
 </script>
