@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('tbl_catalogoPuestos', function (Blueprint $table) {
             $table->id('idPuesto');
-            $table->string('puesto', 100);
+            $table->string('puesto', 150);
             //$table->foreignId('idExtensionCatalogo')->references('idExtensionCatalogo')->on('tbl_catalogoExtensiones');
             $table->timestamps();
             $table->softDeletes();

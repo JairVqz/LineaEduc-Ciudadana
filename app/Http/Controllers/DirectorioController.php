@@ -181,7 +181,9 @@ class DirectorioController extends Controller
                 $extensionCatalogo->idPuesto = $idPuesto;
                 $extensionCatalogo->save();
 
-                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $request->input('nuevaExtension'))->first();
+                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $request->input('nuevaExtension'))
+                ->orderBy('idExtensionCatalogo', 'desc')
+                ->first();
 
                 $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
 
@@ -197,7 +199,9 @@ class DirectorioController extends Controller
                 $extensionCatalogo->idPuesto = $idPuesto;
                 $extensionCatalogo->save();
 
-                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $extensionBuscada->extension)->first();
+                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $extensionBuscada->extension)
+                ->orderBy('idExtensionCatalogo', 'desc')
+                ->first();
 
                 $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
             }
