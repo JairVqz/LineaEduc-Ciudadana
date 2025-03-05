@@ -141,7 +141,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="guardarNuevoDirectorio">Guardar</button>
+                <button type="button" class="btn btn-color" id="guardarNuevoDirectorio">Guardar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
             </div>
         </div>
@@ -162,9 +162,6 @@
         $('#idNuevaExtension').on('change', function() {
             var extensionSeleccionada = $('#idNuevaExtension').find('option:selected');
             var nombreTitular = extensionSeleccionada.data('nombretitular');
-
-            console.log(nombreTitular);
-
 
             if ($('#idNuevaExtension').val() == "otro") {
                 $('#nuevaExtension').prop('readonly', false);
@@ -266,46 +263,42 @@
                             cancelButtonText: `CANCELAR`,
                         }).then((result) => {
 
-                            localStorage.setItem('idNuevaExtension', data.idExtension);
-                            localStorage.setItem('idNuevaArea', data.idArea);
-                            localStorage.setItem('idNuevoTipoSolicitud', data
-                                .idTipoSolicitud);
-
-                            /*$('#idExtension').trigger('change');
-                            $('#idArea').trigger('change');
-                            $('#idTipoSolicitud').trigger('change');*/
-
+                            document.getElementById('idArea').dispatchEvent(new Event(
+                                'change'));
 
                             document.getElementById('idArea').dispatchEvent(new Event(
                                 'change'));
 
-                            if (nuevaExtension != null) {
+                            if ($("#idNuevaExtension").val() == "otro") {
                                 $("#idExtension").append('<option value="' + data
                                     .idExtension + '">' + nuevaExtension + '</option>');
                                 $("#idExtension").val(data.idExtension).trigger('change');
-
                             } else {
-                                $("#idExtension").val($("#idNuevaExtension").val()).trigger(
-                                    'change');
 
-                                if (nuevaArea != null) {
-                                    document.getElementById('idArea').dispatchEvent(new Event('change'));
-                                    $('#idArea').val(data.idArea).trigger('change');
+                                if ($("#idNuevaArea").val() == "otro") {
+
+                                    /*document.getElementById('idArea').dispatchEvent(new Event('change'));
+                                    $('#idArea').val(data.idArea).trigger('change');*/
+                                    $("#idExtension").append('<option value="' + data
+                                        .idExtension + '">' + $(
+                                            "#idNuevaExtension option:selected")
+                                        .text() + '</option>');
+                                    $("#idExtension").val(data.idExtension).trigger(
+                                        'change');
+
                                 } else {
-                                    $('#idArea').val($("#idArea").val()).trigger('change');
+                                    $("#idExtension").val($("#idNuevaExtension").val())
+                                        .trigger('change');
+
                                 }
                             }
 
-
-
                             if (result.isConfirmed) {
                                 Swal.close();
-
-                                //window.location.href = indexUsuario;
-
+                                $("#modalAgregarDirectorio").modal('hide');
                             } else {
                                 Swal.close();
-                                //window.location.href = indexUsuario;
+                                $("#modalAgregarDirectorio").modal('hide');
                             }
                         });
 
@@ -331,37 +324,65 @@
                 });
         });
 
-        /*$('#modalAgregarDirectorio').on('click', function(e) {
+        $('#idNuevaExtension').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona una extensión",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
 
-            if ($(e.target).parent().attr("data-dismiss")) {
-                //console.log("by Corner X");
-                reflejarValoresModalenFormulario();
-            } else if ($(e.target).hasClass("btn-secondary")) {
-                //console.log("by Close Button");
-                reflejarValoresModalenFormulario();
-            } else {
-                //console.log("by Background Overlay");
-            }
+        $('#idNuevaArea').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona una área",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
 
-        });*/
+        $('#idNuevoPuesto').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona un puesto",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
 
-        //const modalNuevoDirectorio = document.getElementById("modalAgregarDirectorio");
-
-        // Cierra el modal si se hace clic fuera del contenido
-        /*window.addEventListener("click", (event) => {
-            if (event.target === modalNuevoDirectorio) {
-                //modalNuevoDirectorio.style.display = "none";
-                console.log("cerrar clic fuera");
-                reflejarValoresModalenFormulario();
-            }
-        });*/
-
-        /*function reflejarValoresModalenFormulario() {
-            $('#idExtension').val(localStorage.getItem('idNuevaExtension')).trigger('change');
-            $('#idArea').val(localStorage.getItem('idNuevaArea')).trigger('change');
-            $('#idTipoSolicitud').val(localStorage.getItem('idNuevoTipoSolicitud')).trigger('change');
-
-        }*/
+        $('#idNuevoTipoSolicitud').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona un tipo de solicitud",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
 
     });
 </script>
