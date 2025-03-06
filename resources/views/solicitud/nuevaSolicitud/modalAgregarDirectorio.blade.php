@@ -263,12 +263,6 @@
                             cancelButtonText: `CANCELAR`,
                         }).then((result) => {
 
-                            document.getElementById('idArea').dispatchEvent(new Event(
-                                'change'));
-
-                            document.getElementById('idArea').dispatchEvent(new Event(
-                                'change'));
-
                             if ($("#idNuevaExtension").val() == "otro") {
                                 $("#idExtension").append('<option value="' + data
                                     .idExtension + '">' + nuevaExtension + '</option>');
