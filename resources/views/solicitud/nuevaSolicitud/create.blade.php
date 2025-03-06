@@ -120,48 +120,36 @@
                                     class="bi bi-telephone-fill" style="margin-right:5px;"></i>Datos de la solicitud:
                             </legend>
                             <div class="row g-3">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <label for="idExtension" class="form-label"
-                                        style="font-weight:bold">Extensión:</label>
+                                        style="font-weight:bold">Directorio:</label>
                                     <select name="idExtension" id="idExtension" class="form-select select2-bootstrap"
                                         required>
-                                        @foreach ($listaExtensiones as $data)
-                                            <option value="{{ $data->idExtensionCatalogo }}" data-idpuesto="{{ $data->idPuesto }}">
-                                                {{ $data->extension }}
+                                        @foreach ($listaDirectorio as $data)
+                                            <option value="{{ $data->idExtensionCatalogo }}" data-idpuesto="{{ $data->idPuesto }}" 
+                                                data-idarea="{{ $data->idArea }}" data-nombretitular="{{ $data->nombreTitular }}">
+                                                {{ $data->extension }} - {{ $data->area }} - {{ $data->puesto }}
                                             </option>
                                         @endforeach
                                         <option value="otro">Otra</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <label for="nombreTitular" class="form-label"
                                         style="font-weight:bold">Funcionario:</label>
                                         <input type="text" name="nombreTitular" id="nombreTitular" class="form-control"
                                         placeholder="" readonly>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="idArea" class="form-label" style="font-weight:bold">Área que
-                                        atiende:</label>
-                                    <select name="idArea" id="idArea" class="form-select select2-bootstrap"
-                                        required>
-                                        @foreach ($listaAreas as $data)
-                                            <option value="{{ $data->idArea }}">
-                                                {{ $data->area }}
-                                            </option>
-                                        @endforeach
-                                        <option value="otro">Otra</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
                                     <label for="idTipoSolicitud" class="form-label" style="font-weight:bold">Tipo de
                                         Solicitud:</label>
                                     <select name="idTipoSolicitud" id="idTipoSolicitud"
                                         class="form-select select2-bootstrap" required>
-                                        @foreach ($listaTiposSolicitud as $data)
+                                        {{--@foreach ($listaTiposSolicitud as $data)
                                             <option value="{{ $data->idTipoSolicitud }}">
                                                 {{ $data->tipoSolicitud }}
                                             </option>
-                                        @endforeach
+                                        @endforeach--}}
                                         <option value="otro">Otro</option>
                                     </select>
                                 </div>
@@ -353,6 +341,7 @@
         'apiFetchExtensionAreas' => route('solicitud.fetchExtensionAreas'),
         'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
         'apiFetchTipoSolicitudPrioridad' => route('solicitud.fetchTipoSolicitudPrioridad'),
+        'apifetchDirectorioTipoSolicitud' => route('solicitud.fetchDirectorioTipoSolicitud'),
     ]); ?>
 
     var listaPrioridades = @json($listaPrioridades);
@@ -431,19 +420,6 @@
 
     $('#idExtension').select2({
         placeholder: "Selecciona una extensión",
-        allowClear: true,
-        language: {
-            noResults: function() {
-                return "No hay resultados";
-            },
-            searching: function() {
-                return "Buscando..";
-            }
-        }
-    }).val(null).trigger('change');
-
-    $('#idArea').select2({
-        placeholder: "Selecciona una área",
         allowClear: true,
         language: {
             noResults: function() {

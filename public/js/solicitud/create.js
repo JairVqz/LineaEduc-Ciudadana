@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const apiFetchExtensionAreas = window.Laravel.apiFetchExtensionAreas;
     const apiFetchAreaTipoSolicitudes = window.Laravel.apiFetchAreaTipoSolicitudes;
     const apiFetchTipoSolicitudPrioridad = window.Laravel.apiFetchTipoSolicitudPrioridad;
+    const apiFetchDirectorioTipoSolicitud = window.Laravel.apifetchDirectorioTipoSolicitud;
 
     let now = new Date();
 
@@ -36,16 +37,110 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    //SELECTS DINÁMICOS EXTENSIÓN-ÁREA-TIPO_SOLICITUD_-PRIORIDAD
     $('#idExtension').on('change', function () {
+        var areaDirectorio = $('#idExtension').find('option:selected');
+        var idAreaDirectorioSeleccionada = areaDirectorio.data('idarea');
+        var nombreTitularAreaDirectorioSeleccionada = areaDirectorio.data('nombretitular')
+
+        if ($('#idExtension').val() == "otro") {
+            //Por Default los demás select están vacios o indice 0
+            $("#idTipoSolicitud").html('');
+            $("#idTipoSolicitud").trigger('change');
+            document.getElementById("idNuevoPuesto").selectedIndex = -1;
+            $('#idNuevoPuesto').trigger('change');
+
+            //Se muestra el modal para ingresar los valores del nuevo directorio.
+            $('#modalAgregarDirectorio').modal('show');
+
+            //En caso de que previamente se hayan llenado y ocultado, se limpian de los valores que tengan anteriormente.
+            $('#nuevaExtension').val('');
+            $('#nuevaArea').val('');
+            $('#nuevoTipoSolicitud').val('');
+            $('#idNuevaExtension').val('').trigger('change');
+            $('#idNuevaArea').val('').trigger('change');
+            $('#idNuevoTipoSolicitud').val('').trigger('change');
+            $('#idNuevaPrioridad').val('').trigger('change');
+
+            $("#nombreTitular").val('');
+
+            fetchDirectorioTipoSolicitud(idAreaDirectorioSeleccionada);
+
+        } else if ($('#idExtension').val() == null) {
+            console.log("entro a null");
+            //Remover el valor que tengan asignado los inputs principales
+            $("#idTipoSolicitud").html('');
+            $("#nombreTitular").val('');
+            $("#idTipoSolicitud").trigger('change');
+            $("#idTipoSolicitud").html('');
+            $("#idTipoSolicitud").trigger('change');
+
+            //Ocultar la sección de los nuevos catálogos y remover el valor que tengan asignado los inputs de la seccioón
+            $('#nuevaExtension').val('');
+            $('#nuevaArea').val('');
+            $('#nuevoTipoSolicitud').val('');
+            $('#idNuevaExtension').val('').trigger('change');
+            $('#idNuevaArea').val('').trigger('change');
+            $('#idNuevoTipoSolicitud').val('').trigger('change');
+            $('#idNuevaPrioridad').val('').trigger('change');
+            
+            fetchDirectorioTipoSolicitud(idAreaDirectorioSeleccionada);
+
+        } else {
+            $("#idTipoSolicitud").html('');
+
+            var extensionSeleccionada = $('#idExtension').find('option:selected');
+            var idPuesto = extensionSeleccionada.data('idpuesto');
+            var idArea = extensionSeleccionada.data('idarea');
+            $('#idNuevoPuesto').val(idPuesto).trigger('change');
+            $('#idNuevoArea').val(idArea).trigger('change');
+            $("#nombreTitular").val(nombreTitularAreaDirectorioSeleccionada);
+            
+
+            fetchDirectorioTipoSolicitud(idAreaDirectorioSeleccionada);
+
+        }
+    });
+
+    function fetchDirectorioTipoSolicitud(idAreaDirectorioSeleccionada) {
+        console.log("idAreaDirec")
+
+        $.ajax({
+            url: apiFetchDirectorioTipoSolicitud,
+            method: 'POST',
+            dataType: 'json',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            data: {
+                idArea: idAreaDirectorioSeleccionada,
+            },
+            success: function (data) {
+                $.each(data.areaTipoSolicitud, function (key, data) {
+                    $("#idTipoSolicitud").append('<option value="' + data.idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
+
+                });
+                $("#idTipoSolicitud").append('<option value="otro">Otra</option>');
+
+                $('#idTipoSolicitud').val(null);
+
+                $('#idTipoSolicitud').trigger('change');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al enviar la petición:', error);
+
+            }
+        });
+
+    }
+
+    //SELECTS DINÁMICOS EXTENSIÓN-ÁREA-TIPO_SOLICITUD_-PRIORIDAD
+    /*$('#idExtension').on('change', function () {
         var idExtensionSeleccionada = this.value;
         console.log("Extension: "+idExtensionSeleccionada);
 
         if ($('#idExtension').val() == "otro"){
             //Por Default los demás select están vacios o indice 0
-            $('#idArea').val(null);
             $("#idTipoSolicitud").html('');
-            $("#idArea").trigger('change');
             $("#idTipoSolicitud").trigger('change');
             document.getElementById("idNuevoPuesto").selectedIndex = -1;
             $('#idNuevoPuesto').trigger('change');
@@ -75,9 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
             $("#idTipoSolicitud").html('');
             $("#nombreTitular").val('');
             $("#idTipoSolicitud").trigger('change');
-            $('#idArea').val(null);
             $("#idTipoSolicitud").html('');
-            $("#idArea").trigger('change');
             $("#idTipoSolicitud").trigger('change');
             //document.getElementById("idPrioridad").selectedIndex = -1;
             //$('#idPrioridad').trigger('change');
@@ -286,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("telefonoFijo").value = "";
         document.getElementById("telefonoCelular").value = "";
         document.getElementById("idTipoSolicitud").selectedIndex = 0;
-        document.getElementById("idArea").selectedIndex = 0;
         document.getElementById("idPrioridad").selectedIndex = 0;
         document.getElementById("descripcion").value = "";
         document.getElementById("cct").value = "";

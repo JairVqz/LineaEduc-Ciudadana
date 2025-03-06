@@ -52,6 +52,7 @@ class SolicitudController extends Controller
         $listaAreas = CatalogoAreas::all();
         $listaExtensiones = CatalogoExtensiones::all();
         $listaPuestos = CatalogoPuestos::all();
+        $listaDirectorio = DB::table('directorio')->get();
 
         return view(
             'solicitud.nuevaSolicitud.create',
@@ -61,6 +62,7 @@ class SolicitudController extends Controller
                 'listaAreas' => $listaAreas,
                 'listaExtensiones' => $listaExtensiones,
                 'listaPuestos' => $listaPuestos,
+                'listaDirectorio' => $listaDirectorio,
             ]
         );
     }
@@ -720,6 +722,19 @@ class SolicitudController extends Controller
         return response()->json($data);
     }
 
+    public function fetchDirectorioTipoSolicitud(Request $request)
+    {
+        $idArea = $request->idArea;
+
+        //Log::info("idExtensionRecibido: " . $idExtension);
+
+        $data['areaTipoSolicitud'] = DB::table('directorio')
+        ->join('tbl_tipoSolicitud', 'directorio.idArea', '=', 'tbl_tipoSolicitud.idArea')
+        ->where('tbl_tipoSolicitud.idArea', '=', $idArea)
+        ->get(['tbl_tipoSolicitud.idTipoSolicitud','tbl_tipoSolicitud.tipoSolicitud']);
+
+        return response()->json($data);
+    }
 
     public function exportarExcel()
     {
