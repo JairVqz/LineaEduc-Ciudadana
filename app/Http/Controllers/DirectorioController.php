@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\CatalogoPuestos;
 use App\Models\CatalogoAreas;
 use App\Models\TipoSolicitud;
@@ -27,10 +28,10 @@ class DirectorioController extends Controller
             'solicitud.directorio.directorio.directorio',
             [
                 'listaDirectorio' => $listaDirectorio,
-                'catalogoExtensiones'=>$catalogoExtensiones,
-                'listaAreas'=>$listaAreas,
-                'listaPuestos'=>$listaPuestos,
-                
+                'catalogoExtensiones' => $catalogoExtensiones,
+                'listaAreas' => $listaAreas,
+                'listaPuestos' => $listaPuestos,
+
             ]
         );
     }
@@ -40,7 +41,7 @@ class DirectorioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-   
+
     /**
      * Store a newly created resource in storage.
      *
@@ -79,7 +80,7 @@ class DirectorioController extends Controller
         $idExtensionCatalogo = $request->input('idExtensionCatalogo');
 
         try {
-            $directorio = CatalogoExtensiones::where("idExtensionCatalogo","=",$idExtensionCatalogo);
+            $directorio = CatalogoExtensiones::where("idExtensionCatalogo", "=", $idExtensionCatalogo);
             $extension = $request->input('extension');
             $nombreTitular = $request->input('nombreTitular');
             $idPuesto = $request->input('idPuesto');
@@ -102,7 +103,7 @@ class DirectorioController extends Controller
         $idExtensionCatalogo = $request->input('idExtensionCatalogo');
 
         try {
-            $directorio = CatalogoExtensiones::where("idExtensionCatalogo","=",$idExtensionCatalogo);
+            $directorio = CatalogoExtensiones::where("idExtensionCatalogo", "=", $idExtensionCatalogo);
             $directorio->delete();
 
             return response()->json(['message' => 'Directorio eliminado correctamente']);
@@ -116,22 +117,21 @@ class DirectorioController extends Controller
         $idExtensionCatalogo = $request->idExtensionCatalogo;
 
         try {
-            $directorio = CatalogoExtensiones::withTrashed()->where("idExtensionCatalogo","=",$idExtensionCatalogo);
+            $directorio = CatalogoExtensiones::withTrashed()->where("idExtensionCatalogo", "=", $idExtensionCatalogo);
             $directorio->restore();
 
             return response()->json(['message' => 'Directorio activado correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Hubo un error al activar el directorio: ' . $e->getMessage()], 500);
         }
-
     }
 
     public function storeDirectorioDinamico(Request $request)
     {
         Log::info("entro: " . $request->input('idNuevaExtension') . $request->input('nuevaExtension') . $request->input('nuevoFuncionario') .
-        $request->input('idNuevaArea') . $request->input('nuevaArea') .
-        $request->input('idNuevoPuesto') . $request->input('nuevoPuesto') .
-        $request->input('idNuevoTipoSolicitud') . $request->input('nuevoTipoSolicitud') );
+            $request->input('idNuevaArea') . $request->input('nuevaArea') .
+            $request->input('idNuevoPuesto') . $request->input('nuevoPuesto') .
+            $request->input('idNuevoTipoSolicitud') . $request->input('nuevoTipoSolicitud'));
         DB::beginTransaction();
 
         try {
@@ -140,39 +140,33 @@ class DirectorioController extends Controller
             $idArea = $request->input('idNuevaArea');
             $idPuesto = $request->input('idNuevoPuesto');
             $idTipoSolicitud = $request->input('idNuevoTipoSolicitud');
-            
-            
 
-            //NUEVOS CATÁLOGOS
-            if ($idArea == "otro") {
+                //NUEVOS CATÁLOGOS
+                if ($idArea == "otro") {
 
-                $areaCatalogo = new CatalogoAreas();
-                $areaCatalogo->area = $request->input('nuevaArea');
-                $areaCatalogo->save();
+                    $areaCatalogo = new CatalogoAreas();
+                    $areaCatalogo->area = $request->input('nuevaArea');
+                    $areaCatalogo->save();
 
-                $areaCatalogoGuardada = CatalogoAreas::where('area', $request->input('nuevaArea'))->first();
+                    $areaCatalogoGuardada = CatalogoAreas::where('area', $request->input('nuevaArea'))->first();
 
-                $idArea = $areaCatalogoGuardada->idArea;
+                    $idArea = $areaCatalogoGuardada->idArea;
+                } else {
+                    $idArea = $request->input('idNuevaArea');
+                }
 
-            } else {
-                $idArea = $request->input('idNuevaArea');
-            }
+                if ($idPuesto == "otro") {
 
-            if ($idPuesto == "otro") {
+                    $puestoCatalogo = new CatalogoPuestos();
+                    $puestoCatalogo->puesto = $request->input('nuevoPuesto');
+                    $puestoCatalogo->save();
 
-                $puestoCatalogo = new CatalogoPuestos();
-                $puestoCatalogo->puesto = $request->input('nuevoPuesto');
-                $puestoCatalogo->save();
+                    $puestoCatalogoGuardado = CatalogoPuestos::where('puesto', $request->input('nuevoPuesto'))->first();
 
-                $puestoCatalogoGuardado = CatalogoPuestos::where('puesto', $request->input('nuevoPuesto'))->first();
-
-                $idPuesto = $puestoCatalogoGuardado->idPuesto;
-
-            } else {
-                $idPuesto = $request->input('idNuevoPuesto');
-            }
-
-            if ($idExtension == "otro") {
+                    $idPuesto = $puestoCatalogoGuardado->idPuesto;
+                } else {
+                    $idPuesto = $request->input('idNuevoPuesto');
+                }
 
                 $extensionCatalogo = new CatalogoExtensiones();
                 $extensionCatalogo->extension = $request->input('nuevaExtension');
@@ -182,31 +176,10 @@ class DirectorioController extends Controller
                 $extensionCatalogo->save();
 
                 $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $request->input('nuevaExtension'))
-                ->orderBy('idExtensionCatalogo', 'desc')
-                ->first();
+                    ->orderBy('idExtensionCatalogo', 'desc')
+                    ->first();
 
                 $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
-
-            } else {
-                $extensionBuscada = CatalogoExtensiones::where('idExtensionCatalogo', '=', $idExtension)->first();
-
-                Log::info("extensionBuscada: " . $extensionBuscada);
-
-                $extensionCatalogo = new CatalogoExtensiones();
-                $extensionCatalogo->extension = $extensionBuscada->extension;
-                $extensionCatalogo->nombreTitular = $request->input('nuevoFuncionario');
-                $extensionCatalogo->idArea = $idArea;
-                $extensionCatalogo->idPuesto = $idPuesto;
-                $extensionCatalogo->save();
-
-                $extensionCatalogoGuardada = CatalogoExtensiones::where('extension', '=', $extensionBuscada->extension)
-                ->orderBy('idExtensionCatalogo', 'desc')
-                ->first();
-
-                $idExtension = $extensionCatalogoGuardada->idExtensionCatalogo;
-            }
-
-            if ($idTipoSolicitud == "otro") {
 
                 $tipoSolicitudCatalogo = new TipoSolicitud();
                 $tipoSolicitudCatalogo->tipoSolicitud = $request->input('nuevoTipoSolicitud');
@@ -218,12 +191,18 @@ class DirectorioController extends Controller
 
                 $idTipoSolicitud = $tipoSolicitudCatalogoGuardada->idTipoSolicitud;
 
-            }
-
             DB::commit();
 
-            return response()->json(['mensaje' => 'directorio guardado correctamente', 'idArea' => $idArea,
-                                    'idPuesto' => $idPuesto, 'idExtension' => $idExtension, 'idTipoSolicitud' => $idTipoSolicitud]);
+            $listaDirectorio = DB::table('directorio')->get();
+
+            return response()->json([
+                'mensaje' => 'directorio guardado correctamente',
+                'idArea' => $idArea,
+                'idPuesto' => $idPuesto,
+                'idExtension' => $idExtension,
+                'idTipoSolicitud' => $idTipoSolicitud,
+                'listaDirectorio' => $listaDirectorio
+            ]);
         } catch (\Exception $e) {
 
             Log::error('Error al guardar el directorio: ' . $e->getMessage(), [

@@ -77,6 +77,7 @@
                                 <input type="hidden" name="horaInicio" id="horaInicio">
                                 <input type="hidden" name="nombreMunicipio" id="nombreMunicipio">
                                 <input type="hidden" name="nombreLocalidad" id="nombreLocalidad">
+                                <input name="idArea" id="idArea">
                             </div>
                         </fieldset>
                         <br>
@@ -145,80 +146,21 @@
                                         Solicitud:</label>
                                     <select name="idTipoSolicitud" id="idTipoSolicitud"
                                         class="form-select select2-bootstrap" required>
-                                        {{--@foreach ($listaTiposSolicitud as $data)
-                                            <option value="{{ $data->idTipoSolicitud }}">
-                                                {{ $data->tipoSolicitud }}
-                                            </option>
-                                        @endforeach--}}
-                                        <option value="otro">Otro</option>
                                     </select>
                                 </div>
-                                {{--<div class="col-md-2">
-                                    <label for="idPrioridad" class="form-label"
-                                        style="font-weight:bold">Prioridad:</label>
-                                    <select name="idPrioridad" id="idPrioridad" class="form-select select2-bootstrap"
-                                        required>
-                                        @foreach ($listaPrioridades as $data)
-                                            <option value="{{ $data->idPrioridad }}">
-                                                {{ $data->prioridad }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>--}}
-
-                            @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
-
-                            {{--<div id="nuevosCatalogos" style="display: none">
-                                <div class="row g-3">
-                                    <div class="col-md-2">
-                                        <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
-                                            Extensión:</label>
-                                        <input type="number" name="nuevaExtension" id="nuevaExtension"
-                                            class="form-control" placeholder="" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
-                                            Área:</label>
-                                        <input type="text" name="nuevaArea" id="nuevaArea" class="form-control"
-                                            placeholder="" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="nuevoTipoSolicitud" class="form-label"
-                                            style="font-weight:bold">Nuevo tipo de solicitud:</label>
-                                        <input type="text" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud"
-                                            class="form-control" placeholder="" readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="idNuevaPrioridad" class="form-label" style="font-weight:bold">Prioridad:</label>
-                                        <select name="idNuevaPrioridad" id="idNuevaPrioridad" class="form-select">
-                                            <option value="" hidden></option>
-                                            @foreach ($listaPrioridades as $data)
-                                                <option value="{{ $data->idPrioridad }}">
-                                                    {{ $data->prioridad }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>--}}
-
                                 <div class="col-md-12">
                                     <label for="descripcion" class="form-label"
                                         style="font-weight:bold">Descripción:</label>
                                     <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="" required></textarea>
                                 </div>
+
+                            @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
+                                
                             </div>
                         </fieldset>
                         <br>
 
                         <div class="row g-3">
-                            <!--div class="d-flex align-items-center justify-content-center">
-                                <input class="form-check-input mr-2" type="checkbox" value=""
-                                    id="origenSolicitud" style="transform: scale(1.5); margin-right: 15px;">
-                                <label class="form-check-label ml-4" for="origenSolicitud" style="font-weight: bold">
-                                    La solicitud proviene de un CCT
-                                </label>
-                            </div-->
                             <div class="d-flex align-items-center justify-content-center">
 
                                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group"
@@ -338,10 +280,7 @@
         'guardarSolicitud' => route('solicitud.store'),
         'coincidenciasSolicitud' => route('solicitud.coincidenciasSolicitud'),
         'apiPlantel' => route('solicitud.apiPlantel'),
-        'apiFetchExtensionAreas' => route('solicitud.fetchExtensionAreas'),
         'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
-        'apiFetchTipoSolicitudPrioridad' => route('solicitud.fetchTipoSolicitudPrioridad'),
-        'apifetchDirectorioTipoSolicitud' => route('solicitud.fetchDirectorioTipoSolicitud'),
     ]); ?>
 
     var listaPrioridades = @json($listaPrioridades);
@@ -432,7 +371,7 @@
     }).val(null).trigger('change');
 
     $('#idTipoSolicitud').select2({
-        placeholder: "Selecciona una solicitud",
+        placeholder: "Selecciona un tipo de solicitud",
         allowClear: true,
         language: {
             noResults: function() {

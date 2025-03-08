@@ -686,52 +686,36 @@ class SolicitudController extends Controller
         }
     }
 
-    public function fetchExtensionAreas(Request $request)
+    public function fetchDirectorioTipoSolicitud(Request $request)
     {
-        $idExtension = $request->idExtension;
+        $idArea = $request->idArea;
+        Log::info("directorio: " . $idArea);
 
-        //Log::info("idExtensionRecibido: " . $idExtension);
+        $data['areaTipoSolicitud'] = DB::table('tbl_tipoSolicitud')
+            ->where(function ($query) use ($idArea) {
+                $query->where('tipoSolicitud', 'Información')
+                    ->where('idArea', $idArea)
+                    ->orWhere('tipoSolicitud', '!=', 'Información');
+            })
+            ->orderByRaw("CASE WHEN tipoSolicitud = 'Información' AND idArea = ? THEN 0 ELSE 1 END", [$idArea])
+            ->orderBy('idPrioridad')
+            ->get();
 
-        if ($idExtension == "otro") {
-            $data['extensionAreas'] = CatalogoAreas::all();
-        } elseif ($idExtension == "") {
-            $data['extensionAreas'] = CatalogoAreas::all();
-        } else {
-            $data['extensionAreas'] = CatalogoAreas::join('tbl_catalogoExtensiones', 'tbl_catalogoExtensiones.idArea', '=', 'tbl_catalogoAreas.idArea')
-                ->where('tbl_catalogoExtensiones.idExtensionCatalogo', '=', $idExtension)
-                ->get(['tbl_catalogoAreas.idArea','tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular','tbl_catalogoExtensiones.idPuesto']);
-        }
-
-        return response()->json($data);
+            return response()->json($data);
     }
 
     public function fetchAreaTipoSolicitudes(Request $request)
     {
-        $data['areaTipoSolicitudes'] = TipoSolicitud::where("idArea", $request->idArea)
-            ->get();
-
-        return response()->json($data);
-    }
-
-    public function fetchTipoSolicitudPrioridad(Request $request)
-    {
-        $data['tipoSolicitudPrioridad'] = TipoSolicitud::join("tbl_prioridad", 'tbl_tipoSolicitud.idPrioridad', '=', 'tbl_prioridad.idPrioridad')
-            ->where('tbl_tipoSolicitud.idPrioridad', '=', $request->idPrioridad)
-            ->get('tbl_tipoSolicitud.idPrioridad');
-
-        return response()->json($data);
-    }
-
-    public function fetchDirectorioTipoSolicitud(Request $request)
-    {
         $idArea = $request->idArea;
 
-        //Log::info("idExtensionRecibido: " . $idExtension);
+        Log::info("area recibida: " . $idArea);
 
-        $data['areaTipoSolicitud'] = DB::table('directorio')
-        ->join('tbl_tipoSolicitud', 'directorio.idArea', '=', 'tbl_tipoSolicitud.idArea')
-        ->where('tbl_tipoSolicitud.idArea', '=', $idArea)
-        ->get(['tbl_tipoSolicitud.idTipoSolicitud','tbl_tipoSolicitud.tipoSolicitud']);
+        /*$data['areaTipoSolicitud'] = DB::table('t')
+            ->join('tbl_tipoSolicitud', 'directorio.idArea', '=', 'tbl_tipoSolicitud.idArea')
+            ->where('tbl_tipoSolicitud.idArea', '=', $idArea)
+            ->get(['tbl_tipoSolicitud.idTipoSolicitud', 'tbl_tipoSolicitud.tipoSolicitud']);*/
+        
+        $data['areaTipoSolicitud'] = TipoSolicitud::where('idArea', '=', $idArea)->get();
 
         return response()->json($data);
     }

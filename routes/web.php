@@ -65,9 +65,7 @@ Route::middleware('auth.validation')->group(function () {
             Route::post('/solicitud/notificarSeguimiento', [SolicitudController::class, 'notificarSeguimiento'])->name('notificarSeguimiento');
 
             Route::post('/api/fetchDirectorioTipoSolicitud', [SolicitudController::class, 'fetchDirectorioTipoSolicitud'])->name('fetchDirectorioTipoSolicitud');
-            Route::post('/api/fetchExtensionAreas', [SolicitudController::class, 'fetchExtensionAreas'])->name('fetchExtensionAreas');
             Route::post('/api/fetchAreaTipoSolicitudes', [SolicitudController::class, 'fetchAreaTipoSolicitudes'])->name('fetchAreaTipoSolicitudes');
-            Route::post('/api/fetchTipoSolicitudPrioridad', [SolicitudController::class, 'fetchTipoSolicitudPrioridad'])->name('fetchTipoSolicitudPrioridad');
 
             //EXCEL
             Route::get('/exportarExcel', [SolicitudController::class, 'exportarExcel'])->name('exportarExcel');
