@@ -123,7 +123,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada) {
-        console.log("idAreaDirec: "+idAreaDirectorioSeleccionada);
 
         $.ajax({
             url: apiFetchAreaTipoSolicitudes,

@@ -65,7 +65,7 @@
                                 extensión o número directo:</label>
                             <input type="number" name="nuevaExtension" id="nuevaExtension" class="form-control"
                                 placeholder="">
-                            <input hidden name="idNuevaExtension" id="idNuevaExtension">
+                            <input type="hidden" name="idNuevaExtension" id="idNuevaExtension">
                         </div>
 
                         <div class="col-md-12">
@@ -241,6 +241,7 @@
             var nuevaArea = document.getElementById("nuevaArea").value;
             var idNuevoPuesto = document.getElementById("idNuevoPuesto").value;
             var nuevoPuesto = document.getElementById("nuevoPuesto").value;
+            var idNuevoTipoSolicitud = document.getElementById("idNuevoTipoSolicitud").value;
             var nuevoTipoSolicitud = document.getElementById("nuevoTipoSolicitud").value;
 
             fetch(guardarDirectorioRoute, {
@@ -259,7 +260,7 @@
                         nuevaArea: nuevaArea,
                         idNuevoPuesto: idNuevoPuesto,
                         nuevoPuesto: nuevoPuesto,
-                        idNuevoTipoSolicitud: 'otro',
+                        idNuevoTipoSolicitud: idNuevoTipoSolicitud,
                         nuevoTipoSolicitud: nuevoTipoSolicitud,
                     })
                 })
@@ -314,7 +315,7 @@
                                     .trigger('change');
                                 $('#idTipoSolicitud').trigger(
                                 'select2:open'); // Forzar la actualización si es necesario
-                            }, 500);
+                            }, 1000);
 
                             if (result.isConfirmed) {
                                 Swal.close();

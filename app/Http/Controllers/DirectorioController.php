@@ -128,6 +128,7 @@ class DirectorioController extends Controller
 
     public function storeDirectorioDinamico(Request $request)
     {
+        Log::info("tiposolicitud: ".$request->input('idNuevoTipoSolicitud'));
 
         DB::beginTransaction();
 

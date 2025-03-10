@@ -574,6 +574,31 @@ class SolicitudController extends Controller
         }
     }
 
+    public function coincidenciasSolicitudRegistro(Request $request)
+    {
+        $busquedaNombre = $request->query('busquedaNombre');
+        $busquedaApellidoPaterno = $request->query('busquedaApellidoPaterno');
+        $busquedaApellidoMaterno = $request->query('busquedaApellidoMaterno');
+
+        Log::info("nombre: ".$busquedaNombre);
+        Log::info("apellidoPaterno: ".$busquedaApellidoPaterno);
+        Log::info("apellidoMaterno: ".$busquedaApellidoMaterno);
+
+        if ($busquedaNombre == '' && $busquedaApellidoPaterno == '' && $busquedaApellidoMaterno == ''){
+
+            $data['coincidenciasSolicitudRegistro'] = [];
+        
+        } else {
+            $data['coincidenciasSolicitudRegistro'] = DB::table('listarSolicitudes')
+            ->where('nombre', 'LIKE', '%' . $busquedaNombre . '%')
+            ->where('apellidoPaterno', 'LIKE', '%' . $busquedaApellidoPaterno . '%')
+            ->where('apellidoMaterno', 'LIKE', '%' . $busquedaApellidoMaterno . '%')
+            ->get();
+        }
+
+        return response()->json($data);
+    }
+
 
     public function pdf_generator(Request $request)
     {
@@ -701,7 +726,7 @@ class SolicitudController extends Controller
             ->orderBy('idPrioridad')
             ->get();
 
-            return response()->json($data);
+        return response()->json($data);
     }
 
     public function fetchAreaTipoSolicitudes(Request $request)
@@ -714,7 +739,7 @@ class SolicitudController extends Controller
             ->join('tbl_tipoSolicitud', 'directorio.idArea', '=', 'tbl_tipoSolicitud.idArea')
             ->where('tbl_tipoSolicitud.idArea', '=', $idArea)
             ->get(['tbl_tipoSolicitud.idTipoSolicitud', 'tbl_tipoSolicitud.tipoSolicitud']);*/
-        
+
         $data['areaTipoSolicitud'] = TipoSolicitud::where('idArea', '=', $idArea)->get();
 
         return response()->json($data);

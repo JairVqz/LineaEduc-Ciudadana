@@ -28,7 +28,6 @@
 
 <body>
 
-
     <!-- Contenido Principal -->
     <div class="content">
         <div class="card" style="padding: 30px;">
@@ -72,12 +71,18 @@
                                         class="form-control" placeholder="">
                                 </div>
 
+                                <button type="button" class="accordion">Resultados similares <p
+                                        id="estatusCoincidencias"></p></button>
+                                <div class="panel">
+                                    <div id="resultadosBusquedaCoincidencias"></div>
+                                </div>
+
                                 <input type="hidden" name="curpUsuario" id="curpUsuario">
                                 <input type="hidden" name="usuario" id="usuario">
                                 <input type="hidden" name="horaInicio" id="horaInicio">
                                 <input type="hidden" name="nombreMunicipio" id="nombreMunicipio">
                                 <input type="hidden" name="nombreLocalidad" id="nombreLocalidad">
-                                <input name="idArea" id="idArea">
+                                <input type="hidden" name="idArea" id="idArea">
                             </div>
                         </fieldset>
                         <br>
@@ -127,8 +132,10 @@
                                     <select name="idExtension" id="idExtension" class="form-select select2-bootstrap"
                                         required>
                                         @foreach ($listaDirectorio as $data)
-                                            <option value="{{ $data->idExtensionCatalogo }}" data-idpuesto="{{ $data->idPuesto }}"
-                                                data-idarea="{{ $data->idArea }}" data-nombretitular="{{ $data->nombreTitular }}">
+                                            <option value="{{ $data->idExtensionCatalogo }}"
+                                                data-idpuesto="{{ $data->idPuesto }}"
+                                                data-idarea="{{ $data->idArea }}"
+                                                data-nombretitular="{{ $data->nombreTitular }}">
                                                 {{ $data->extension }} - {{ $data->area }} - {{ $data->puesto }}
                                             </option>
                                         @endforeach
@@ -138,8 +145,8 @@
                                 <div class="col-md-4">
                                     <label for="nombreTitular" class="form-label"
                                         style="font-weight:bold">Funcionario:</label>
-                                        <input type="text" name="nombreTitular" id="nombreTitular" class="form-control"
-                                        placeholder="" readonly>
+                                    <input type="text" name="nombreTitular" id="nombreTitular"
+                                        class="form-control" placeholder="" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="idTipoSolicitud" class="form-label" style="font-weight:bold">Tipo de
@@ -278,16 +285,127 @@
 <script>
     window.Laravel = <?php echo json_encode([
         'guardarSolicitud' => route('solicitud.store'),
-        'coincidenciasSolicitud' => route('solicitud.coincidenciasSolicitud'),
+        'coincidenciasSolicitudRegistro' => route('solicitud.coincidenciasSolicitudRegistro'),
         'apiPlantel' => route('solicitud.apiPlantel'),
         'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
     ]); ?>
 
     var listaPrioridades = @json($listaPrioridades);
 
-    const coincidenciasSolicitud = window.Laravel.coincidenciasSolicitud;
+    const RoutecoincidenciasSolicitudRegistro = window.Laravel.coincidenciasSolicitudRegistro;
 
     $(document).ready(function() {
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+
+        $('#nombre, #apellidoPaterno, #apellidoMaterno').on('change input', function() {
+            console.log('Hubo un cambio en alguno de los selects');
+
+            var busquedaNombre = $('#nombre').val();
+            var busquedaApellidoPaterno = $('#apellidoPaterno').val();
+            var busquedaApellidoMaterno = $('#apellidoMaterno').val();
+
+            console.log("parametros enviados: "+busquedaNombre+busquedaApellidoPaterno+busquedaApellidoMaterno);
+
+            $.ajax({
+                url: RoutecoincidenciasSolicitudRegistro,
+                type: 'GET',
+                data: {
+                    busquedaNombre: busquedaNombre,
+                    busquedaApellidoPaterno: busquedaApellidoPaterno,
+                    busquedaApellidoMaterno : busquedaApellidoMaterno,
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (!response || response.coincidenciasSolicitudRegistro.length === 0) {
+                        $('#resultadosBusquedaCoincidencias').html(
+                            '<p>No se encontraron coincidencias de solicitudes</p>');
+                        return;
+                    }
+
+                    var coincidencias = response.coincidenciasSolicitudRegistro;
+                    let content = '';
+
+                    content +=
+                        '<table class="table table-bordered table-striped" style="width: 100%;">';
+                    content += '<thead>';
+                    content += '<tr>';
+                    content += '<th>Folio</th>';
+                    content += '<th>Nombre solicitante</th>';
+                    content += '<th>Directorio</th>';
+                    content += '<th>Tipo de solicitud</th>';
+                    content += '<th>Descripción</th>';
+                    content += '<th>Fecha de registro</th>';
+                    content += '</tr>';
+                    content += '</thead>';
+                    content += '<tbody>';
+
+                    coincidencias.forEach(function(item, index) {
+                        if (item && item['folio']) {
+                            var folio = item['folio'];
+                            var solicitante = item['nombre'] + " " + item[
+                                'apellidoPaterno'] + " " + item[
+                                'apellidoMaterno'];
+                            var fechaRegistro = new Date(item['created_at']);
+                            var curp_usuario = item['curp_usuario'];
+                            var nombre_usuario = item['nombre_usuario'];
+                            var idArea = item['idArea'];
+                            var area = item['area'];
+
+                            //Formatear fecha
+                            var dia = fechaRegistro.getDate();
+                            var mes = fechaRegistro.getMonth() + 1;
+                            var anio = fechaRegistro.getFullYear();
+                            dia = dia < 10 ? '0' + dia : dia;
+                            mes = mes < 10 ? '0' + mes : mes;
+
+                            var fechaFormateada = `${dia}/${mes}/${anio}`;
+
+                            content += '<tr class="row-solicitud" data-index="' + index + '">';
+                            content += `<td>${folio}</td>`;
+                            content += `<td>${item['nombre']} ${item['apellidoPaterno']} ${item['apellidoMaterno']}</td>`;
+                            content += `<td>${item['area']} (Ext. ${item['extension']})</td>`;
+                            content += `<td>${item['tipoSolicitud']}</td>`;
+                            content += `<td>${item['descripcion']}</td>`;
+                            content += `<td>${fechaFormateada}</td>`;
+
+                            content +=
+                                `<td><button class="btn btn-warning" data-folio="${folio}" data-id_area="${idArea}" data-area="${area}"
+                                        data-solicitante="${solicitante}">Notificar <i class="bi bi-bell-fill"></i></button></td>`;
+
+                            content += '</tr>';
+
+                        }
+                    });
+
+                    content += '</tbody>';
+                    content += '</table>';
+
+                    $('#resultadosBusquedaCoincidencias').html(content);
+                },
+                error: function() {
+                    $('#resultadosBusquedaCoincidencias').html(
+                        '<p>Hubo un error al realizar la búsqueda.</p>');
+                },
+                complete: function() {
+                    isProcessing = false;
+                }
+            });
+        });
+
         $.ajax({
             url: 'https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/',
             //url: '/api-municipios',
@@ -352,7 +470,8 @@
 
     $(document).on('select2:open', (e) => {
         const selectId = e.target.id;
-        $(".select2-search__field[aria-controls='select2-"+selectId+"-results']").each(function (key,value,){
+        $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function(key,
+            value, ) {
             value.focus();
         });
     });

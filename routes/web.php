@@ -46,6 +46,7 @@ Route::middleware('auth.validation')->group(function () {
 
             // Buscar coincidencias de solicitudes por nombre
             Route::get('/solicitud', [SolicitudController::class, 'coincidenciasSolicitud'])->name('coincidenciasSolicitud');
+            Route::get('/coincidenciasSolicitud', [SolicitudController::class, 'coincidenciasSolicitudRegistro'])->name('coincidenciasSolicitudRegistro');
 
             // Obtener un registro
             Route::get('/solicitud/{folio}/detalle', [SolicitudController::class, 'detalle'])->name('solicitud.detalle');
