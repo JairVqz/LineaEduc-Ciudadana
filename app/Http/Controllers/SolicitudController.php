@@ -593,6 +593,7 @@ class SolicitudController extends Controller
             ->where('nombre', 'LIKE', '%' . $busquedaNombre . '%')
             ->where('apellidoPaterno', 'LIKE', '%' . $busquedaApellidoPaterno . '%')
             ->where('apellidoMaterno', 'LIKE', '%' . $busquedaApellidoMaterno . '%')
+            ->where('created_at', '>=', Carbon::now()->subDays(32))
             ->get();
         }
 

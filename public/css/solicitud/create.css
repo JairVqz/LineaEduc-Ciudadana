@@ -61,3 +61,16 @@ input[type="radio"]:hover+.btn {
     background-color: white;
     overflow: hidden;
 }
+
+.close {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    outline: none;
+}

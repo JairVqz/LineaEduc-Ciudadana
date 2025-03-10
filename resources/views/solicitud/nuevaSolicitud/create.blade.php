@@ -71,8 +71,10 @@
                                         class="form-control" placeholder="">
                                 </div>
 
-                                <button type="button" class="accordion">Resultados similares <p
-                                        id="estatusCoincidencias"></p></button>
+                                <button type="button" class="accordion">
+                                    <p id="estatusCoincidencias"
+                                        style="text-align: start; color: black; font-weight: bold;">Coincidencias...</p>
+                                </button>
                                 <div class="panel">
                                     <div id="resultadosBusquedaCoincidencias"></div>
                                 </div>
@@ -288,11 +290,15 @@
         'coincidenciasSolicitudRegistro' => route('solicitud.coincidenciasSolicitudRegistro'),
         'apiPlantel' => route('solicitud.apiPlantel'),
         'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
+        'notificarSeguimiento' => route('solicitud.notificarSeguimiento'),
+        'index' => route('solicitud.index'),
     ]); ?>
 
     var listaPrioridades = @json($listaPrioridades);
 
     const RoutecoincidenciasSolicitudRegistro = window.Laravel.coincidenciasSolicitudRegistro;
+    const notificarSeguimiento = window.Laravel.notificarSeguimiento;
+    const index = window.Laravel.index;
 
     $(document).ready(function() {
 
@@ -314,11 +320,11 @@
         $('#nombre, #apellidoPaterno, #apellidoMaterno').on('change input', function() {
             console.log('Hubo un cambio en alguno de los selects');
 
+            $('#estatusCoincidencias').text('Buscando solicitudes...');
+
             var busquedaNombre = $('#nombre').val();
             var busquedaApellidoPaterno = $('#apellidoPaterno').val();
             var busquedaApellidoMaterno = $('#apellidoMaterno').val();
-
-            console.log("parametros enviados: "+busquedaNombre+busquedaApellidoPaterno+busquedaApellidoMaterno);
 
             $.ajax({
                 url: RoutecoincidenciasSolicitudRegistro,
@@ -326,10 +332,13 @@
                 data: {
                     busquedaNombre: busquedaNombre,
                     busquedaApellidoPaterno: busquedaApellidoPaterno,
-                    busquedaApellidoMaterno : busquedaApellidoMaterno,
+                    busquedaApellidoMaterno: busquedaApellidoMaterno,
                 },
                 success: function(response) {
                     console.log(response);
+                    $('#estatusCoincidencias').text('Se encontraron ' + response
+                        .coincidenciasSolicitudRegistro.length +
+                        ' solicitudes que coinciden con los datos ingresados');
                     if (!response || response.coincidenciasSolicitudRegistro.length === 0) {
                         $('#resultadosBusquedaCoincidencias').html(
                             '<p>No se encontraron coincidencias de solicitudes</p>');
@@ -345,10 +354,12 @@
                     content += '<tr>';
                     content += '<th>Folio</th>';
                     content += '<th>Nombre solicitante</th>';
+                    content += '<th>Datos de contacto</th>';
                     content += '<th>Directorio</th>';
                     content += '<th>Tipo de solicitud</th>';
                     content += '<th>Descripción</th>';
                     content += '<th>Fecha de registro</th>';
+                    content += '<th>Acciones</th>';
                     content += '</tr>';
                     content += '</thead>';
                     content += '<tbody>';
@@ -364,6 +375,13 @@
                             var nombre_usuario = item['nombre_usuario'];
                             var idArea = item['idArea'];
                             var area = item['area'];
+                            var extension = item['extension'];
+                            var descripcion = item['descripcion'];
+                            var tipoSolicitud = item['tipoSolicitud'];
+
+                            var correo = item['correo'];
+                            var telefonoFijo = item['telefonoFijo'];
+                            var telefonoCelular = item['telefonoCelular'];
 
                             //Formatear fecha
                             var dia = fechaRegistro.getDate();
@@ -377,14 +395,18 @@
                             content += '<tr class="row-solicitud" data-index="' + index + '">';
                             content += `<td>${folio}</td>`;
                             content += `<td>${item['nombre']} ${item['apellidoPaterno']} ${item['apellidoMaterno']}</td>`;
-                            content += `<td>${item['area']} (Ext. ${item['extension']})</td>`;
-                            content += `<td>${item['tipoSolicitud']}</td>`;
-                            content += `<td>${item['descripcion']}</td>`;
+                            content += `<td>Correo: ${correo || 'Sin correo'} <br> telefonoFijo: ${telefonoFijo || 'Sin teléfono fijo'} 
+                                <br> telefonoCelular: ${telefonoCelular || 'Sin teléfono celular'}</td>`;
+                            content += `<td>${area} (Ext. ${extension})</td>`;
+                            content += `<td>${tipoSolicitud}</td>`;
+                            content += `<td>${descripcion}</td>`;
                             content += `<td>${fechaFormateada}</td>`;
 
                             content +=
-                                `<td><button class="btn btn-warning" data-folio="${folio}" data-id_area="${idArea}" data-area="${area}"
-                                        data-solicitante="${solicitante}">Notificar <i class="bi bi-bell-fill"></i></button></td>`;
+                                `<td><button id="btnNotificar" type="button" class="btn btn-warning" 
+                                    data-folio="${folio}" data-id_area="${idArea}" data-area="${area}" data-solicitante="${solicitante}" data-fecha="${fechaFormateada}"
+                                    data-descripcion="${descripcion}" data-tiposolicitud="${tipoSolicitud}" data-extension="${extension}">
+                                    Notificar <i class="bi bi-bell-fill"></i></button></td>`;
 
                             content += '</tr>';
 
@@ -405,6 +427,147 @@
                 }
             });
         });
+
+        $(document).on('click', '#btnNotificar', function (event) {
+        event.stopPropagation();
+        var folio = $(this).data('folio');
+        var nombre_usuario = $(this).data('nombre_usuario');
+        var curp_usuario = $(this).data('curp_usuario');
+        var idArea = $(this).data('id_area');
+        var area = $(this).data('area');
+        var solicitante = $(this).data('solicitante');
+        var descripcion = $(this).data('descripcion');
+        var tiposolicitud = $(this).data('tiposolicitud');
+        var fecha = $(this).data('fecha');
+        var extension = $(this).data('extension');
+
+        // Crear el modal dinámicamente
+        var modalHtml = `
+        <div class="modal fade" id="modalConfirmarNotificacion" tabindex="-1" role="dialog" aria-labelledby="modalConfirmarNotificacionTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalConfirmarNotificacionTitle">Enviar notificación al folio ${folio}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p style="color: #7A1737; font-weight: bold;">¿Deseas enviar la notificación de seguimiento en esta solicitud?</p>
+                <p><strong>Nombre del Usuario:</strong> ${solicitante}</p>
+                <p><strong>Fecha de la solicitud:</strong> ${fecha}</p>
+                <p><strong>Asignada a:</strong> ${area} (Ext. ${extension})</p>
+                <p><strong>Tipo de solicitud :</strong> ${tiposolicitud}</p>
+                <p><strong>Descripción:</strong> ${descripcion}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-color" id="enviarNotificacion">Enviar Notificación</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+
+        `<style>
+            #modalConfirmarNotificacion {
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modal-backdrop.show {
+                opacity: 0.4;
+            }
+
+        </style>`;
+
+        $('#modalConfirmarNotificacion').remove();
+        $('body').append(modalHtml);
+
+        $('#modalConfirmarNotificacion').modal({
+            backdrop: true,
+            keyboard: true
+        });
+
+        $('#modalConfirmarNotificacion').modal('show');
+
+        $('#modalConfirmarNotificacion .btn-secondary').on('click', function () {
+            $('#modalConfirmarNotificacion').modal('hide');
+        });
+
+        $('#modalConfirmarNotificacion .close').on('click', function () {
+            $('#modalConfirmarNotificacion').modal('hide');
+        });
+
+        $('#modalConfirmarNotificacion #enviarNotificacion').on('click', function () {
+            notificar(folio, idArea);
+            $('#modalConfirmarNotificacion').modal('hide');
+        });
+
+    });
+
+    function notificar(folio, idArea) {
+        const nombre_usuario = localStorage.getItem('nombreSEV');
+        const curp_usuario = localStorage.getItem('curpSEV');
+
+        fetch(notificarSeguimiento, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                folio: folio,
+                nombre_usuario: nombre_usuario,
+                curp_usuario: curp_usuario,
+                idArea: idArea,
+                comentario: "La solicitud ha recibido nuevamente una llamada, favor de revisar la soliciud y dar seguimiento",
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Notificación enviada exitosamente") {
+                    Swal.fire({
+                        icon: "success",
+                        title: "¡La notificación se ha enviado correctamente!",
+                        text: "Se ha enviado una notificación a la solicitud con el folio: " + data.folio +
+                            ", para que se seguimiento a la brevedad posible.",
+                        showCancelButton: false,
+                        confirmButtonText: `ACEPTAR`,
+                        confirmButtonColor: "#7A1737",
+                        cancelButtonText: `CANCELAR`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.close();
+                            window.location.href = index;
+                        } else {
+                            Swal.close();
+                            window.location.href = index;
+                        }
+                    });
+                    
+                }else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "¡Error al enviar la notificación!",
+                        text: "Ocurrió un error al enviar la notificación de la solicitud con el folio: " + data.folio + ", por favor intente de nuevo o recargue la página",
+                        showCancelButton: false,
+                        confirmButtonText: `ACEPTAR`,
+                        confirmButtonColor: "#7A1737",
+                        cancelButtonText: `CANCELAR`,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.close();
+                        }
+                    });
+                }
+                console.log('Notificación enviada:', data);
+                //alert('Notificación enviada exitosamente');
+            })
+            .catch(error => {
+                console.error('Error al enviar la notificación:', error);
+                //alert('Hubo un error al enviar la notificación');
+            });
+    }
 
         $.ajax({
             url: 'https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/',
