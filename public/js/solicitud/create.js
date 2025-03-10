@@ -78,21 +78,19 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#idNuevaArea').val('').trigger('change');
             $('#idNuevoTipoSolicitud').val(null).trigger('change');
             $('#idNuevaPrioridad').val('').trigger('change');
-            
+
             fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada);
 
         } else {
             var extensionSeleccionada = $('#idExtension').find('option:selected');
             var idPuesto = extensionSeleccionada.data('idpuesto');
-            var idArea = extensionSeleccionada.data('idarea');
 
-            fetchAreaTipoSolicitudes(idArea);
             $("#idArea").val(idArea);
             $('#idNuevoPuesto').val(idPuesto).trigger('change');
             $('#idNuevoArea').val(idArea).trigger('change');
             $('#idNuevoTipoSolicitud').val(null).trigger('change');
             $("#nombreTitular").val(nombreTitularAreaDirectorioSeleccionada);
-            
+
             fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada);
 
         }
@@ -110,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if ($('#idExtension').val() != "otro" && $('#idExtension').val() != null){
                 var extensionSeleccionada = $('#idExtension').find('option:selected');
-    
+
                 $('#idNuevaExtension').val($('#idExtension').val()).trigger('change');
                 $('#idNuevaArea').val(extensionSeleccionada.data('idarea')).trigger('change');
                 $('#idNuevoPuesto').val(extensionSeleccionada.data('idpuesto')).trigger('change');
@@ -120,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#idNuevoPuesto').val(null).trigger('change');
             }
 
-            
+
         }
     });
 
@@ -147,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 $("#idTipoSolicitud").append('<option value="otro">Otra</option>');
-                
+
                 $('#idTipoSolicitud').val(null);
 
                 $('#idTipoSolicitud').trigger('change');
@@ -265,9 +263,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (parametro === "") {
             //$('#resultadoApi').html("");
             document.getElementById("nivelCct").value = "";
-            document.getElementById("municipio").selectedIndex = 0;
+            document.getElementById("municipio").selectedIndex = -1;
+            $('#municipio').trigger('change');
             document.getElementById("nombreMunicipio").value = "";
-            document.getElementById("localidad").selectedIndex = 0;
+            document.getElementById("localidad").selectedIndex = -1;
+            $('#localidad').trigger('change');
             document.getElementById("nombreLocalidad").value = "";
             document.getElementById("nombreCct").value = "";
             document.getElementById("nombreDirector").value = "";

@@ -65,6 +65,7 @@
                                 extensión o número directo:</label>
                             <input type="number" name="nuevaExtension" id="nuevaExtension" class="form-control"
                                 placeholder="">
+                            <input hidden name="idNuevaExtension" id="idNuevaExtension">
                         </div>
 
                         <div class="col-md-12">
@@ -137,265 +138,259 @@
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script>
-        window.Laravel = <?php echo json_encode([
-            'guardarDirectorio' => route('directorio.storeDirectorioDinamico'),
-            'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
-        ]); ?>
+<script>
+    window.Laravel = <?php echo json_encode([
+        'guardarDirectorio' => route('directorio.storeDirectorioDinamico'),
+        'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
+    ]); ?>
 
-        const guardarDirectorioRoute = window.Laravel.guardarDirectorio;
-        const apiFetchAreaTipoSolicitudes = window.Laravel.apiFetchAreaTipoSolicitudes;
+    const guardarDirectorioRoute = window.Laravel.guardarDirectorio;
+    const apiFetchAreaTipoSolicitudes = window.Laravel.apiFetchAreaTipoSolicitudes;
 
-        document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
 
-            $('#idNuevaArea').on('change', function() {
-                console.log("detecto el cambio nuevaArea");
+        $('#idNuevaArea').on('change', function() {
 
-                if ($('#idNuevaArea').val() == "otro") {
-                    $('#nuevaArea').prop('readonly', false);
-                    $('#idNuevoTipoSolicitud').html("").trigger('change');
+            if ($('#idNuevaArea').val() == "otro") {
+                $('#nuevaArea').prop('readonly', false);
+                $('#idNuevoTipoSolicitud').html("").trigger('change');
 
-                } else if ($('#idNuevaArea').val() == null) {
-                    $('#nuevaArea').prop('readonly', true);
-                    $('#idNuevoTipoSolicitud').html("").trigger('change');
+            } else if ($('#idNuevaArea').val() == null) {
+                $('#nuevaArea').prop('readonly', true);
+                $('#idNuevoTipoSolicitud').html("").trigger('change');
 
-                } else {
-                    $('#nuevaArea').prop('readonly', true);
-                    fetchAreaTipoSolicitudes($('#idNuevaArea').val());
-
-                }
-
-            });
-
-            $('#idNuevoPuesto').on('change', function() {
-
-                if ($('#idNuevoPuesto').val() == "otro") {
-                    $('#nuevoPuesto').prop('readonly', false);
-                } else if ($('#idNuevoPuesto').val() == null) {
-                    $('#nuevoPuesto').prop('readonly', true);
-                } else {
-                    $('#nuevoPuesto').prop('readonly', true);
-                }
-
-            });
-
-            $('#idNuevoTipoSolicitud').on('change', function() {
-
-                if ($('#idNuevoTipoSolicitud').val() == "otro") {
-                    $('#nuevoTipoSolicitud').prop('readonly', false);
-                } else if ($('#idNuevoTipoSolicitud').val() == null) {
-                    $('#nuevoTipoSolicitud').prop('readonly', true);
-                } else {
-                    $('#nuevoTipoSolicitud').prop('readonly', true);
-                }
-
-            });
-
-            function fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada) {
-                console.log("idAreaDirec: " + idAreaDirectorioSeleccionada);
-
-                $.ajax({
-                    url: apiFetchAreaTipoSolicitudes,
-                    method: 'POST',
-                    dataType: 'json',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        idArea: idAreaDirectorioSeleccionada,
-                    },
-                    success: function(data) {
-
-                        $('#idNuevoTipoSolicitud').html('');
-
-                        $.each(data.areaTipoSolicitud, function(key, data) {
-                            $("#idNuevoTipoSolicitud").append('<option value="' + data
-                                .idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
-
-                        });
-
-                        $("#idNuevoTipoSolicitud").append('<option value="otro">Otra</option>');
-
-                        $('#idNuevoTipoSolicitud').val(null);
-
-                        $('#idNuevoTipoSolicitud').trigger('change');
-
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error al enviar la petición:', error);
-
-                    }
-                });
+            } else {
+                $('#nuevaArea').prop('readonly', true);
+                fetchAreaTipoSolicitudes($('#idNuevaArea').val());
 
             }
 
-            $('#guardarNuevoDirectorio').on('click', function(e) {
+        });
 
-                var idNuevaExtension = document.getElementById("idNuevaExtension").value;
-                var nuevaExtension = document.getElementById("nuevaExtension").value;
-                var nuevoFuncionario = document.getElementById("nuevoFuncionario").value;
-                var idNuevaArea = document.getElementById("idNuevaArea").value;
-                var nuevaArea = document.getElementById("nuevaArea").value;
-                var idNuevoPuesto = document.getElementById("idNuevoPuesto").value;
-                var nuevoPuesto = document.getElementById("nuevoPuesto").value;
-                var nuevoTipoSolicitud = document.getElementById("nuevoTipoSolicitud").value;
+        $('#idNuevoPuesto').on('change', function() {
 
-                fetch(guardarDirectorioRoute, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute(
-                                    'content')
-                        },
-                        body: JSON.stringify({
-                            idNuevaExtension: idNuevaExtension,
-                            nuevaExtension: nuevaExtension,
-                            nuevoFuncionario: nuevoFuncionario,
-                            idNuevaArea: idNuevaArea,
-                            nuevaArea: nuevaArea,
-                            idNuevoPuesto: idNuevoPuesto,
-                            nuevoPuesto: nuevoPuesto,
-                            idNuevoTipoSolicitud: 'otro',
-                            nuevoTipoSolicitud: nuevoTipoSolicitud,
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Petición enviada correctamente:', data);
-                        if (data.mensaje === "directorio guardado correctamente") {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Directorio registrado con éxito!",
-                                showCancelButton: false,
-                                confirmButtonText: `ACEPTAR`,
-                                confirmButtonColor: "#7A1737",
-                                cancelButtonText: `CANCELAR`,
-                            }).then((result) => {
-
-                                $('#idExtension').empty();
-                                $('#idExtension').select2('destroy');
-
-                                data.listaDirectorio.forEach(function(item) {
-                                    console.log("agregando..");
-                                    $('#idExtension').append(
-                                        `<option value="${item.idExtensionCatalogo}" data-idpuesto="${item.idPuesto}" 
-                                        data-idarea="${item.idArea}" data-nombretitular="${item.nombreTitular}">
-                                        ${item.extension} - ${item.area} - ${item.puesto}</option>`
-                                    );
-                                });
-
-                                $('#idExtension').append('<option value="otro">Otra</option>');
-
-                                $('#idExtension').select2({
-                                    placeholder: "Selecciona una extensión",
-                                    allowClear: true,
-                                    language: {
-                                        noResults: function() {
-                                            return "No hay resultados";
-                                        },
-                                        searching: function() {
-                                            return "Buscando..";
-                                        }
-                                    },
-                                    width: '100%'
-                                }).trigger('change');
-
-                                $('#idExtension').val(data.idExtension).trigger('change');
-
-                                if (result.isConfirmed) {
-                                    Swal.close();
-                                    $("#modalAgregarDirectorio").modal('hide');
-                                } else {
-                                    Swal.close();
-                                    $("#modalAgregarDirectorio").modal('hide');
-                                }
-                            });
-
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "¡Error al guardar el directorio!",
-                                text: "Ocurrió un error al guardar el directorio, por favor intente de nuevo o recargue la página",
-                                showCancelButton: false,
-                                confirmButtonText: `ACEPTAR`,
-                                confirmButtonColor: "#7A1737",
-                                cancelButtonText: `CANCELAR`,
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    Swal.close();
-                                }
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al enviar la petición:', error);
-                        //alert('Hubo un error al enviar la notificación');
-                    });
-            });
-
-            $('#idNuevaExtension').select2({
-                dropdownParent: $('#modalAgregarDirectorio'),
-                placeholder: "Selecciona una extensión",
-                allowClear: true,
-                language: {
-                    noResults: function() {
-                        return "No hay resultados";
-                    },
-                    searching: function() {
-                        return "Buscando..";
-                    }
-                },
-                width: '100%'
-            }).val(null).trigger('change');
-
-            $('#idNuevaArea').select2({
-                dropdownParent: $('#modalAgregarDirectorio'),
-                placeholder: "Selecciona una área",
-                allowClear: true,
-                language: {
-                    noResults: function() {
-                        return "No hay resultados";
-                    },
-                    searching: function() {
-                        return "Buscando..";
-                    }
-                },
-                width: '100%'
-            }).val(null).trigger('change');
-
-            $('#idNuevoPuesto').select2({
-                dropdownParent: $('#modalAgregarDirectorio'),
-                placeholder: "Selecciona un puesto",
-                allowClear: true,
-                language: {
-                    noResults: function() {
-                        return "No hay resultados";
-                    },
-                    searching: function() {
-                        return "Buscando..";
-                    }
-                },
-                width: '100%'
-            }).val(null).trigger('change');
-
-            $('#idNuevoTipoSolicitud').select2({
-                dropdownParent: $('#modalAgregarDirectorio'),
-                placeholder: "Selecciona un tipo de solicitud",
-                allowClear: true,
-                language: {
-                    noResults: function() {
-                        return "No hay resultados";
-                    },
-                    searching: function() {
-                        return "Buscando..";
-                    }
-                },
-                width: '100%'
-            }).val(null).trigger('change');
+            if ($('#idNuevoPuesto').val() == "otro") {
+                $('#nuevoPuesto').prop('readonly', false);
+            } else if ($('#idNuevoPuesto').val() == null) {
+                $('#nuevoPuesto').prop('readonly', true);
+            } else {
+                $('#nuevoPuesto').prop('readonly', true);
+            }
 
         });
-    </script>
+
+        $('#idNuevoTipoSolicitud').on('change', function() {
+
+            if ($('#idNuevoTipoSolicitud').val() == "otro") {
+                $('#nuevoTipoSolicitud').prop('readonly', false);
+            } else if ($('#idNuevoTipoSolicitud').val() == null) {
+                $('#nuevoTipoSolicitud').prop('readonly', true);
+            } else {
+                $('#nuevoTipoSolicitud').prop('readonly', true);
+            }
+
+        });
+
+        function fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada) {
+
+            $.ajax({
+                url: apiFetchAreaTipoSolicitudes,
+                method: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    idArea: idAreaDirectorioSeleccionada,
+                },
+                success: function(data) {
+
+                    $('#idNuevoTipoSolicitud').html('');
+
+                    $.each(data.areaTipoSolicitud, function(key, data) {
+                        $("#idNuevoTipoSolicitud").append('<option value="' + data
+                            .idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
+
+                    });
+
+                    $("#idNuevoTipoSolicitud").append('<option value="otro">Otra</option>');
+
+                    $('#idNuevoTipoSolicitud').val(null);
+
+                    $('#idNuevoTipoSolicitud').trigger('change');
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al enviar la petición:', error);
+
+                }
+            });
+
+        }
+
+        $('#guardarNuevoDirectorio').on('click', function(e) {
+
+            var idNuevaExtension = document.getElementById("idNuevaExtension").value;
+            var nuevaExtension = document.getElementById("nuevaExtension").value;
+            var nuevoFuncionario = document.getElementById("nuevoFuncionario").value;
+            var idNuevaArea = document.getElementById("idNuevaArea").value;
+            var nuevaArea = document.getElementById("nuevaArea").value;
+            var idNuevoPuesto = document.getElementById("idNuevoPuesto").value;
+            var nuevoPuesto = document.getElementById("nuevoPuesto").value;
+            var nuevoTipoSolicitud = document.getElementById("nuevoTipoSolicitud").value;
+
+            fetch(guardarDirectorioRoute, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute(
+                                'content')
+                    },
+                    body: JSON.stringify({
+                        idNuevaExtension: idNuevaExtension,
+                        nuevaExtension: nuevaExtension,
+                        nuevoFuncionario: nuevoFuncionario,
+                        idNuevaArea: idNuevaArea,
+                        nuevaArea: nuevaArea,
+                        idNuevoPuesto: idNuevoPuesto,
+                        nuevoPuesto: nuevoPuesto,
+                        idNuevoTipoSolicitud: 'otro',
+                        nuevoTipoSolicitud: nuevoTipoSolicitud,
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Petición enviada correctamente:', data);
+                    if (data.mensaje === "directorio guardado correctamente") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Directorio registrado con éxito!",
+                            showCancelButton: false,
+                            confirmButtonText: `ACEPTAR`,
+                            confirmButtonColor: "#7A1737",
+                            cancelButtonText: `CANCELAR`,
+                        }).then((result) => {
+
+                            /*REFRESCAR Y SELECCIONAR LA EXTENSION GUARDADA EN EL SELECT DIRECTORIO*/
+                            $('#idExtension').empty();
+                            $('#idExtension').select2('destroy');
+
+                            data.listaDirectorio.forEach(function(item) {
+                                $('#idExtension').append(
+                                    `<option value="${item.idExtensionCatalogo}" data-idpuesto="${item.idPuesto}"
+                                        data-idarea="${item.idArea}" data-nombretitular="${item.nombreTitular}">
+                                        ${item.extension} - ${item.area} - ${item.puesto}</option>`
+                                );
+                            });
+
+                            $('#idExtension').append('<option value="otro">Otra</option>');
+
+                            $('#idExtension').select2({
+                                placeholder: "Selecciona una extensión",
+                                allowClear: true,
+                                language: {
+                                    noResults: function() {
+                                        return "No hay resultados";
+                                    },
+                                    searching: function() {
+                                        return "Buscando..";
+                                    }
+                                },
+                                width: '100%'
+                            }).trigger('change');
+
+                            $('#idExtension').val(data.idExtension).trigger('change');
+                            /*FIN SELECT DIRECTORIO*/
+
+                            setTimeout(function() {
+                                console.log("entro a setear tipo: " + data
+                                    .idTipoSolicitud);
+                                $('#idTipoSolicitud').val(data.idTipoSolicitud)
+                                    .trigger('change');
+                                $('#idTipoSolicitud').trigger(
+                                'select2:open'); // Forzar la actualización si es necesario
+                            }, 500);
+
+                            if (result.isConfirmed) {
+                                Swal.close();
+                                $("#modalAgregarDirectorio").modal('hide');
+                            } else {
+                                Swal.close();
+                                $("#modalAgregarDirectorio").modal('hide');
+                            }
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "¡Error al guardar el directorio!",
+                            text: "Ocurrió un error al guardar el directorio, por favor intente de nuevo o recargue la página",
+                            showCancelButton: false,
+                            confirmButtonText: `ACEPTAR`,
+                            confirmButtonColor: "#7A1737",
+                            cancelButtonText: `CANCELAR`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.close();
+                            }
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al enviar la petición:', error);
+                    //alert('Hubo un error al enviar la notificación');
+                });
+        });
+
+        $('#idNuevaArea').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona una área",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
+
+        $('#idNuevoPuesto').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona un puesto",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
+
+        $('#idNuevoTipoSolicitud').select2({
+            dropdownParent: $('#modalAgregarDirectorio'),
+            placeholder: "Selecciona un tipo de solicitud",
+            allowClear: true,
+            language: {
+                noResults: function() {
+                    return "No hay resultados";
+                },
+                searching: function() {
+                    return "Buscando..";
+                }
+            },
+            width: '100%'
+        }).val(null).trigger('change');
+
+    });
+</script>
