@@ -319,7 +319,7 @@
 
         var xhrRequest = null;
 
-        $('#nombre, #apellidoPaterno, #apellidoMaterno').on('change input', function() {
+        $('#nombre, #apellidoPaterno, #apellidoMaterno').on('input', function() {
             console.log('Hubo un cambio en alguno de los selects');
 
             if (xhrRequest !== null) {
