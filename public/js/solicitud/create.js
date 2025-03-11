@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var extensionSeleccionada = $('#idExtension').find('option:selected');
             var idPuesto = extensionSeleccionada.data('idpuesto');
 
-            $("#idArea").val(idArea);
+            $("#idArea").val(idAreaDirectorioSeleccionada);
             $('#idNuevoPuesto').val(idPuesto).trigger('change');
             $('#idNuevoArea').val(idArea).trigger('change');
             $('#idNuevoTipoSolicitud').val(null).trigger('change');

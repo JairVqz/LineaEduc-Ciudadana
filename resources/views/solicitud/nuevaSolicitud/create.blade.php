@@ -71,13 +71,13 @@
                                         class="form-control" placeholder="">
                                 </div>
 
-                                <button type="button" class="accordion">
+                                {{--<button type="button" class="accordion">
                                     <p id="estatusCoincidencias"
                                         style="text-align: start; color: black; font-weight: bold;">Coincidencias...</p>
                                 </button>
                                 <div class="panel">
                                     <div id="resultadosBusquedaCoincidencias"></div>
-                                </div>
+                                </div>--}}
 
                                 <input type="hidden" name="curpUsuario" id="curpUsuario">
                                 <input type="hidden" name="usuario" id="usuario">
