@@ -319,13 +319,18 @@
 
         var xhrRequest = null;
 
+        let debounceTimer; // Variable para almacenar el temporizador de debounce
         $('#nombre, #apellidoPaterno, #apellidoMaterno').on('input', function() {
-            console.log('Hubo un cambio en alguno de los selects');
+            console.log('Hubo un cambio en alguno de los inputs');
 
+            // Cancelar la solicitud anterior si existe
             if (xhrRequest !== null) {
                 xhrRequest.abort();
                 console.log('Solicitud anterior cancelada');
             }
+
+            // Cancelar cualquier ejecución pendiente de la función de búsqueda
+            clearTimeout(debounceTimer);
 
             $('#estatusCoincidencias').text('Buscando solicitudes...');
 
@@ -333,105 +338,114 @@
             var busquedaApellidoPaterno = $('#apellidoPaterno').val();
             var busquedaApellidoMaterno = $('#apellidoMaterno').val();
 
-            xhrRequest = $.ajax({
-                url: RoutecoincidenciasSolicitudRegistro,
-                type: 'GET',
-                data: {
-                    busquedaNombre: busquedaNombre,
-                    busquedaApellidoPaterno: busquedaApellidoPaterno,
-                    busquedaApellidoMaterno: busquedaApellidoMaterno,
-                },
-                success: function(response) {
-                    console.log(response);
-                    $('#estatusCoincidencias').text('Se encontraron ' + response
-                        .coincidenciasSolicitudRegistro.length +
-                        ' solicitudes que coinciden con los datos ingresados');
-                    if (!response || response.coincidenciasSolicitudRegistro.length === 0) {
-                        $('#resultadosBusquedaCoincidencias').html(
-                            '<p>No se encontraron coincidencias de solicitudes</p>');
-                        return;
-                    }
+            // Esperar 500 ms después de la última entrada antes de hacer la solicitud AJAX
+            debounceTimer = setTimeout(function() {
+                xhrRequest = $.ajax({
+                    url: RoutecoincidenciasSolicitudRegistro,
+                    type: 'GET',
+                    data: {
+                        busquedaNombre: busquedaNombre,
+                        busquedaApellidoPaterno: busquedaApellidoPaterno,
+                        busquedaApellidoMaterno: busquedaApellidoMaterno,
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#estatusCoincidencias').text('Se encontraron ' + response
+                            .coincidenciasSolicitudRegistro.length +
+                            ' solicitudes que coinciden con los datos ingresados'
+                            );
 
-                    var coincidencias = response.coincidenciasSolicitudRegistro;
-                    let content = '';
-
-                    content +=
-                        '<table class="table table-bordered table-striped" style="width: 100%;">';
-                    content += '<thead>';
-                    content += '<tr>';
-                    content += '<th>Folio</th>';
-                    content += '<th>Nombre solicitante</th>';
-                    content += '<th>Datos de contacto</th>';
-                    content += '<th>Directorio</th>';
-                    content += '<th>Tipo de solicitud</th>';
-                    content += '<th>Descripción</th>';
-                    content += '<th>Fecha de registro</th>';
-                    content += '<th>Acciones</th>';
-                    content += '</tr>';
-                    content += '</thead>';
-                    content += '<tbody>';
-
-                    coincidencias.forEach(function(item, index) {
-                        if (item && item['folio']) {
-                            var folio = item['folio'];
-                            var solicitante = item['nombre'] + " " + item[
-                                'apellidoPaterno'] + " " + item[
-                                'apellidoMaterno'];
-                            var fechaRegistro = new Date(item['created_at']);
-                            var curp_usuario = item['curp_usuario'];
-                            var nombre_usuario = item['nombre_usuario'];
-                            var idArea = item['idArea'];
-                            var area = item['area'];
-                            var extension = item['extension'];
-                            var descripcion = item['descripcion'];
-                            var tipoSolicitud = item['tipoSolicitud'];
-
-                            var correo = item['correo'];
-                            var telefonoFijo = item['telefonoFijo'];
-                            var telefonoCelular = item['telefonoCelular'];
-
-                            // Formatear fecha
-                            var dia = fechaRegistro.getDate();
-                            var mes = fechaRegistro.getMonth() + 1;
-                            var anio = fechaRegistro.getFullYear();
-                            dia = dia < 10 ? '0' + dia : dia;
-                            mes = mes < 10 ? '0' + mes : mes;
-
-                            var fechaFormateada = `${dia}/${mes}/${anio}`;
-
-                            content += '<tr class="row-solicitud" data-index="' + index + '">';
-                            content += `<td>${folio}</td>`;
-                            content += `<td>${item['nombre']} ${item['apellidoPaterno']} ${item['apellidoMaterno']}</td>`;
-                            content += `<td>Correo: ${correo || 'Sin correo'} <br> telefonoFijo: ${telefonoFijo || 'Sin teléfono fijo'} 
-                                <br> telefonoCelular: ${telefonoCelular || 'Sin teléfono celular'}</td>`;
-                            content += `<td>${area} (Ext. ${extension})</td>`;
-                            content += `<td>${tipoSolicitud}</td>`;
-                            content += `<td>${descripcion}</td>`;
-                            content += `<td>${fechaFormateada}</td>`;
-
-                            content += `<td><button id="btnNotificar" type="button" class="btn btn-warning" 
-                                    data-folio="${folio}" data-id_area="${idArea}" data-area="${area}" data-solicitante="${solicitante}" data-fecha="${fechaFormateada}"
-                                    data-descripcion="${descripcion}" data-tiposolicitud="${tipoSolicitud}" data-extension="${extension}">
-                                    Notificar <i class="bi bi-bell-fill"></i></button></td>`;
-
-                            content += '</tr>';
+                        if (!response || response.coincidenciasSolicitudRegistro
+                            .length === 0) {
+                            $('#resultadosBusquedaCoincidencias').html(
+                                '<p>No se encontraron coincidencias de solicitudes</p>'
+                                );
+                            return;
                         }
-                    });
 
-                    content += '</tbody>';
-                    content += '</table>';
+                        var coincidencias = response.coincidenciasSolicitudRegistro;
+                        let content = '';
 
-                    $('#resultadosBusquedaCoincidencias').html(content);
-                },
-                error: function() {
-                    $('#resultadosBusquedaCoincidencias').html(
-                        '<p>Hubo un error al realizar la búsqueda.</p>');
-                },
-                complete: function() {
-                    xhrRequest =
-                    null;
-                }
-            });
+                        content +=
+                            '<table class="table table-bordered table-striped" style="width: 100%;">';
+                        content += '<thead>';
+                        content += '<tr>';
+                        content += '<th>Folio</th>';
+                        content += '<th>Nombre solicitante</th>';
+                        content += '<th>Datos de contacto</th>';
+                        content += '<th>Directorio</th>';
+                        content += '<th>Tipo de solicitud</th>';
+                        content += '<th>Descripción</th>';
+                        content += '<th>Fecha de registro</th>';
+                        content += '<th>Acciones</th>';
+                        content += '</tr>';
+                        content += '</thead>';
+                        content += '<tbody>';
+
+                        coincidencias.forEach(function(item, index) {
+                            if (item && item['folio']) {
+                                var folio = item['folio'];
+                                var solicitante = item['nombre'] + " " +
+                                    item['apellidoPaterno'] + " " + item[
+                                        'apellidoMaterno'];
+                                var fechaRegistro = new Date(item[
+                                    'created_at']);
+                                var curp_usuario = item['curp_usuario'];
+                                var nombre_usuario = item['nombre_usuario'];
+                                var idArea = item['idArea'];
+                                var area = item['area'];
+                                var extension = item['extension'];
+                                var descripcion = item['descripcion'];
+                                var tipoSolicitud = item['tipoSolicitud'];
+
+                                var correo = item['correo'];
+                                var telefonoFijo = item['telefonoFijo'];
+                                var telefonoCelular = item[
+                                    'telefonoCelular'];
+
+                                // Formatear fecha
+                                var dia = fechaRegistro.getDate();
+                                var mes = fechaRegistro.getMonth() + 1;
+                                var anio = fechaRegistro.getFullYear();
+                                dia = dia < 10 ? '0' + dia : dia;
+                                mes = mes < 10 ? '0' + mes : mes;
+
+                                var fechaFormateada = `${dia}/${mes}/${anio}`;
+
+                                content += '<tr class="row-solicitud" data-index="' + index + '">';
+                                content += `<td>${folio}</td>`;
+                                content += `<td>${item['nombre']} ${item['apellidoPaterno']} ${item['apellidoMaterno']}</td>`;
+                                content +=
+                                    `<td>Correo: ${correo || 'Sin correo'} <br> telefonoFijo: ${telefonoFijo || 'Sin teléfono fijo'} <br> telefonoCelular: ${telefonoCelular || 'Sin teléfono celular'}</td>`;
+                                content += `<td>${area} (Ext. ${extension})</td>`;
+                                content += `<td>${tipoSolicitud}</td>`;
+                                content += `<td>${descripcion}</td>`;
+                                content += `<td>${fechaFormateada}</td>`;
+
+                                content += `<td><button id="btnNotificar" type="button" class="btn btn-warning" 
+                                data-folio="${folio}" data-id_area="${idArea}" data-area="${area}" data-solicitante="${solicitante}" data-fecha="${fechaFormateada}"
+                                data-descripcion="${descripcion}" data-tiposolicitud="${tipoSolicitud}" data-extension="${extension}">
+                                Notificar <i class="bi bi-bell-fill"></i></button></td>`;
+
+                                content += '</tr>';
+                            }
+                        });
+
+                        content += '</tbody>';
+                        content += '</table>';
+
+                        $('#resultadosBusquedaCoincidencias').html(content);
+                    },
+                    error: function() {
+                        $('#resultadosBusquedaCoincidencias').html(
+                            '<p>Hubo un error al realizar la búsqueda.</p>');
+                    },
+                    complete: function() {
+                        xhrRequest = null;
+                    }
+                });
+            },
+            500); // Retraso de 500 ms para realizar la solicitud después de que el usuario termine de escribir
         });
 
         $(document).on('click', '#btnNotificar', function(event) {
