@@ -590,9 +590,9 @@ class SolicitudController extends Controller
         
         } else {
             $data['coincidenciasSolicitudRegistro'] = DB::table('listarSolicitudes')
-            ->where('nombre', 'LIKE', '%' . $busquedaNombre . '%')
-            ->where('apellidoPaterno', 'LIKE', '%' . $busquedaApellidoPaterno . '%')
-            ->where('apellidoMaterno', 'LIKE', '%' . $busquedaApellidoMaterno . '%')
+            ->where('nombre', 'LIKE',  $busquedaNombre . '%')
+            ->where('apellidoPaterno', 'LIKE',  $busquedaApellidoPaterno . '%')
+            ->where('apellidoMaterno', 'LIKE',  $busquedaApellidoMaterno . '%')
             ->where('created_at', '>=', Carbon::now()->subDays(32))
             ->get();
         }

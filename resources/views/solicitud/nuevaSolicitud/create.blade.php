@@ -71,13 +71,13 @@
                                         class="form-control" placeholder="">
                                 </div>
 
-                                {{--<button type="button" class="accordion">
+                                <button type="button" class="accordion">
                                     <p id="estatusCoincidencias"
                                         style="text-align: start; color: black; font-weight: bold;">Coincidencias...</p>
                                 </button>
                                 <div class="panel">
                                     <div id="resultadosBusquedaCoincidencias"></div>
-                                </div>--}}
+                                </div>
 
                                 <input type="hidden" name="curpUsuario" id="curpUsuario">
                                 <input type="hidden" name="usuario" id="usuario">
@@ -317,8 +317,15 @@
             });
         }
 
+        var xhrRequest = null;
+
         $('#nombre, #apellidoPaterno, #apellidoMaterno').on('change input', function() {
             console.log('Hubo un cambio en alguno de los selects');
+
+            if (xhrRequest !== null) {
+                xhrRequest.abort();
+                console.log('Solicitud anterior cancelada');
+            }
 
             $('#estatusCoincidencias').text('Buscando solicitudes...');
 
@@ -326,7 +333,7 @@
             var busquedaApellidoPaterno = $('#apellidoPaterno').val();
             var busquedaApellidoMaterno = $('#apellidoMaterno').val();
 
-            $.ajax({
+            xhrRequest = $.ajax({
                 url: RoutecoincidenciasSolicitudRegistro,
                 type: 'GET',
                 data: {
@@ -383,7 +390,7 @@
                             var telefonoFijo = item['telefonoFijo'];
                             var telefonoCelular = item['telefonoCelular'];
 
-                            //Formatear fecha
+                            // Formatear fecha
                             var dia = fechaRegistro.getDate();
                             var mes = fechaRegistro.getMonth() + 1;
                             var anio = fechaRegistro.getFullYear();
@@ -402,14 +409,12 @@
                             content += `<td>${descripcion}</td>`;
                             content += `<td>${fechaFormateada}</td>`;
 
-                            content +=
-                                `<td><button id="btnNotificar" type="button" class="btn btn-warning" 
+                            content += `<td><button id="btnNotificar" type="button" class="btn btn-warning" 
                                     data-folio="${folio}" data-id_area="${idArea}" data-area="${area}" data-solicitante="${solicitante}" data-fecha="${fechaFormateada}"
                                     data-descripcion="${descripcion}" data-tiposolicitud="${tipoSolicitud}" data-extension="${extension}">
                                     Notificar <i class="bi bi-bell-fill"></i></button></td>`;
 
                             content += '</tr>';
-
                         }
                     });
 
@@ -423,26 +428,27 @@
                         '<p>Hubo un error al realizar la búsqueda.</p>');
                 },
                 complete: function() {
-                    isProcessing = false;
+                    xhrRequest =
+                    null;
                 }
             });
         });
 
-        $(document).on('click', '#btnNotificar', function (event) {
-        event.stopPropagation();
-        var folio = $(this).data('folio');
-        var nombre_usuario = $(this).data('nombre_usuario');
-        var curp_usuario = $(this).data('curp_usuario');
-        var idArea = $(this).data('id_area');
-        var area = $(this).data('area');
-        var solicitante = $(this).data('solicitante');
-        var descripcion = $(this).data('descripcion');
-        var tiposolicitud = $(this).data('tiposolicitud');
-        var fecha = $(this).data('fecha');
-        var extension = $(this).data('extension');
+        $(document).on('click', '#btnNotificar', function(event) {
+            event.stopPropagation();
+            var folio = $(this).data('folio');
+            var nombre_usuario = $(this).data('nombre_usuario');
+            var curp_usuario = $(this).data('curp_usuario');
+            var idArea = $(this).data('id_area');
+            var area = $(this).data('area');
+            var solicitante = $(this).data('solicitante');
+            var descripcion = $(this).data('descripcion');
+            var tiposolicitud = $(this).data('tiposolicitud');
+            var fecha = $(this).data('fecha');
+            var extension = $(this).data('extension');
 
-        // Crear el modal dinámicamente
-        var modalHtml = `
+            // Crear el modal dinámicamente
+            var modalHtml = `
         <div class="modal fade" id="modalConfirmarNotificacion" tabindex="-1" role="dialog" aria-labelledby="modalConfirmarNotificacionTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -469,7 +475,7 @@
         </div>
         `;
 
-        `<style>
+            `<style>
             #modalConfirmarNotificacion {
                 background-color: rgba(0, 0, 0, 0.5);
             }
@@ -480,94 +486,97 @@
 
         </style>`;
 
-        $('#modalConfirmarNotificacion').remove();
-        $('body').append(modalHtml);
+            $('#modalConfirmarNotificacion').remove();
+            $('body').append(modalHtml);
 
-        $('#modalConfirmarNotificacion').modal({
-            backdrop: true,
-            keyboard: true
-        });
-
-        $('#modalConfirmarNotificacion').modal('show');
-
-        $('#modalConfirmarNotificacion .btn-secondary').on('click', function () {
-            $('#modalConfirmarNotificacion').modal('hide');
-        });
-
-        $('#modalConfirmarNotificacion .close').on('click', function () {
-            $('#modalConfirmarNotificacion').modal('hide');
-        });
-
-        $('#modalConfirmarNotificacion #enviarNotificacion').on('click', function () {
-            notificar(folio, idArea);
-            $('#modalConfirmarNotificacion').modal('hide');
-        });
-
-    });
-
-    function notificar(folio, idArea) {
-        const nombre_usuario = localStorage.getItem('nombreSEV');
-        const curp_usuario = localStorage.getItem('curpSEV');
-
-        fetch(notificarSeguimiento, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({
-                folio: folio,
-                nombre_usuario: nombre_usuario,
-                curp_usuario: curp_usuario,
-                idArea: idArea,
-                comentario: "La solicitud ha recibido nuevamente una llamada, favor de revisar la soliciud y dar seguimiento",
-            })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === "Notificación enviada exitosamente") {
-                    Swal.fire({
-                        icon: "success",
-                        title: "¡La notificación se ha enviado correctamente!",
-                        text: "Se ha enviado una notificación a la solicitud con el folio: " + data.folio +
-                            ", para que se seguimiento a la brevedad posible.",
-                        showCancelButton: false,
-                        confirmButtonText: `ACEPTAR`,
-                        confirmButtonColor: "#7A1737",
-                        cancelButtonText: `CANCELAR`,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.close();
-                            window.location.href = index;
-                        } else {
-                            Swal.close();
-                            window.location.href = index;
-                        }
-                    });
-                    
-                }else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "¡Error al enviar la notificación!",
-                        text: "Ocurrió un error al enviar la notificación de la solicitud con el folio: " + data.folio + ", por favor intente de nuevo o recargue la página",
-                        showCancelButton: false,
-                        confirmButtonText: `ACEPTAR`,
-                        confirmButtonColor: "#7A1737",
-                        cancelButtonText: `CANCELAR`,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            Swal.close();
-                        }
-                    });
-                }
-                console.log('Notificación enviada:', data);
-                //alert('Notificación enviada exitosamente');
-            })
-            .catch(error => {
-                console.error('Error al enviar la notificación:', error);
-                //alert('Hubo un error al enviar la notificación');
+            $('#modalConfirmarNotificacion').modal({
+                backdrop: true,
+                keyboard: true
             });
-    }
+
+            $('#modalConfirmarNotificacion').modal('show');
+
+            $('#modalConfirmarNotificacion .btn-secondary').on('click', function() {
+                $('#modalConfirmarNotificacion').modal('hide');
+            });
+
+            $('#modalConfirmarNotificacion .close').on('click', function() {
+                $('#modalConfirmarNotificacion').modal('hide');
+            });
+
+            $('#modalConfirmarNotificacion #enviarNotificacion').on('click', function() {
+                notificar(folio, idArea);
+                $('#modalConfirmarNotificacion').modal('hide');
+            });
+
+        });
+
+        function notificar(folio, idArea) {
+            const nombre_usuario = localStorage.getItem('nombreSEV');
+            const curp_usuario = localStorage.getItem('curpSEV');
+
+            fetch(notificarSeguimiento, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify({
+                        folio: folio,
+                        nombre_usuario: nombre_usuario,
+                        curp_usuario: curp_usuario,
+                        idArea: idArea,
+                        comentario: "La solicitud ha recibido nuevamente una llamada, favor de revisar la soliciud y dar seguimiento",
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Notificación enviada exitosamente") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "¡La notificación se ha enviado correctamente!",
+                            text: "Se ha enviado una notificación a la solicitud con el folio: " +
+                                data.folio +
+                                ", para que se seguimiento a la brevedad posible.",
+                            showCancelButton: false,
+                            confirmButtonText: `ACEPTAR`,
+                            confirmButtonColor: "#7A1737",
+                            cancelButtonText: `CANCELAR`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.close();
+                                window.location.href = index;
+                            } else {
+                                Swal.close();
+                                window.location.href = index;
+                            }
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "¡Error al enviar la notificación!",
+                            text: "Ocurrió un error al enviar la notificación de la solicitud con el folio: " +
+                                data.folio + ", por favor intente de nuevo o recargue la página",
+                            showCancelButton: false,
+                            confirmButtonText: `ACEPTAR`,
+                            confirmButtonColor: "#7A1737",
+                            cancelButtonText: `CANCELAR`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.close();
+                            }
+                        });
+                    }
+                    console.log('Notificación enviada:', data);
+                    //alert('Notificación enviada exitosamente');
+                })
+                .catch(error => {
+                    console.error('Error al enviar la notificación:', error);
+                    //alert('Hubo un error al enviar la notificación');
+                });
+        }
 
         $.ajax({
             url: 'https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/',
