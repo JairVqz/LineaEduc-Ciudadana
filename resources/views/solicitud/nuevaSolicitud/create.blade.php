@@ -223,14 +223,12 @@
                                 <div class="col-md-6" id="divMunicipio">
                                     <label for="municipio" class="form-label"
                                         style="font-weight:bold">Municipio:</label>
-                                    <!--input type="text" name="municipio" id="municipio" class="form-control"-->
                                     <select name="municipio" id="municipio" class="form-control select2-bootstrap">
                                     </select>
                                 </div>
                                 <div class="col-md-6" id="divLocalidad">
                                     <label for="localidad" class="form-label"
                                         style="font-weight:bold">Localidad:</label>
-                                    <!--input type="text" name="localidad" id="localidad" class="form-control"-->
                                     <select name="localidad" id="localidad" class="form-select select2-bootstrap"
                                         style="pointer-events: none; background-color: #f1f1f1;">
                                     </select>

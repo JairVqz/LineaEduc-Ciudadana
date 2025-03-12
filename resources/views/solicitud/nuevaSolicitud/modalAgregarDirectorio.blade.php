@@ -63,8 +63,9 @@
                         <div class="col-md-12">
                             <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
                                 extensión o número directo:</label>
-                            <input type="number" name="nuevaExtension" id="nuevaExtension" class="form-control"
-                                placeholder="">
+                            <input type="number" min="0" maxlength="10"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                name="nuevaExtension" id="nuevaExtension" class="form-control" placeholder="">
                             <input type="hidden" name="idNuevaExtension" id="idNuevaExtension">
                         </div>
 
@@ -314,7 +315,8 @@
                                 $('#idTipoSolicitud').val(data.idTipoSolicitud)
                                     .trigger('change');
                                 $('#idTipoSolicitud').trigger(
-                                'select2:open'); // Forzar la actualización si es necesario
+                                    'select2:open'
+                                    ); // Forzar la actualización si es necesario
                             }, 1000);
 
                             if (result.isConfirmed) {

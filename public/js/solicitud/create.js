@@ -234,6 +234,17 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('divLocalidad').style.display = 'none';
             document.getElementById('divNombreDirector').style.display = 'none';
             document.getElementById('divDireccionCct').style.display = 'none';
+
+            $('#cct').val('');
+            $('#nivelCct').val('');
+            $('#nombreCct').val('');
+            $('#municipio').val(null).trigger('change');
+            $('#nombreMunicipio').val('');
+            $('#localidad').val(null).trigger('change');
+            $('#nombreLocalidad').val('');
+            $('#nombreDirector').val('');
+            $('#direccionCct').val('');
+
         } else if (this.id === 'mpioLoc') {
 
             document.getElementById('datosUbicacion').style.display = 'block';
@@ -245,6 +256,16 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('divLocalidad').style.display = 'block';
             document.getElementById('divNombreDirector').style.display = 'none';
             document.getElementById('divDireccionCct').style.display = 'none';
+
+            $('#cct').val('');
+            $('#nivelCct').val('');
+            $('#nombreCct').val('');
+            $('#municipio').val(null).trigger('change');
+            $('#nombreMunicipio').val('');
+            $('#localidad').val(null).trigger('change');
+            $('#nombreLocalidad').val('');
+            $('#nombreDirector').val('');
+            $('#direccionCct').val('');
         }
     });
 
