@@ -269,7 +269,7 @@ class SolicitudController extends Controller
 
         $solicitud = new Solicitud();
 
-        $solicitudes = $solicitud->listarSolicitudes();
+        $solicitudes = $solicitud->listarSolicitudesDESC();
         $listaTiposSolicitud = TipoSolicitud::all(); // Para los filtros
         $listaAreas = CatalogoAreas::all();
         $listaPrioridades = Prioridad::all();
