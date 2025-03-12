@@ -28,7 +28,6 @@
 
 <body>
 
-
     <!-- Contenido Principal -->
     <div class="content">
         <div class="card" style="padding: 30px;">
@@ -72,11 +71,20 @@
                                         class="form-control" placeholder="">
                                 </div>
 
+                                <button type="button" class="accordion">
+                                    <p id="estatusCoincidencias"
+                                        style="text-align: start; color: black; font-weight: bold;">Coincidencias...</p>
+                                </button>
+                                <div class="panel">
+                                    <div id="resultadosBusquedaCoincidencias"></div>
+                                </div>
+
                                 <input type="hidden" name="curpUsuario" id="curpUsuario">
                                 <input type="hidden" name="usuario" id="usuario">
                                 <input type="hidden" name="horaInicio" id="horaInicio">
                                 <input type="hidden" name="nombreMunicipio" id="nombreMunicipio">
                                 <input type="hidden" name="nombreLocalidad" id="nombreLocalidad">
+                                <input type="hidden" name="idArea" id="idArea">
                             </div>
                         </fieldset>
                         <br>
@@ -120,117 +128,48 @@
                                     class="bi bi-telephone-fill" style="margin-right:5px;"></i>Datos de la solicitud:
                             </legend>
                             <div class="row g-3">
-                                <div class="col-md-2">
+                                <div class="col-md-4">
                                     <label for="idExtension" class="form-label"
-                                        style="font-weight:bold">Extensión:</label>
+                                        style="font-weight:bold">Directorio:</label>
                                     <select name="idExtension" id="idExtension" class="form-select select2-bootstrap"
                                         required>
-                                        @foreach ($listaExtensiones as $data)
-                                            <option value="{{ $data->idExtensionCatalogo }}" data-idpuesto="{{ $data->idPuesto }}">
-                                                {{ $data->extension }}
+                                        @foreach ($listaDirectorio as $data)
+                                            <option value="{{ $data->idExtensionCatalogo }}"
+                                                data-idpuesto="{{ $data->idPuesto }}"
+                                                data-idarea="{{ $data->idArea }}"
+                                                data-nombretitular="{{ $data->nombreTitular }}">
+                                                {{ $data->extension }} - {{ $data->area }} - {{ $data->puesto }}
                                             </option>
                                         @endforeach
                                         <option value="otro">Otra</option>
                                     </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="nombreTitular" class="form-label"
-                                        style="font-weight:bold">Funcionario:</label>
-                                        <input type="text" name="nombreTitular" id="nombreTitular" class="form-control"
-                                        placeholder="" readonly>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="idArea" class="form-label" style="font-weight:bold">Área que
-                                        atiende:</label>
-                                    <select name="idArea" id="idArea" class="form-select select2-bootstrap"
-                                        required>
-                                        @foreach ($listaAreas as $data)
-                                            <option value="{{ $data->idArea }}">
-                                                {{ $data->area }}
-                                            </option>
-                                        @endforeach
-                                        <option value="otro">Otra</option>
-                                    </select>
+                                    <label for="nombreTitular" class="form-label"
+                                        style="font-weight:bold">Funcionario:</label>
+                                    <input type="text" name="nombreTitular" id="nombreTitular"
+                                        class="form-control" placeholder="" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="idTipoSolicitud" class="form-label" style="font-weight:bold">Tipo de
                                         Solicitud:</label>
                                     <select name="idTipoSolicitud" id="idTipoSolicitud"
                                         class="form-select select2-bootstrap" required>
-                                        @foreach ($listaTiposSolicitud as $data)
-                                            <option value="{{ $data->idTipoSolicitud }}">
-                                                {{ $data->tipoSolicitud }}
-                                            </option>
-                                        @endforeach
-                                        <option value="otro">Otro</option>
                                     </select>
                                 </div>
-                                {{--<div class="col-md-2">
-                                    <label for="idPrioridad" class="form-label"
-                                        style="font-weight:bold">Prioridad:</label>
-                                    <select name="idPrioridad" id="idPrioridad" class="form-select select2-bootstrap"
-                                        required>
-                                        @foreach ($listaPrioridades as $data)
-                                            <option value="{{ $data->idPrioridad }}">
-                                                {{ $data->prioridad }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>--}}
-
-                            @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
-
-                            {{--<div id="nuevosCatalogos" style="display: none">
-                                <div class="row g-3">
-                                    <div class="col-md-2">
-                                        <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
-                                            Extensión:</label>
-                                        <input type="number" name="nuevaExtension" id="nuevaExtension"
-                                            class="form-control" placeholder="" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
-                                            Área:</label>
-                                        <input type="text" name="nuevaArea" id="nuevaArea" class="form-control"
-                                            placeholder="" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="nuevoTipoSolicitud" class="form-label"
-                                            style="font-weight:bold">Nuevo tipo de solicitud:</label>
-                                        <input type="text" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud"
-                                            class="form-control" placeholder="" readonly>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <label for="idNuevaPrioridad" class="form-label" style="font-weight:bold">Prioridad:</label>
-                                        <select name="idNuevaPrioridad" id="idNuevaPrioridad" class="form-select">
-                                            <option value="" hidden></option>
-                                            @foreach ($listaPrioridades as $data)
-                                                <option value="{{ $data->idPrioridad }}">
-                                                    {{ $data->prioridad }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>--}}
-
                                 <div class="col-md-12">
                                     <label for="descripcion" class="form-label"
                                         style="font-weight:bold">Descripción:</label>
                                     <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="" required></textarea>
                                 </div>
+
+                                @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
+
                             </div>
                         </fieldset>
                         <br>
 
                         <div class="row g-3">
-                            <!--div class="d-flex align-items-center justify-content-center">
-                                <input class="form-check-input mr-2" type="checkbox" value=""
-                                    id="origenSolicitud" style="transform: scale(1.5); margin-right: 15px;">
-                                <label class="form-check-label ml-4" for="origenSolicitud" style="font-weight: bold">
-                                    La solicitud proviene de un CCT
-                                </label>
-                            </div-->
                             <div class="d-flex align-items-center justify-content-center">
 
                                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group"
@@ -348,18 +287,311 @@
 <script>
     window.Laravel = <?php echo json_encode([
         'guardarSolicitud' => route('solicitud.store'),
-        'coincidenciasSolicitud' => route('solicitud.coincidenciasSolicitud'),
+        'coincidenciasSolicitudRegistro' => route('solicitud.coincidenciasSolicitudRegistro'),
         'apiPlantel' => route('solicitud.apiPlantel'),
-        'apiFetchExtensionAreas' => route('solicitud.fetchExtensionAreas'),
         'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
-        'apiFetchTipoSolicitudPrioridad' => route('solicitud.fetchTipoSolicitudPrioridad'),
+        'notificarSeguimiento' => route('solicitud.notificarSeguimiento'),
+        'index' => route('solicitud.index'),
     ]); ?>
 
     var listaPrioridades = @json($listaPrioridades);
 
-    const coincidenciasSolicitud = window.Laravel.coincidenciasSolicitud;
+    const RoutecoincidenciasSolicitudRegistro = window.Laravel.coincidenciasSolicitudRegistro;
+    const notificarSeguimiento = window.Laravel.notificarSeguimiento;
+    const index = window.Laravel.index;
 
     $(document).ready(function() {
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+
+        var xhrRequest = null;
+
+        let debounceTimer; // Variable para almacenar el temporizador de debounce
+        $('#nombre, #apellidoPaterno, #apellidoMaterno').on('input', function() {
+            console.log('Hubo un cambio en alguno de los inputs');
+
+            // Cancelar la solicitud anterior si existe
+            if (xhrRequest !== null) {
+                xhrRequest.abort();
+                console.log('Solicitud anterior cancelada');
+            }
+
+            // Cancelar cualquier ejecución pendiente de la función de búsqueda
+            clearTimeout(debounceTimer);
+
+            $('#estatusCoincidencias').text('Buscando solicitudes...');
+
+            var busquedaNombre = $('#nombre').val();
+            var busquedaApellidoPaterno = $('#apellidoPaterno').val();
+            var busquedaApellidoMaterno = $('#apellidoMaterno').val();
+
+            // Esperar 500 ms después de la última entrada antes de hacer la solicitud AJAX
+            debounceTimer = setTimeout(function() {
+                xhrRequest = $.ajax({
+                    url: RoutecoincidenciasSolicitudRegistro,
+                    type: 'GET',
+                    data: {
+                        busquedaNombre: busquedaNombre,
+                        busquedaApellidoPaterno: busquedaApellidoPaterno,
+                        busquedaApellidoMaterno: busquedaApellidoMaterno,
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        $('#estatusCoincidencias').text('Se encontraron ' + response
+                            .coincidenciasSolicitudRegistro.length +
+                            ' solicitudes que coinciden con los datos ingresados'
+                            );
+
+                        if (!response || response.coincidenciasSolicitudRegistro
+                            .length === 0) {
+                            $('#resultadosBusquedaCoincidencias').html(
+                                '<p>No se encontraron coincidencias de solicitudes</p>'
+                                );
+                            return;
+                        }
+
+                        var coincidencias = response.coincidenciasSolicitudRegistro;
+                        let content = '';
+
+                        content +=
+                            '<table class="table table-bordered table-striped" style="width: 100%;">';
+                        content += '<thead>';
+                        content += '<tr>';
+                        content += '<th>Folio</th>';
+                        content += '<th>Nombre solicitante</th>';
+                        content += '<th>Datos de contacto</th>';
+                        content += '<th>Directorio</th>';
+                        content += '<th>Tipo de solicitud</th>';
+                        content += '<th>Descripción</th>';
+                        content += '<th>Fecha de registro</th>';
+                        content += '<th>Acciones</th>';
+                        content += '</tr>';
+                        content += '</thead>';
+                        content += '<tbody>';
+
+                        coincidencias.forEach(function(item, index) {
+                            if (item && item['folio']) {
+                                var folio = item['folio'];
+                                var solicitante = item['nombre'] + " " +
+                                    item['apellidoPaterno'] + " " + item[
+                                        'apellidoMaterno'];
+                                var fechaRegistro = new Date(item[
+                                    'created_at']);
+                                var curp_usuario = item['curp_usuario'];
+                                var nombre_usuario = item['nombre_usuario'];
+                                var idArea = item['idArea'];
+                                var area = item['area'];
+                                var extension = item['extension'];
+                                var descripcion = item['descripcion'];
+                                var tipoSolicitud = item['tipoSolicitud'];
+
+                                var correo = item['correo'];
+                                var telefonoFijo = item['telefonoFijo'];
+                                var telefonoCelular = item[
+                                    'telefonoCelular'];
+
+                                // Formatear fecha
+                                var dia = fechaRegistro.getDate();
+                                var mes = fechaRegistro.getMonth() + 1;
+                                var anio = fechaRegistro.getFullYear();
+                                dia = dia < 10 ? '0' + dia : dia;
+                                mes = mes < 10 ? '0' + mes : mes;
+
+                                var fechaFormateada = `${dia}/${mes}/${anio}`;
+
+                                content += '<tr class="row-solicitud" data-index="' + index + '">';
+                                content += `<td>${folio}</td>`;
+                                content += `<td>${item['nombre']} ${item['apellidoPaterno']} ${item['apellidoMaterno'] || ''}</td>`;
+                                content +=
+                                    `<td>Correo: ${correo || 'Sin correo'} <br> telefonoFijo: ${telefonoFijo || 'Sin teléfono fijo'} <br> telefonoCelular: ${telefonoCelular || 'Sin teléfono celular'}</td>`;
+                                content += `<td>${area} (Ext. ${extension})</td>`;
+                                content += `<td>${tipoSolicitud}</td>`;
+                                content += `<td>${descripcion}</td>`;
+                                content += `<td>${fechaFormateada}</td>`;
+
+                                content += `<td><button id="btnNotificar" type="button" class="btn btn-warning" 
+                                data-folio="${folio}" data-id_area="${idArea}" data-area="${area}" data-solicitante="${solicitante}" data-fecha="${fechaFormateada}"
+                                data-descripcion="${descripcion}" data-tiposolicitud="${tipoSolicitud}" data-extension="${extension}">
+                                Notificar <i class="bi bi-bell-fill"></i></button></td>`;
+
+                                content += '</tr>';
+                            }
+                        });
+
+                        content += '</tbody>';
+                        content += '</table>';
+
+                        $('#resultadosBusquedaCoincidencias').html(content);
+                    },
+                    error: function() {
+                        $('#resultadosBusquedaCoincidencias').html(
+                            '<p>Hubo un error al realizar la búsqueda.</p>');
+                    },
+                    complete: function() {
+                        xhrRequest = null;
+                    }
+                });
+            },
+            500); // Retraso de 500 ms para realizar la solicitud después de que el usuario termine de escribir
+        });
+
+        $(document).on('click', '#btnNotificar', function(event) {
+            event.stopPropagation();
+            var folio = $(this).data('folio');
+            var nombre_usuario = $(this).data('nombre_usuario');
+            var curp_usuario = $(this).data('curp_usuario');
+            var idArea = $(this).data('id_area');
+            var area = $(this).data('area');
+            var solicitante = $(this).data('solicitante');
+            var descripcion = $(this).data('descripcion');
+            var tiposolicitud = $(this).data('tiposolicitud');
+            var fecha = $(this).data('fecha');
+            var extension = $(this).data('extension');
+
+            // Crear el modal dinámicamente
+            var modalHtml = `
+        <div class="modal fade" id="modalConfirmarNotificacion" tabindex="-1" role="dialog" aria-labelledby="modalConfirmarNotificacionTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalConfirmarNotificacionTitle">Enviar notificación al folio ${folio}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <p style="color: #7A1737; font-weight: bold;">¿Deseas enviar la notificación de seguimiento en esta solicitud?</p>
+                <p><strong>Nombre del Usuario:</strong> ${solicitante}</p>
+                <p><strong>Fecha de la solicitud:</strong> ${fecha}</p>
+                <p><strong>Asignada a:</strong> ${area} (Ext. ${extension})</p>
+                <p><strong>Tipo de solicitud :</strong> ${tiposolicitud}</p>
+                <p><strong>Descripción:</strong> ${descripcion}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-color" id="enviarNotificacion">Enviar Notificación</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        `;
+
+            `<style>
+            #modalConfirmarNotificacion {
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+
+            .modal-backdrop.show {
+                opacity: 0.4;
+            }
+
+        </style>`;
+
+            $('#modalConfirmarNotificacion').remove();
+            $('body').append(modalHtml);
+
+            $('#modalConfirmarNotificacion').modal({
+                backdrop: true,
+                keyboard: true
+            });
+
+            $('#modalConfirmarNotificacion').modal('show');
+
+            $('#modalConfirmarNotificacion .btn-secondary').on('click', function() {
+                $('#modalConfirmarNotificacion').modal('hide');
+            });
+
+            $('#modalConfirmarNotificacion .close').on('click', function() {
+                $('#modalConfirmarNotificacion').modal('hide');
+            });
+
+            $('#modalConfirmarNotificacion #enviarNotificacion').on('click', function() {
+                notificar(folio, idArea);
+                $('#modalConfirmarNotificacion').modal('hide');
+            });
+
+        });
+
+        function notificar(folio, idArea) {
+            const nombre_usuario = localStorage.getItem('nombreSEV');
+            const curp_usuario = localStorage.getItem('curpSEV');
+
+            fetch(notificarSeguimiento, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify({
+                        folio: folio,
+                        nombre_usuario: nombre_usuario,
+                        curp_usuario: curp_usuario,
+                        idArea: idArea,
+                        comentario: "La solicitud ha recibido nuevamente una llamada, favor de revisar la soliciud y dar seguimiento",
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === "Notificación enviada exitosamente") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "¡La notificación se ha enviado correctamente!",
+                            text: "Se ha enviado una notificación a la solicitud con el folio: " +
+                                data.folio +
+                                ", para que se seguimiento a la brevedad posible.",
+                            showCancelButton: false,
+                            confirmButtonText: `ACEPTAR`,
+                            confirmButtonColor: "#7A1737",
+                            cancelButtonText: `CANCELAR`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.close();
+                                window.location.href = index;
+                            } else {
+                                Swal.close();
+                                window.location.href = index;
+                            }
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "¡Error al enviar la notificación!",
+                            text: "Ocurrió un error al enviar la notificación de la solicitud con el folio: " +
+                                data.folio + ", por favor intente de nuevo o recargue la página",
+                            showCancelButton: false,
+                            confirmButtonText: `ACEPTAR`,
+                            confirmButtonColor: "#7A1737",
+                            cancelButtonText: `CANCELAR`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.close();
+                            }
+                        });
+                    }
+                    console.log('Notificación enviada:', data);
+                    //alert('Notificación enviada exitosamente');
+                })
+                .catch(error => {
+                    console.error('Error al enviar la notificación:', error);
+                    //alert('Hubo un error al enviar la notificación');
+                });
+        }
+
         $.ajax({
             url: 'https://msvc.sev.gob.mx/catalogos/entidad/api/estado/30/municipio/',
             //url: '/api-municipios',
@@ -424,7 +656,8 @@
 
     $(document).on('select2:open', (e) => {
         const selectId = e.target.id;
-        $(".select2-search__field[aria-controls='select2-"+selectId+"-results']").each(function (key,value,){
+        $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function(key,
+            value, ) {
             value.focus();
         });
     });
@@ -442,21 +675,8 @@
         }
     }).val(null).trigger('change');
 
-    $('#idArea').select2({
-        placeholder: "Selecciona una área",
-        allowClear: true,
-        language: {
-            noResults: function() {
-                return "No hay resultados";
-            },
-            searching: function() {
-                return "Buscando..";
-            }
-        }
-    }).val(null).trigger('change');
-
     $('#idTipoSolicitud').select2({
-        placeholder: "Selecciona una solicitud",
+        placeholder: "Selecciona un tipo de solicitud",
         allowClear: true,
         language: {
             noResults: function() {

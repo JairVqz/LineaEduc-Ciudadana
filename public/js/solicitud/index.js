@@ -101,8 +101,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let filtroBusqueda = $('#filtroBusqueda').val();
         let parametroBusqueda = $('#parametroBusqueda').val();
 
-        console.log("F:"+filtroBusqueda+", p:"+parametroBusqueda);
-
         if (!isProcessing) {
             isProcessing = true;
 
@@ -262,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Enviar Notificación</button>
+                <button type="button" class="btn btn-color">Enviar Notificación</button>
               </div>
             </div>
           </div>

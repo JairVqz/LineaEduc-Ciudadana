@@ -4,9 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const guardarSolicitudRoute = window.Laravel.guardarSolicitud;
     const listarSolicitudesRoute = '/index.php/solicitud/index';
     const apiPlantel = window.Laravel.apiPlantel;
-    const apiFetchExtensionAreas = window.Laravel.apiFetchExtensionAreas;
     const apiFetchAreaTipoSolicitudes = window.Laravel.apiFetchAreaTipoSolicitudes;
-    const apiFetchTipoSolicitudPrioridad = window.Laravel.apiFetchTipoSolicitudPrioridad;
 
     let now = new Date();
 
@@ -36,22 +34,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    //SELECTS DINÁMICOS EXTENSIÓN-ÁREA-TIPO_SOLICITUD_-PRIORIDAD
     $('#idExtension').on('change', function () {
-        var idExtensionSeleccionada = this.value;
-        console.log("Extension: "+idExtensionSeleccionada);
+        var areaDirectorio = $('#idExtension').find('option:selected');
+        var idAreaDirectorioSeleccionada = areaDirectorio.data('idarea');
+        var nombreTitularAreaDirectorioSeleccionada = areaDirectorio.data('nombretitular')
 
-        if ($('#idExtension').val() == "otro"){
+        if ($('#idExtension').val() == "otro") {
             //Por Default los demás select están vacios o indice 0
-            $('#idArea').val(null);
+            $("#idArea").html('');
             $("#idTipoSolicitud").html('');
-            $("#idArea").trigger('change');
             $("#idTipoSolicitud").trigger('change');
             document.getElementById("idNuevoPuesto").selectedIndex = -1;
             $('#idNuevoPuesto').trigger('change');
 
             //Se muestra el modal para ingresar los valores del nuevo directorio.
             $('#modalAgregarDirectorio').modal('show');
+            $('#divNuevoDirectorio').css('display', 'block');
 
             //En caso de que previamente se hayan llenado y ocultado, se limpian de los valores que tengan anteriormente.
             $('#nuevaExtension').val('');
@@ -59,151 +57,73 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#nuevoTipoSolicitud').val('');
             $('#idNuevaExtension').val('').trigger('change');
             $('#idNuevaArea').val('').trigger('change');
-            $('#idNuevoTipoSolicitud').val('').trigger('change');
+            $('#idNuevoTipoSolicitud').val(null).trigger('change');
             $('#idNuevaPrioridad').val('').trigger('change');
-            //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            //$('#idNuevaPrioridad').trigger('change');
 
             $("#nombreTitular").val('');
 
-            var banderaSeleccionar = false;
-            fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
+            fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada);
 
         } else if ($('#idExtension').val() == null) {
-            console.log("entro a null");
             //Remover el valor que tengan asignado los inputs principales
-            $("#idTipoSolicitud").html('');
+            $("#idArea").val('');
             $("#nombreTitular").val('');
-            $("#idTipoSolicitud").trigger('change');
-            $('#idArea').val(null);
-            $("#idTipoSolicitud").html('');
-            $("#idArea").trigger('change');
-            $("#idTipoSolicitud").trigger('change');
-            //document.getElementById("idPrioridad").selectedIndex = -1;
-            //$('#idPrioridad').trigger('change');
+            $("#idTipoSolicitud").html('').trigger('change');;
 
-            //Ocultar la sección de los nuevos catálogos y remover el valor que tengan asignado los inputs de la seccioón
-            //$('#nuevosCatalogos').css("display", "none")
+            //Ocultar la sección de los nuevos catálogos y remover el valor que tengan asignado los inputs de la sección
             $('#nuevaExtension').val('');
             $('#nuevaArea').val('');
             $('#nuevoTipoSolicitud').val('');
             $('#idNuevaExtension').val('').trigger('change');
             $('#idNuevaArea').val('').trigger('change');
-            $('#idNuevoTipoSolicitud').val('').trigger('change');
+            $('#idNuevoTipoSolicitud').val(null).trigger('change');
             $('#idNuevaPrioridad').val('').trigger('change');
-            //document.getElementById("idNuevaPrioridad").selectedIndex = -1;
-            //$('#idNuevaPrioridad').trigger('change');
 
-            var banderaSeleccionar = false;
-            fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
-            $('#idArea').trigger('change');
+            fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada);
 
         } else {
-            $("#idArea").html('');
-            $("#idTipoSolicitud").html('');
-
             var extensionSeleccionada = $('#idExtension').find('option:selected');
             var idPuesto = extensionSeleccionada.data('idpuesto');
+
+            $("#idArea").val(idAreaDirectorioSeleccionada);
             $('#idNuevoPuesto').val(idPuesto).trigger('change');
+            $('#idNuevoArea').val(idArea).trigger('change');
+            $('#idNuevoTipoSolicitud').val(null).trigger('change');
+            $("#nombreTitular").val(nombreTitularAreaDirectorioSeleccionada);
 
-            var banderaSeleccionar = true;
-            fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar);
+            fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada);
 
-    }
-
-    });
-
-    $('#idArea').on('change', function () {
-        var idAreaSeleccionada = this.value;
-
-        if ($('#idArea').val() == "otro"){
-
-            $("#idTipoSolicitud").html('');
-            document.getElementById("idNuevoTipoSolicitud").selectedIndex = -1;
-            $('#idNuevoTipoSolicitud').trigger('change');
-
-            if ($('#idExtension').val() != null) {
-                var indexExtension = $('#idExtension').val();
-                $('#idNuevaExtension').val(indexExtension).trigger('change');
-            }
-
-            $('#modalAgregarDirectorio').modal('show');
-
-        } else if ($('#idArea').val() == null) {
-
-            $("#idTipoSolicitud").html('');
-
-
-        } else {
-            $("#idTipoSolicitud").html('');
-            fetchAreaTipoSolicitud(idAreaSeleccionada);
-    }
-
+        }
     });
 
     $('#idTipoSolicitud').on('change', function () {
 
-        if ($('#idTipoSolicitud').val() == "otro"){
+        if ($('#idTipoSolicitud').val() == "otro") {
 
-            document.getElementById("idNuevoTipoSolicitud").selectedIndex = -1;
-            $('#idNuevoTipoSolicitud').trigger('change');
-
-            if ($('#idExtension').val() != null){
-                var indexExtension = $('#idExtension').val();
-                $('#idNuevaExtension').val(indexExtension).trigger('change');
-            }
-
-            if ($('#idArea').val() != null){
-                var indexArea = $('#idArea').val();
-                $('#idNuevaArea').val(indexArea).trigger('change');
-            }
-
+            //Se muestra el modal para ingresar los valores del nuevo directorio.
             $('#modalAgregarDirectorio').modal('show');
+            $('#divNuevoDirectorio').css('display', 'none');
 
-        } else if ($('#idTipoSolicitud').val() == null) {
+            $('#idNuevaPrioridad').val(null).trigger('change');
 
-        } else {
+            if ($('#idExtension').val() != "otro" && $('#idExtension').val() != null){
+                var extensionSeleccionada = $('#idExtension').find('option:selected');
 
-            //fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado);
+                $('#idNuevaExtension').val($('#idExtension').val()).trigger('change');
+                $('#idNuevaArea').val(extensionSeleccionada.data('idarea')).trigger('change');
+                $('#idNuevoPuesto').val(extensionSeleccionada.data('idpuesto')).trigger('change');
+            } else {
+                $('#idNuevaExtension').val(null).trigger('change');
+                $('#idNuevaArea').val(null).trigger('change');
+                $('#idNuevoPuesto').val(null).trigger('change');
+            }
+
 
         }
-
     });
 
-    function fetchExtensionArea(idExtensionSeleccionada, banderaSeleccionar){
+    function fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada) {
 
-        $.ajax({
-            url: apiFetchExtensionAreas,
-            method: 'POST',
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                idExtension: idExtensionSeleccionada,
-            },
-            success: function (data) {
-                $("#idArea").html('');
-                $.each(data.extensionAreas, function (key, data) {
-                    $("#idArea").append('<option value="' + data.idArea + '">' + data.area + '</option>');
-
-                    $("#nombreTitular").val(data.nombreTitular);
-                });
-                $("#idArea").append('<option value="otro">Otra</option>');
-                if (banderaSeleccionar == false){
-                    $('#idArea').val(null);
-                }
-                $('#idArea').trigger('change');
-            },
-            error: function (xhr, status, error) {
-                console.error('Error al enviar la petición:', error);
-
-            }
-        });
-
-    }
-
-    function fetchAreaTipoSolicitud(idAreaSeleccionada){
         $.ajax({
             url: apiFetchAreaTipoSolicitudes,
             method: 'POST',
@@ -212,50 +132,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: {
-                idArea: idAreaSeleccionada,
+                idArea: idAreaDirectorioSeleccionada,
             },
             success: function (data) {
-                $("#idTipoSolicitud").html('');
-                $.each(data.areaTipoSolicitudes, function (key, data) {
+
+                $('#idTipoSolicitud').html('');
+
+                $.each(data.areaTipoSolicitud, function (key, data) {
                     $("#idTipoSolicitud").append('<option value="' + data.idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
+
                 });
-                $("#idTipoSolicitud").append('<option value="otro">Otro</option>');
+
+                $("#idTipoSolicitud").append('<option value="otro">Otra</option>');
+
                 $('#idTipoSolicitud').val(null);
+
                 $('#idTipoSolicitud').trigger('change');
+
             },
             error: function (xhr, status, error) {
                 console.error('Error al enviar la petición:', error);
 
             }
         });
+
     }
-
-    /*function fetchTipoSolicitudPrioridad(idTipoSolicitudSeleccionado){
-        $.ajax({
-            url: apiFetchTipoSolicitudPrioridad,
-            method: 'POST',
-            dataType: 'json',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: {
-                idPrioridad: idTipoSolicitudSeleccionado,
-            },
-            success: function (data) {
-                for (var i = 0; i < listaPrioridades.length; i++) {
-                    if (listaPrioridades[i].idPrioridad === data.tipoSolicitudPrioridad[0].idPrioridad) {
-                        document.getElementById('idPrioridad').selectedIndex = i;
-                        document.getElementById('idPrioridad').dispatchEvent(new Event('change'));
-                        break;
-                    }
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error al enviar la petición:', error);
-
-            }
-        });
-    }*/
 
     $('#municipio').on('change', function () {
         var municipioSeleccionado = $(this).find('option:selected').text();
@@ -286,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("telefonoFijo").value = "";
         document.getElementById("telefonoCelular").value = "";
         document.getElementById("idTipoSolicitud").selectedIndex = 0;
-        document.getElementById("idArea").selectedIndex = 0;
         document.getElementById("idPrioridad").selectedIndex = 0;
         document.getElementById("descripcion").value = "";
         document.getElementById("cct").value = "";
@@ -362,9 +262,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (parametro === "") {
             //$('#resultadoApi').html("");
             document.getElementById("nivelCct").value = "";
-            document.getElementById("municipio").selectedIndex = 0;
+            document.getElementById("municipio").selectedIndex = -1;
+            $('#municipio').trigger('change');
             document.getElementById("nombreMunicipio").value = "";
-            document.getElementById("localidad").selectedIndex = 0;
+            document.getElementById("localidad").selectedIndex = -1;
+            $('#localidad').trigger('change');
             document.getElementById("nombreLocalidad").value = "";
             document.getElementById("nombreCct").value = "";
             document.getElementById("nombreDirector").value = "";

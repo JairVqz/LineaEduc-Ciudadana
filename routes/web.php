@@ -46,6 +46,7 @@ Route::middleware('auth.validation')->group(function () {
 
             // Buscar coincidencias de solicitudes por nombre
             Route::get('/solicitud', [SolicitudController::class, 'coincidenciasSolicitud'])->name('coincidenciasSolicitud');
+            Route::get('/coincidenciasSolicitud', [SolicitudController::class, 'coincidenciasSolicitudRegistro'])->name('coincidenciasSolicitudRegistro');
 
             // Obtener un registro
             Route::get('/solicitud/{folio}/detalle', [SolicitudController::class, 'detalle'])->name('solicitud.detalle');
@@ -64,8 +65,9 @@ Route::middleware('auth.validation')->group(function () {
             //notificacion boton de inicio
             Route::post('/solicitud/notificarSeguimiento', [SolicitudController::class, 'notificarSeguimiento'])->name('notificarSeguimiento');
 
-            Route::post('/api/fetchExtensionAreas', [SolicitudController::class, 'fetchExtensionAreas'])->name('fetchExtensionAreas');
+            Route::post('/api/fetchDirectorioTipoSolicitud', [SolicitudController::class, 'fetchDirectorioTipoSolicitud'])->name('fetchDirectorioTipoSolicitud');
             Route::post('/api/fetchAreaTipoSolicitudes', [SolicitudController::class, 'fetchAreaTipoSolicitudes'])->name('fetchAreaTipoSolicitudes');
+            Route::post('/api/fetchExtensionAreas', [SolicitudController::class, 'fetchExtensionAreas'])->name('fetchExtensionAreas');
             Route::post('/api/fetchTipoSolicitudPrioridad', [SolicitudController::class, 'fetchTipoSolicitudPrioridad'])->name('fetchTipoSolicitudPrioridad');
 
             //EXCEL

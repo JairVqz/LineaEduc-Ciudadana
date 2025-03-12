@@ -52,6 +52,7 @@ class SolicitudController extends Controller
         $listaAreas = CatalogoAreas::all();
         $listaExtensiones = CatalogoExtensiones::all();
         $listaPuestos = CatalogoPuestos::all();
+        $listaDirectorio = DB::table('directorio')->get();
 
         return view(
             'solicitud.nuevaSolicitud.create',
@@ -61,6 +62,7 @@ class SolicitudController extends Controller
                 'listaAreas' => $listaAreas,
                 'listaExtensiones' => $listaExtensiones,
                 'listaPuestos' => $listaPuestos,
+                'listaDirectorio' => $listaDirectorio,
             ]
         );
     }
@@ -541,6 +543,34 @@ class SolicitudController extends Controller
         }
     }
 
+    public function fetchExtensionAreas(Request $request)
+    {
+        $idExtension = $request->idExtension;
+
+        //Log::info("idExtensionRecibido: " . $idExtension);
+
+        if ($idExtension == "otro") {
+            $data['extensionAreas'] = CatalogoAreas::all();
+        } elseif ($idExtension == "") {
+            $data['extensionAreas'] = CatalogoAreas::all();
+        } else {
+            $data['extensionAreas'] = CatalogoAreas::join('tbl_catalogoExtensiones', 'tbl_catalogoExtensiones.idArea', '=', 'tbl_catalogoAreas.idArea')
+                ->where('tbl_catalogoExtensiones.idExtensionCatalogo', '=', $idExtension)
+                ->get(['tbl_catalogoAreas.idArea', 'tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular', 'tbl_catalogoExtensiones.idPuesto']);
+        }
+
+        return response()->json($data);
+    }
+
+    public function fetchTipoSolicitudPrioridad(Request $request)
+    {
+        $data['tipoSolicitudPrioridad'] = TipoSolicitud::join("tbl_prioridad", 'tbl_tipoSolicitud.idPrioridad', '=', 'tbl_prioridad.idPrioridad')
+            ->where('tbl_tipoSolicitud.idPrioridad', '=', $request->idPrioridad)
+            ->get('tbl_tipoSolicitud.idPrioridad');
+
+        return response()->json($data);
+    }
+
 
     public function coincidenciasSolicitud(Request $request)
     {
@@ -570,6 +600,34 @@ class SolicitudController extends Controller
 
             return response()->json($data);
         }
+    }
+
+    public function coincidenciasSolicitudRegistro(Request $request)
+    {
+        $busquedaNombre = $request->query('busquedaNombre');
+        $busquedaApellidoPaterno = $request->query('busquedaApellidoPaterno');
+        $busquedaApellidoMaterno = $request->query('busquedaApellidoMaterno');
+
+        Log::info("nombre: " . $busquedaNombre);
+        Log::info("apellidoPaterno: " . $busquedaApellidoPaterno);
+        Log::info("apellidoMaterno: " . $busquedaApellidoMaterno);
+
+        if ($busquedaNombre == '' && $busquedaApellidoPaterno == '' && $busquedaApellidoMaterno == '') {
+
+            $data['coincidenciasSolicitudRegistro'] = [];
+        } else {
+            $data['coincidenciasSolicitudRegistro'] = DB::table('listarSolicitudes')
+                ->where('nombre', 'LIKE',  $busquedaNombre . '%')
+                ->where('apellidoPaterno', 'LIKE',  $busquedaApellidoPaterno . '%')
+                ->where(function ($query) use ($busquedaApellidoMaterno) {
+                    $query->where('apellidoMaterno', 'LIKE', $busquedaApellidoMaterno . '%')
+                        ->orWhereNull('apellidoMaterno');  // Agrega esta línea para incluir valores nulos
+                })
+                ->where('created_at', '>=', Carbon::now()->subDays(32))
+                ->get();
+        }
+
+        return response()->json($data);
     }
 
 
@@ -684,42 +742,39 @@ class SolicitudController extends Controller
         }
     }
 
-    public function fetchExtensionAreas(Request $request)
+    public function fetchDirectorioTipoSolicitud(Request $request)
     {
-        $idExtension = $request->idExtension;
+        $idArea = $request->idArea;
+        Log::info("directorio: " . $idArea);
 
-        //Log::info("idExtensionRecibido: " . $idExtension);
-
-        if ($idExtension == "otro") {
-            $data['extensionAreas'] = CatalogoAreas::all();
-        } elseif ($idExtension == "") {
-            $data['extensionAreas'] = CatalogoAreas::all();
-        } else {
-            $data['extensionAreas'] = CatalogoAreas::join('tbl_catalogoExtensiones', 'tbl_catalogoExtensiones.idArea', '=', 'tbl_catalogoAreas.idArea')
-                ->where('tbl_catalogoExtensiones.idExtensionCatalogo', '=', $idExtension)
-                ->get(['tbl_catalogoAreas.idArea','tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular','tbl_catalogoExtensiones.idPuesto']);
-        }
+        $data['areaTipoSolicitud'] = DB::table('tbl_tipoSolicitud')
+            ->where(function ($query) use ($idArea) {
+                $query->where('tipoSolicitud', 'Información')
+                    ->where('idArea', $idArea)
+                    ->orWhere('tipoSolicitud', '!=', 'Información');
+            })
+            ->orderByRaw("CASE WHEN tipoSolicitud = 'Información' AND idArea = ? THEN 0 ELSE 1 END", [$idArea])
+            ->orderBy('idPrioridad')
+            ->get();
 
         return response()->json($data);
     }
 
     public function fetchAreaTipoSolicitudes(Request $request)
     {
-        $data['areaTipoSolicitudes'] = TipoSolicitud::where("idArea", $request->idArea)
-            ->get();
+        $idArea = $request->idArea;
+
+        Log::info("area recibida: " . $idArea);
+
+        /*$data['areaTipoSolicitud'] = DB::table('t')
+            ->join('tbl_tipoSolicitud', 'directorio.idArea', '=', 'tbl_tipoSolicitud.idArea')
+            ->where('tbl_tipoSolicitud.idArea', '=', $idArea)
+            ->get(['tbl_tipoSolicitud.idTipoSolicitud', 'tbl_tipoSolicitud.tipoSolicitud']);*/
+
+        $data['areaTipoSolicitud'] = TipoSolicitud::where('idArea', '=', $idArea)->get();
 
         return response()->json($data);
     }
-
-    public function fetchTipoSolicitudPrioridad(Request $request)
-    {
-        $data['tipoSolicitudPrioridad'] = TipoSolicitud::join("tbl_prioridad", 'tbl_tipoSolicitud.idPrioridad', '=', 'tbl_prioridad.idPrioridad')
-            ->where('tbl_tipoSolicitud.idPrioridad', '=', $request->idPrioridad)
-            ->get('tbl_tipoSolicitud.idPrioridad');
-
-        return response()->json($data);
-    }
-
 
     public function exportarExcel()
     {

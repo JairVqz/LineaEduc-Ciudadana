@@ -57,92 +57,84 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="idNuevaExtension" class="form-label" style="font-weight:bold">Extensión:</label>
-                        <select name="idNuevaExtension" id="idNuevaExtension" class="form-select select2-bootstrap">
-                            @foreach ($listaExtensiones as $data)
-                                <option value="{{ $data->idExtensionCatalogo }}"
-                                    data-nombretitular="{{ $data->nombreTitular }}">
-                                    {{ $data->extension }}
-                                </option>
-                            @endforeach
-                            <option value="otro">Otra</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
-                            Extensión:</label>
-                        <input type="number" name="nuevaExtension" id="nuevaExtension" class="form-control"
-                            placeholder="" readonly>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="nuevoFuncionario" class="form-label" style="font-weight:bold">Funcionario:</label>
-                        <input type="text" name="nuevoFuncionario" id="nuevoFuncionario" class="form-control"
-                            placeholder="" readonly>
-                    </div>
 
-                    <div class="col-md-6">
-                        <label for="idNuevaArea" class="form-label" style="font-weight:bold">Área que
-                            atiende:</label>
-                        <select name="idNuevaArea" id="idNuevaArea" class="form-select select2-bootstrap">
-                            @foreach ($listaAreas as $data)
-                                <option value="{{ $data->idArea }}">
-                                    {{ $data->area }}
-                                </option>
-                            @endforeach
-                            <option value="otro">Otra</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
-                            Área:</label>
-                        <input type="text" name="nuevaArea" id="nuevaArea" class="form-control" placeholder=""
-                            readonly>
-                    </div>
+                <div id="divNuevoDirectorio">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label for="nuevaExtension" class="form-label" style="font-weight:bold">Nueva
+                                extensión o número directo:</label>
+                            <input type="number" name="nuevaExtension" id="nuevaExtension" class="form-control"
+                                placeholder="">
+                            <input type="hidden" name="idNuevaExtension" id="idNuevaExtension">
+                        </div>
 
-                    <div class="col-md-6">
-                        <label for="idNuevoPuesto" class="form-label" style="font-weight:bold">Puesto:</label>
-                        <select name="idNuevoPuesto" id="idNuevoPuesto" class="form-select select2-bootstrap">
-                            @foreach ($listaPuestos as $data)
-                                <option value="{{ $data->idPuesto }}">
-                                    {{ $data->puesto }}
-                                </option>
-                            @endforeach
-                            <option value="otro">Otro</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="nuevoPuesto" class="form-label" style="font-weight:bold">Nuevo Puesto:</label>
-                        <input type="text" name="nuevoPuesto" id="nuevoPuesto" class="form-control" placeholder=""
-                            readonly>
-                    </div>
+                        <div class="col-md-12">
+                            <label for="nuevoFuncionario" class="form-label"
+                                style="font-weight:bold">Funcionario</label>
+                            <input type="text" name="nuevoFuncionario" id="nuevoFuncionario" class="form-control"
+                                placeholder="">
+                        </div>
 
+                        <div class="col-md-6">
+                            <label for="idNuevaArea" class="form-label" style="font-weight:bold">Área que
+                                atiende:</label>
+                            <select name="idNuevaArea" id="idNuevaArea" class="form-select select2-bootstrap">
+                                @foreach ($listaAreas as $data)
+                                    <option value="{{ $data->idArea }}">
+                                        {{ $data->area }}
+                                    </option>
+                                @endforeach
+                                <option value="otro">Otra</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
+                                Área:</label>
+                            <input type="text" name="nuevaArea" id="nuevaArea" class="form-control" placeholder=""
+                                readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="idNuevoPuesto" class="form-label" style="font-weight:bold">Puesto:</label>
+                            <select name="idNuevoPuesto" id="idNuevoPuesto" class="form-select select2-bootstrap">
+                                @foreach ($listaPuestos as $data)
+                                    <option value="{{ $data->idPuesto }}">
+                                        {{ $data->puesto }}
+                                    </option>
+                                @endforeach
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nuevoPuesto" class="form-label" style="font-weight:bold">Nuevo Puesto:</label>
+                            <input type="text" name="nuevoPuesto" id="nuevoPuesto" class="form-control"
+                                placeholder="" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-1">
                     <div class="col-md-6">
                         <label for="idNuevoTipoSolicitud" class="form-label" style="font-weight:bold">Tipo de
                             Solicitud:</label>
                         <select name="idNuevoTipoSolicitud" id="idNuevoTipoSolicitud"
                             class="form-select select2-bootstrap">
-                            @foreach ($listaTiposSolicitud as $data)
-                                <option value="{{ $data->idTipoSolicitud }}">
-                                    {{ $data->tipoSolicitud }}
-                                </option>
-                            @endforeach
-                            <option value="otro">Otro</option>
                         </select>
                     </div>
+
                     <div class="col-md-6">
-                        <label for="nuevoTipoSolicitud" class="form-label" style="font-weight:bold">Nuevo tipo de
+                        <label for="nuevoTipoSolicitud" class="form-label" style="font-weight:bold">Nuevo tipo
+                            de
                             solicitud:</label>
                         <input type="text" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud" class="form-control"
                             placeholder="" readonly>
                     </div>
-
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-color" id="guardarNuevoDirectorio">Guardar</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+
+                <div class="modal-footer" style="border: none">
+                    <button type="button" class="btn btn-color" id="guardarNuevoDirectorio">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -153,42 +145,27 @@
 <script>
     window.Laravel = <?php echo json_encode([
         'guardarDirectorio' => route('directorio.storeDirectorioDinamico'),
+        'apiFetchAreaTipoSolicitudes' => route('solicitud.fetchAreaTipoSolicitudes'),
     ]); ?>
 
     const guardarDirectorioRoute = window.Laravel.guardarDirectorio;
+    const apiFetchAreaTipoSolicitudes = window.Laravel.apiFetchAreaTipoSolicitudes;
 
     document.addEventListener('DOMContentLoaded', function() {
-
-        $('#idNuevaExtension').on('change', function() {
-            var extensionSeleccionada = $('#idNuevaExtension').find('option:selected');
-            var nombreTitular = extensionSeleccionada.data('nombretitular');
-
-            if ($('#idNuevaExtension').val() == "otro") {
-                $('#nuevaExtension').prop('readonly', false);
-                $('#nuevoFuncionario').prop('readonly', false);
-                $('#nuevoFuncionario').val('');
-            } else if ($('#idNuevaExtension').val() == null) {
-                $('#nuevaExtension').prop('readonly', true);
-                $('#nuevoFuncionario').prop('readonly', true);
-                $('#nuevoFuncionario').val('');
-            } else {
-                $('#nuevaExtension').prop('readonly', true);
-                $('#nuevoFuncionario').prop('readonly', true);
-                $('#nuevoFuncionario').val(nombreTitular);
-            }
-
-        });
 
         $('#idNuevaArea').on('change', function() {
 
             if ($('#idNuevaArea').val() == "otro") {
                 $('#nuevaArea').prop('readonly', false);
+                $('#idNuevoTipoSolicitud').html("").trigger('change');
 
             } else if ($('#idNuevaArea').val() == null) {
                 $('#nuevaArea').prop('readonly', true);
+                $('#idNuevoTipoSolicitud').html("").trigger('change');
 
             } else {
                 $('#nuevaArea').prop('readonly', true);
+                fetchAreaTipoSolicitudes($('#idNuevaArea').val());
 
             }
 
@@ -217,6 +194,43 @@
             }
 
         });
+
+        function fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada) {
+
+            $.ajax({
+                url: apiFetchAreaTipoSolicitudes,
+                method: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    idArea: idAreaDirectorioSeleccionada,
+                },
+                success: function(data) {
+
+                    $('#idNuevoTipoSolicitud').html('');
+
+                    $.each(data.areaTipoSolicitud, function(key, data) {
+                        $("#idNuevoTipoSolicitud").append('<option value="' + data
+                            .idTipoSolicitud + '">' + data.tipoSolicitud + '</option>');
+
+                    });
+
+                    $("#idNuevoTipoSolicitud").append('<option value="otro">Otra</option>');
+
+                    $('#idNuevoTipoSolicitud').val(null);
+
+                    $('#idNuevoTipoSolicitud').trigger('change');
+
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al enviar la petición:', error);
+
+                }
+            });
+
+        }
 
         $('#guardarNuevoDirectorio').on('click', function(e) {
 
@@ -263,35 +277,45 @@
                             cancelButtonText: `CANCELAR`,
                         }).then((result) => {
 
-                            document.getElementById('idArea').dispatchEvent(new Event(
-                                'change'));
+                            /*REFRESCAR Y SELECCIONAR LA EXTENSION GUARDADA EN EL SELECT DIRECTORIO*/
+                            $('#idExtension').empty();
+                            $('#idExtension').select2('destroy');
 
-                            document.getElementById('idArea').dispatchEvent(new Event(
-                                'change'));
+                            data.listaDirectorio.forEach(function(item) {
+                                $('#idExtension').append(
+                                    `<option value="${item.idExtensionCatalogo}" data-idpuesto="${item.idPuesto}"
+                                        data-idarea="${item.idArea}" data-nombretitular="${item.nombreTitular}">
+                                        ${item.extension} - ${item.area} - ${item.puesto}</option>`
+                                );
+                            });
 
-                            if ($("#idNuevaExtension").val() == "otro") {
-                                $("#idExtension").append('<option value="' + data
-                                    .idExtension + '">' + nuevaExtension + '</option>');
-                                $("#idExtension").val(data.idExtension).trigger('change');
-                            } else {
+                            $('#idExtension').append('<option value="otro">Otra</option>');
 
-                                if ($("#idNuevaArea").val() == "otro") {
+                            $('#idExtension').select2({
+                                placeholder: "Selecciona una extensión",
+                                allowClear: true,
+                                language: {
+                                    noResults: function() {
+                                        return "No hay resultados";
+                                    },
+                                    searching: function() {
+                                        return "Buscando..";
+                                    }
+                                },
+                                width: '100%'
+                            }).trigger('change');
 
-                                    /*document.getElementById('idArea').dispatchEvent(new Event('change'));
-                                    $('#idArea').val(data.idArea).trigger('change');*/
-                                    $("#idExtension").append('<option value="' + data
-                                        .idExtension + '">' + $(
-                                            "#idNuevaExtension option:selected")
-                                        .text() + '</option>');
-                                    $("#idExtension").val(data.idExtension).trigger(
-                                        'change');
+                            $('#idExtension').val(data.idExtension).trigger('change');
+                            /*FIN SELECT DIRECTORIO*/
 
-                                } else {
-                                    $("#idExtension").val($("#idNuevaExtension").val())
-                                        .trigger('change');
-
-                                }
-                            }
+                            setTimeout(function() {
+                                console.log("entro a setear tipo: " + data
+                                    .idTipoSolicitud);
+                                $('#idTipoSolicitud').val(data.idTipoSolicitud)
+                                    .trigger('change');
+                                $('#idTipoSolicitud').trigger(
+                                'select2:open'); // Forzar la actualización si es necesario
+                            }, 1000);
 
                             if (result.isConfirmed) {
                                 Swal.close();
@@ -323,21 +347,6 @@
                     //alert('Hubo un error al enviar la notificación');
                 });
         });
-
-        $('#idNuevaExtension').select2({
-            dropdownParent: $('#modalAgregarDirectorio'),
-            placeholder: "Selecciona una extensión",
-            allowClear: true,
-            language: {
-                noResults: function() {
-                    return "No hay resultados";
-                },
-                searching: function() {
-                    return "Buscando..";
-                }
-            },
-            width: '100%'
-        }).val(null).trigger('change');
 
         $('#idNuevaArea').select2({
             dropdownParent: $('#modalAgregarDirectorio'),

@@ -112,3 +112,16 @@
     background-color: #8f714b;
     color: #fff;
 }
+
+.close {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    outline: none;
+}
