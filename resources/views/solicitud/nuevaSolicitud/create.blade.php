@@ -414,7 +414,7 @@
 
                                 content += '<tr class="row-solicitud" data-index="' + index + '">';
                                 content += `<td>${folio}</td>`;
-                                content += `<td>${item['nombre']} ${item['apellidoPaterno']} ${item['apellidoMaterno']}</td>`;
+                                content += `<td>${item['nombre']} ${item['apellidoPaterno']} ${item['apellidoMaterno'] || ''}</td>`;
                                 content +=
                                     `<td>Correo: ${correo || 'Sin correo'} <br> telefonoFijo: ${telefonoFijo || 'Sin teléfono fijo'} <br> telefonoCelular: ${telefonoCelular || 'Sin teléfono celular'}</td>`;
                                 content += `<td>${area} (Ext. ${extension})</td>`;

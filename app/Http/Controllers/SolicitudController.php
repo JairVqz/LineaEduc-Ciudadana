@@ -556,7 +556,7 @@ class SolicitudController extends Controller
         } else {
             $data['extensionAreas'] = CatalogoAreas::join('tbl_catalogoExtensiones', 'tbl_catalogoExtensiones.idArea', '=', 'tbl_catalogoAreas.idArea')
                 ->where('tbl_catalogoExtensiones.idExtensionCatalogo', '=', $idExtension)
-                ->get(['tbl_catalogoAreas.idArea','tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular','tbl_catalogoExtensiones.idPuesto']);
+                ->get(['tbl_catalogoAreas.idArea', 'tbl_catalogoAreas.area', 'tbl_catalogoExtensiones.nombreTitular', 'tbl_catalogoExtensiones.idPuesto']);
         }
 
         return response()->json($data);
@@ -608,21 +608,23 @@ class SolicitudController extends Controller
         $busquedaApellidoPaterno = $request->query('busquedaApellidoPaterno');
         $busquedaApellidoMaterno = $request->query('busquedaApellidoMaterno');
 
-        Log::info("nombre: ".$busquedaNombre);
-        Log::info("apellidoPaterno: ".$busquedaApellidoPaterno);
-        Log::info("apellidoMaterno: ".$busquedaApellidoMaterno);
+        Log::info("nombre: " . $busquedaNombre);
+        Log::info("apellidoPaterno: " . $busquedaApellidoPaterno);
+        Log::info("apellidoMaterno: " . $busquedaApellidoMaterno);
 
-        if ($busquedaNombre == '' && $busquedaApellidoPaterno == '' && $busquedaApellidoMaterno == ''){
+        if ($busquedaNombre == '' && $busquedaApellidoPaterno == '' && $busquedaApellidoMaterno == '') {
 
             $data['coincidenciasSolicitudRegistro'] = [];
-        
         } else {
             $data['coincidenciasSolicitudRegistro'] = DB::table('listarSolicitudes')
-            ->where('nombre', 'LIKE',  $busquedaNombre . '%')
-            ->where('apellidoPaterno', 'LIKE',  $busquedaApellidoPaterno . '%')
-            ->where('apellidoMaterno', 'LIKE',  $busquedaApellidoMaterno . '%')
-            ->where('created_at', '>=', Carbon::now()->subDays(32))
-            ->get();
+                ->where('nombre', 'LIKE',  $busquedaNombre . '%')
+                ->where('apellidoPaterno', 'LIKE',  $busquedaApellidoPaterno . '%')
+                ->where(function ($query) use ($busquedaApellidoMaterno) {
+                    $query->where('apellidoMaterno', 'LIKE', $busquedaApellidoMaterno . '%')
+                        ->orWhereNull('apellidoMaterno');  // Agrega esta línea para incluir valores nulos
+                })
+                ->where('created_at', '>=', Carbon::now()->subDays(32))
+                ->get();
         }
 
         return response()->json($data);
