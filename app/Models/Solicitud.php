@@ -91,6 +91,10 @@ class Solicitud extends Model
     {
         return DB::select('SELECT * FROM listarSolicitudes');
     }
+    public static function listarSolicitudesDESC()
+    {
+        return DB::select('SELECT * FROM listarSolicitudes order by folio DESC');
+    }
     public static function listarSolicitudesSeguimiento()
     {
         return DB::select('SELECT * FROM listarSolicitudes order by idestatus ASC, idprioridad desc;');
