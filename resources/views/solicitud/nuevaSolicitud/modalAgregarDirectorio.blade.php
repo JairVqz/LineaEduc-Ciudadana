@@ -72,7 +72,7 @@
                         <div class="col-md-12">
                             <label for="nuevoFuncionario" class="form-label"
                                 style="font-weight:bold">Funcionario</label>
-                            <input type="text" name="nuevoFuncionario" id="nuevoFuncionario" class="form-control"
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoFuncionario" id="nuevoFuncionario" class="form-control"
                                 placeholder="">
                         </div>
 
@@ -91,7 +91,7 @@
                         <div class="col-md-6">
                             <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
                                 Área:</label>
-                            <input type="text" name="nuevaArea" id="nuevaArea" class="form-control" placeholder=""
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevaArea" id="nuevaArea" class="form-control" placeholder=""
                                 readonly>
                         </div>
 
@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="nuevoPuesto" class="form-label" style="font-weight:bold">Nuevo Puesto:</label>
-                            <input type="text" name="nuevoPuesto" id="nuevoPuesto" class="form-control"
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoPuesto" id="nuevoPuesto" class="form-control"
                                 placeholder="" readonly>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                         <label for="nuevoTipoSolicitud" class="form-label" style="font-weight:bold">Nuevo tipo
                             de
                             solicitud:</label>
-                        <input type="text" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud" class="form-control"
+                        <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud" class="form-control"
                             placeholder="" readonly>
                     </div>
                 </div>
@@ -159,6 +159,8 @@
             if ($('#idNuevaArea').val() == "otro") {
                 $('#nuevaArea').prop('readonly', false);
                 $('#idNuevoTipoSolicitud').html("").trigger('change');
+                $("#idNuevoTipoSolicitud").append('<option value="otro">Otra</option>');
+                $('#idNuevoTipoSolicitud').val(null).trigger('change');
 
             } else if ($('#idNuevaArea').val() == null) {
                 $('#nuevaArea').prop('readonly', true);

@@ -76,59 +76,60 @@ class SolicitudController extends Controller
     public function store(StoreSolicitudRequest $request) //YA ESTA BIEN CON LA NUEVA BD
     {
 
-        $fechaActual = NOW();
-        $fechaPartes = explode("-", $fechaActual->format('Y-m-d'));
-        $anioActual = $fechaPartes[0];
-        $mesActual = $fechaPartes[1];
-
-        $ultimoFolio = Solicitud::orderBy('folio', 'desc')->first();
-
-        $folioGenerado = 0;
-        $mesUltimoRegistro = 0;
-        $anioUltimoRegistro = 0;
-
-        if ($ultimoFolio && isset($ultimoFolio->folio)) {
-            $mesUltimoRegistro = Str::of($ultimoFolio->folio)->substr(4, 2);
-        } else {
-            $folioCompleto = $anioActual . $mesActual . '00001';
-        }
-
-        if ($anioUltimoRegistro == $anioActual) {
-
-            $folioNumeroConsecutivo = Str::of($ultimoFolio->folio)->substr(6);
-            $numeroConsecutivo = (int)$folioNumeroConsecutivo->__toString();
-            $numeroConsecutivoFormateado = str_pad($numeroConsecutivo + 1, 5, '0', STR_PAD_LEFT);
-            $folioCompleto = $anioActual . $mesActual . $numeroConsecutivoFormateado;
-
-            $folioGenerado = (int)$folioCompleto;
-        } else {
-
-            $folioCompleto = $anioActual . $mesActual . '00001';
-            $folioGenerado = (int)$folioCompleto;
-        }
-
-        if ($mesUltimoRegistro == $mesActual) {
-
-            $folioNumeroConsecutivo = Str::of($ultimoFolio->folio)->substr(6);
-            $numeroConsecutivo = (int)$folioNumeroConsecutivo->__toString();
-            $numeroConsecutivoFormateado = str_pad($numeroConsecutivo + 1, 5, '0', STR_PAD_LEFT);
-            $folioCompleto = $anioActual . $mesActual . $numeroConsecutivoFormateado;
-
-            $folioGenerado = (int)$folioCompleto;
-        } else {
-
-            $folioCompleto = $anioActual . $mesActual . '00001';
-            $folioGenerado = (int)$folioCompleto;
-        }
-
         DB::beginTransaction();
 
         try {
 
-            $idExtension = $request->idExtension;
-            $idArea = $request->idArea;
-            $idTipoSolicitud = $request->idTipoSolicitud;
-            //$idPrioridad = $request->idPrioridad;
+            $fechaActual = NOW();
+            $fechaPartes = explode("-", $fechaActual->format('Y-m-d'));
+            $anioActual = $fechaPartes[0];
+            $mesActual = $fechaPartes[1];
+
+            $ultimoFolio = DB::table('tbl_folios')->lockForUpdate()->orderBy('folio', 'desc')->first();
+
+            $folioGenerado = 0;
+            $mesUltimoRegistro = 0;
+            $anioUltimoRegistro = 0;
+
+            if ($ultimoFolio && isset($ultimoFolio->folio)) {
+                $mesUltimoRegistro = Str::of($ultimoFolio->folio)->substr(4, 2);
+            } else {
+                $folioCompleto = $anioActual . $mesActual . '00001';
+            }
+
+            if ($anioUltimoRegistro == $anioActual) {
+
+                $folioNumeroConsecutivo = Str::of($ultimoFolio->folio)->substr(6);
+                $numeroConsecutivo = (int)$folioNumeroConsecutivo->__toString();
+                $numeroConsecutivoFormateado = str_pad($numeroConsecutivo + 1, 5, '0', STR_PAD_LEFT);
+                $folioCompleto = $anioActual . $mesActual . $numeroConsecutivoFormateado;
+
+                $folioGenerado = (int)$folioCompleto;
+            } else {
+
+                $folioCompleto = $anioActual . $mesActual . '00001';
+                $folioGenerado = (int)$folioCompleto;
+            }
+
+            if ($mesUltimoRegistro == $mesActual) {
+
+                $folioNumeroConsecutivo = Str::of($ultimoFolio->folio)->substr(6);
+                $numeroConsecutivo = (int)$folioNumeroConsecutivo->__toString();
+                $numeroConsecutivoFormateado = str_pad($numeroConsecutivo + 1, 5, '0', STR_PAD_LEFT);
+                $folioCompleto = $anioActual . $mesActual . $numeroConsecutivoFormateado;
+
+                $folioGenerado = (int)$folioCompleto;
+            } else {
+
+                $folioCompleto = $anioActual . $mesActual . '00001';
+                $folioGenerado = (int)$folioCompleto;
+            }
+
+            while (DB::table('tbl_folios')->where('folio', $folioGenerado)->exists()) {
+                $folioNumeroConsecutivo++;
+                $numeroConsecutivoFormateado = str_pad($folioNumeroConsecutivo, 5, '0', STR_PAD_LEFT);
+                $folioGenerado = $anioActual . $mesActual . $numeroConsecutivoFormateado;
+            }
 
             //FOLIO
             $folio = new Folio();
@@ -137,6 +138,10 @@ class SolicitudController extends Controller
             $folio->save();
 
             $folioGuardado = $folio->folio;
+
+            $idExtension = $request->idExtension;
+            $idArea = $request->idArea;
+            $idTipoSolicitud = $request->idTipoSolicitud;
 
             //CONTACTO
             $contacto = new Contacto();
