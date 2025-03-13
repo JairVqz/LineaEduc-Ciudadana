@@ -55,19 +55,19 @@
                             <div class="row g-3">
                                 <div class="col-md-4">
                                     <label for="nombre" class="form-label" style="font-weight:bold">Nombre(s):</label>
-                                    <input type="text" name="nombre" id="nombre" class="form-control"
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombre" id="nombre" class="form-control"
                                         placeholder="" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="apellidoPaterno" class="form-label" style="font-weight:bold">Apellido
                                         Paterno:</label>
-                                    <input type="text" name="apellidoPaterno" id="apellidoPaterno"
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="apellidoPaterno" id="apellidoPaterno"
                                         class="form-control" placeholder="" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="apellidoMaterno" class="form-label" style="font-weight:bold">Apellido
                                         Materno:</label>
-                                    <input type="text" name="apellidoMaterno" id="apellidoMaterno"
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()" name="apellidoMaterno" id="apellidoMaterno"
                                         class="form-control" placeholder="">
                                 </div>
 
@@ -82,8 +82,8 @@
                                 <input type="hidden" name="curpUsuario" id="curpUsuario">
                                 <input type="hidden" name="usuario" id="usuario">
                                 <input type="hidden" name="horaInicio" id="horaInicio">
-                                <input type="hidden" name="nombreMunicipio" id="nombreMunicipio">
-                                <input type="hidden" name="nombreLocalidad" id="nombreLocalidad">
+                                <input  name="nombreMunicipio" id="nombreMunicipio">
+                                <input  name="nombreLocalidad" id="nombreLocalidad">
                                 <input type="hidden" name="idArea" id="idArea">
                             </div>
                         </fieldset>
@@ -160,7 +160,7 @@
                                 <div class="col-md-12">
                                     <label for="descripcion" class="form-label"
                                         style="font-weight:bold">Descripción:</label>
-                                    <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="" required></textarea>
+                                    <textarea oninput="this.value = this.value.toUpperCase()" name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="" required></textarea>
                                 </div>
 
                                 @include('solicitud.nuevaSolicitud.modalAgregarDirectorio')
@@ -603,7 +603,7 @@
 
                     response.forEach(function(municipio) {
                         selectMunicipio.append(
-                            '<option value="' + municipio.Id + '">' + municipio.Nombre +
+                            '<option value="' + municipio.Id + '">' + municipio.Nombre.toUpperCase() +
                             '</option>'
                         );
                     });
@@ -636,7 +636,7 @@
                             response.forEach(function(localidad) {
                                 selectLocalidad.append(
                                     '<option value="' + localidad.Id + '">' +
-                                    localidad.Nombre + '</option>'
+                                    localidad.Nombre.toUpperCase() + '</option>'
                                 );
                             });
                         } else {
@@ -724,6 +724,21 @@
             }
         }
     }).val(null).trigger('change');
+
+    $('#municipioEscuela').select2({
+        dropdownParent: $('#modalBuscadorCct'),
+        placeholder: "Selecciona un municipio",
+        allowClear: true,
+        language: {
+            noResults: function() {
+                return "No hay resultados";
+            },
+            searching: function() {
+                return "Buscando..";
+            }
+        }
+    }).val(null).trigger('change');
+
 </script>
 
 </html>

@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (municipioSeleccionado === "Selecciona el municipio") {
             municipioSeleccionado = "";
         }
-        document.getElementById("nombreMunicipio").value = municipioSeleccionado;
+        document.getElementById("nombreMunicipio").value = municipioSeleccionado.toUpperCase();
     });
 
     $('#localidad').on('change', function () {
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (localidadSeleccionada === "Selecciona la localidad") {
             localidadSeleccionada = "";
         }
-        document.getElementById("nombreLocalidad").value = localidadSeleccionada;
+        document.getElementById("nombreLocalidad").value = localidadSeleccionada.toUpperCase();
     });
 
     //LIMPIAR FORMULARIO
@@ -358,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         for (var i = 0; i < selectMunicipio.options.length; i++) {
                             if (selectMunicipio.options[i].text.toLowerCase() === municipioPlantel.toLowerCase()) {
                                 selectMunicipio.selectedIndex = i;
-                                document.getElementById("nombreMunicipio").value = selectMunicipio.options[i].text;
+                                document.getElementById("nombreMunicipio").value = selectMunicipio.options[i].text.toUpperCase();
                                 municipioFound = true;
                                 $('#municipio').trigger('change');
                                 break;
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 if (selectLocalidad.options[i].innerText.toLowerCase() === localidadPlantel.toLowerCase()) {
                                     selectLocalidad.selectedIndex = i;
                                     selectLocalidad.dispatchEvent(new Event('change'));
-                                    document.getElementById("nombreLocalidad").value = selectLocalidad.options[i].innerText;
+                                    document.getElementById("nombreLocalidad").value = selectLocalidad.options[i].innerText.toUpperCase();
                                     localidadFound = true;
                                     break;
                                 }

@@ -1,12 +1,13 @@
 <script src="/js/config.js"></script>
 
 <style>
-    .form-label {
-        text-align: left;
-    }
-
     .modal-backdrop.show {
         opacity: 0.2;
+    }
+
+    .select2-container {
+        direction: ltr !important;
+        text-align: left !important;
     }
 </style>
 
@@ -22,20 +23,19 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-12 mb-3 d-flex flex-column">
-                        <label for="municipioEscuela" style="font-weight: bold" class="form-label">Se recomienda completar ambos 
+                        <label for="municipioEscuela" style="font-weight: bold" class="form-label">Se recomienda
+                            completar ambos
                             campos para realizar una búsqueda más precisa.</label>
                     </div>
                     <div class="col-md-12 mb-3 d-flex flex-column">
                         <label for="nombreEscuela" class="form-label">Nombre de la escuela:</label>
-                        <input type="text" name="nombreEscuela" id="nombreEscuela" class="form-control"
-                            placeholder="Ingresa aquí el nombre de la escuela">
+                        <input type="text" oninput="this.value = this.value.toUpperCase()" name="nombreEscuela"
+                            id="nombreEscuela" class="form-control" placeholder="Ingresa aquí el nombre de la escuela">
                     </div>
                     <div class="col-md-12 mb-3 d-flex flex-column">
                         <label for="municipioEscuela" class="form-label">Municipio de la escuela:</label>
-                        <!--input type="text" name="municipioEscuela" id="municipioEscuela" class="form-control"
-                            placeholder="Ingresa aquí el municipio donde se ubica la escuela"-->
-                            <select name="municipioEscuela" id="municipioEscuela" class="form-select">
-                            </select>
+                        <select name="municipioEscuela" id="municipioEscuela" class="form-select">
+                        </select>
                     </div>
 
                     <div class="col-md-12 mb-3 d-flex flex-column">
@@ -73,11 +73,13 @@
                     var selectMunicipioEscuela = $('#municipioEscuela');
 
                     selectMunicipioEscuela.empty();
-                    selectMunicipioEscuela.append('<option value="">Selecciona el municipio</option>');
+                    selectMunicipioEscuela.append(
+                        '<option value="">Selecciona el municipio</option>');
 
                     response.forEach(function(municipio) {
                         selectMunicipioEscuela.append(
-                            '<option value="' + municipio.Id + '" >' + municipio.Nombre +
+                            '<option value="' + municipio.Id + '" >' + municipio.Nombre
+                            .toUpperCase() +
                             '</option>'
                         );
 
@@ -92,11 +94,9 @@
             }
         });
 
-        $('#nombreEscuela, #municipioEscuela').on('input', function() {
+        $('#nombreEscuela, #municipioEscuela').on('input change', function() {
             var nombreEscuela = $('#nombreEscuela').val();
-            //var municipioEscuela = $('#municipioEscuela').val();
             var municipioEscuela = $('#municipioEscuela').find('option:selected').text();
-            console.log("mpioEscuela: "+municipioEscuela);
 
             if (nombreEscuela == "" && municipioEscuela == "") {
                 $('#labelResultadoBusqueda').hide();
@@ -169,5 +169,19 @@
     function eliminarDiacriticos(texto) {
         return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
     }
+
+    $('#resultadoBusqueda').select2({
+        dropdownParent: $('#modalBuscadorCct'),
+        placeholder: "Selecciona un CCT",
+        allowClear: true,
+        language: {
+            noResults: function() {
+                return "No hay resultados";
+            },
+            searching: function() {
+                return "Buscando..";
+            }
+        }
+    }).val(null).trigger('change');
 
 </script>
