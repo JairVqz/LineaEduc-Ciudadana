@@ -115,7 +115,7 @@
     <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
         alt="Gráfica de solicitudes por hora" style="width: 100%; height: auto;">
     -->
-    <img src="{{ storage_path('app/html/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
+    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
         alt="Gráfica de solicitudes por hora" style="width: 100%; height: auto;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
     <div id="areas">

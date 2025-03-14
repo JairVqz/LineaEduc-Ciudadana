@@ -118,7 +118,7 @@ class ReportesController extends Controller
         ))->render();
 
         if (env('APP_ENV') !== 'local') {
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/html/tempdir')]);
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         } else {
             $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         }
@@ -236,7 +236,7 @@ class ReportesController extends Controller
         ))->render();
 
         if (env('APP_ENV') !== 'local') {
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/html/tempdir')]);
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         } else {
             $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         }
@@ -379,7 +379,7 @@ class ReportesController extends Controller
         ))->render();
 
         if (env('APP_ENV') !== 'local') {
-            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/html/tempdir')]);
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         } else {
             $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
         }
@@ -401,11 +401,11 @@ class ReportesController extends Controller
             $imagenDecodificada = base64_decode($imagen);
 
             if (env('APP_ENV') !== 'local') {
-                $directorio = storage_path('app/html/tempdir/mpdf/ttfontdata/');
+                $directorio = storage_path('app/public/tempdir/mpdf/ttfontdata/');
                 if (!file_exists($directorio)) {
                     mkdir($directorio, 0775, true);
                 }
-            } else {
+            } else { 
                 $directorio = storage_path('app/public/tempdir/mpdf/ttfontdata/');
                 if (!file_exists($directorio)) {
                     mkdir($directorio, 0775, true);
