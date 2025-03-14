@@ -1,3 +1,8 @@
+.progress-bar{
+    background-color: rgba(122, 23, 55, 0.5);
+    font-weight: bold;
+}
+
 .leaflet-container {
     background: white !important;
 }
@@ -29,11 +34,7 @@
     background-color: #501125;
 }
 
-/* Estilo para el selector de mapa */
 #mapToggle {
-
-
-
     background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
     font-family: Arial, sans-serif;
@@ -62,7 +63,6 @@
     background: rgb(87, 17, 39);
 }
 
-/* Estilo para la leyenda */
 .info.legend {
     background: rgba(255, 255, 255, 0.9);
     padding: 12px;

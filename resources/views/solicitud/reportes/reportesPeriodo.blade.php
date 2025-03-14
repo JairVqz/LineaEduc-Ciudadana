@@ -182,6 +182,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
+    window.Laravel = <?php echo json_encode(value: [
+        'guardarGrafica' => route('reportes.guardarGrafica'),
+        'reportesPeriodo' => route('reportes.reportesPeriodo'),
+    ]); ?>
+
     $(function () {
         var start = moment().startOf('month');
         var end = moment().endOf('month');
@@ -189,8 +194,9 @@
         function cb(start, end) {
             $('#reportrange span').html('Desde ' + start.format('DD-MM-YYYY') + ' hasta ' + end.format('DD-MM-YYYY'));
 
+            const reportesPeriodo = window.Laravel.reportesPeriodo;
             $.ajax({
-                url: 'https://callcenter.sev.gob.mx/index.php/solicitud/reportesPeriodo',
+                url: reportesPeriodo,
                 type: 'GET',
                 data: {
                     start_date: start.format('YYYY-MM-DD'),
@@ -285,8 +291,8 @@
             let imagenBase64 = canvas.toDataURL('image/png');
             let nombre = 'solicitudesPorHoraPeriodo';
 
-            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+            const guardarGrafica = window.Laravel.guardarGrafica;
+            fetch(guardarGrafica, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -306,8 +312,8 @@
             let imagenBase64 = canvas.toDataURL('image/png');
             let nombre = 'solicitudesPorAreaPeriodo';
 
-            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+            const guardarGrafica = window.Laravel.guardarGrafica;
+            fetch(guardarGrafica, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

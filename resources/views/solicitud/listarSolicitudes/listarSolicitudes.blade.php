@@ -17,17 +17,18 @@
     <link rel="stylesheet" href="/css/solicitud/listarSolicitudes.css">
 </head>
 @include('menuNavigation')
+
 <body>
-    
+
     <!-- mi contenedor -->
     <div class="content">
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Lista de solicitudes</h1>
                 <a href="{{ route('solicitud.exportarExcel') }}">
-                        <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
-                            style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
-                    
+                    <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
+                        style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
+
                 </a>
             </div>
 
@@ -38,7 +39,7 @@
                 <!-- Filtros-->
                 <div class="card mb-3" style="border-radius: 0px">
                     <div class="card-body">
-                       
+
                         <div class="mb-3 row">
                             <div class="col-md-3">
                                 <label for="filtroFolio" class="form-label">Folio:</label>
@@ -53,7 +54,7 @@
                                 <label for="fecha" class="form-label">Fecha de solicitud:</label>
                                 <input type="date" class="form-control" id="fecha" name="fecha">
                             </div>
-                            
+
                         </div>
 
                         <div class="mb-4 row">
@@ -101,8 +102,7 @@
                         <div class="mb-4 row">
                             <div class="col-md-3">
                                 <label for="filtroCCT" class="form-label">CCT:</label>
-                                <input type="text" class="form-control" id="filtroCCT"
-                                    placeholder="Ej. 30DPR0969O">
+                                <input type="text" class="form-control" id="filtroCCT" placeholder="Ej. 30DPR0969O">
                             </div>
 
                             <div class="col-md-3">
@@ -122,7 +122,7 @@
                                 <button name="button" id="btnLimpiarFiltros" style="border-radius: 8px; 
                                 width:100%; height:75%">Limpiar filtros</button>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
 
             <!--tabla de solicitudes-->
             <div class="table-responsive">
-            <table id="tablaResultados" class="table table-striped table-bordered">
+                <table id="tablaResultados" class="table table-striped table-bordered">
                     <thead>
                         <tr>
                             <th>Folio</th>
@@ -145,7 +145,7 @@
                             <th>Fecha</th>
                             <th>Días</th>
                             <th>Acciones</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -153,7 +153,8 @@
                         <tr>
                             <td>{{ $solicitud->folio }} </td>
                             <td>{{ $solicitud->nombre }} {{ $solicitud->apellidoPaterno }}
-                                {{ $solicitud->apellidoMaterno }}</td>
+                                {{ $solicitud->apellidoMaterno }}
+                            </td>
                             <!--todos los que son foraneas-->
                             <td>{{ $solicitud->area ?? 'Sin asignar' }}</td>
                             <td>{{ $solicitud->tipoSolicitud ?? 'Sin asignar' }}</td>
@@ -205,19 +206,17 @@
                                     data-localidad="{{ $solicitud->localidad }}"
                                     data-direccion="{{ $solicitud->direccionCct }}"
                                     data-nombre-director="{{ $solicitud->nombreDirector }}"
-                                    data-correo="{{ $solicitud->correo ?? 'No especificado' }}"
-                                    data-telefono-fijo="{{ $solicitud->telefonoFijo ?? 'No especificado' }}"
-                                    data-telefono-celular="{{ $solicitud->telefonoCelular ?? 'No especificado' }}"
-                                    data-estatus="{{ $solicitud->estatus}}" 
-                                    @php
+                                    data-correo="{{ $solicitud->correo ?? 'NO ESPECIFICADO' }}"
+                                    data-telefono-fijo="{{ $solicitud->telefonoFijo ?? 'NO ESPECIFICADO' }}"
+                                    data-telefono-celular="{{ $solicitud->telefonoCelular ?? 'NO ESPECIFICADO' }}"
+                                    data-estatus="{{ $solicitud->estatus}}" @php
                                         $fechamodal = \Carbon\Carbon::parse($solicitud->created_at)->format('d/m/Y');
                                     @endphp
                                     data-created-at="{{ $fechamodal }}"
                                     data-dias-transcurridos="{{ $solicitud->diasTranscurridos}}"
-                                    data-descripcion="{{ $solicitud->descripcion }}" 
-                                    @php
-                                        $horaInicio = \Carbon\Carbon::parse($solicitud->horaInicio)->format('H:i:s');
-                                        $horaTermino = \Carbon\Carbon::parse($solicitud->horaTermino)->format('H:i:s');
+                                    data-descripcion="{{ $solicitud->descripcion }}" @php
+                                    $horaInicio=\Carbon\Carbon::parse($solicitud->horaInicio)->format('H:i:s');
+                                    $horaTermino = \Carbon\Carbon::parse($solicitud->horaTermino)->format('H:i:s');
                                     @endphp data-hora-inicio="{{ $horaInicio }}" data-hora-termino="{{ $horaTermino }}"
                                     data-duracion="{{ $solicitud->duracionMinutos }}"
                                     data-extension="{{ $solicitud->extension}}"
@@ -229,11 +228,11 @@
                                 </a>
 
 
-                                 <!--OCULTA POR PRODUCTIVO-->
-                                        <a href="{{ route('solicitud.edit', $solicitud->folio) }}" title="Editar" class="mx-2">
-                                            <i class="bi bi-pencil text-warning"></i>
-                                        </a>
-                                        </a>
+                                <!--OCULTA POR PRODUCTIVO-->
+                                <a href="{{ route('solicitud.edit', $solicitud->folio) }}" title="Editar" class="mx-2">
+                                    <i class="bi bi-pencil text-warning"></i>
+                                </a>
+                                </a>
                             </td>
                         </tr>
                         @endforeach
@@ -244,7 +243,7 @@
         </div>
     </div>
 
-    
+
 
 </body>
 @include('solicitud.listarSolicitudes.modalDetalleListar')
@@ -257,16 +256,21 @@
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
 
 <script>
+    window.Laravel = <?php echo json_encode([
+        'getTipos' => route('seguimiento.obtenerTipos'),
+    ]); ?>
+
     $(document).ready(function () {
         $('#idArea').change(function () {
             var idArea = $(this).val();
             var tipoSolicitudSelect = $('#idTipoSolicitud');
-
             tipoSolicitudSelect.empty().append('<option value="">Cargando...</option>');
+            
+            const obtenerTi = window.Laravel.getTipos;
 
             if (idArea) {
                 $.ajax({
-                    url: '/solicitud/obtenerTipos',
+                    url: obtenerTi,
                     type: 'GET',
                     data: { idArea: idArea },
                     dataType: 'json',
@@ -339,9 +343,9 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
                 "paginate": {
-                    "first": "<<",   
-                    "last": ">>",    
-                    "next": ">",    
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
                     "previous": "<"
                 },
             },
@@ -382,7 +386,7 @@
                 $('#tablaResultados').DataTable().columns(3).search(filtro).draw();
             }
         });
-        
+
         idPrioridad.addEventListener('input', function () {
             const filtro = idPrioridad.options[idPrioridad.selectedIndex].text.toLowerCase().trim();
             if (idPrioridad.selectedIndex === 0) {
@@ -436,7 +440,7 @@
     });
 
 
-   //limpiar filtros
+    //limpiar filtros
     document.getElementById('btnLimpiarFiltros').addEventListener('click', function () {
         const selects = document.querySelectorAll('select');
         selects.forEach(select => {
