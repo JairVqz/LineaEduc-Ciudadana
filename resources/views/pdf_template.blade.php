@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
     <title>Reporte Acumulado</title>
     <style>
         body {
@@ -49,7 +50,7 @@
 
         #areas {
             display: flex;
-            
+
             margin-top: 30px;
         }
 
@@ -57,7 +58,6 @@
             width: 300px;
             height: 300px;
             text-align: center;
-            background-color: #6d6666;
         }
 
         #parrafo {
@@ -66,12 +66,18 @@
             justify-content: center;
             flex-direction: column;
             overflow: auto;
-            width: 300px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
             text-align: justify;
             padding: 5px;
             font-size: 12px;
-            /*border: 1px dashed #6d6666;*/
+            /*display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            overflow: auto;
+            font-size: 12px;
+            text-align: justify*/
         }
     </style>
 </head>
@@ -81,7 +87,8 @@
         <img src="{{ public_path('images/SEV_Convivencia_Fondo blanco.png') }}" width="220px"
             style="float: left; margin-left: -20px; margin-top: -20px;" />
         <img src="{{ public_path('images/LEC.png') }}" width="80px" style="float: right; margin-top: -20px;" />
-        <h3 style="text-aling: center; margin-left: 230px; margin-top: -20px;margin-bottom:-10px">Línea Educativa Ciudadana</h3>
+        <h3 style="text-aling: center; margin-left: 230px; margin-top: -20px;margin-bottom:-10px">Línea Educativa
+            Ciudadana</h3>
         <h5 style="text-aling: center; margin-left: 280px; margin-top: -180px;">Reporte Acumulado</h5>
     </div>
     <!--CUADRADOS DE INDICADORES-->
@@ -111,26 +118,33 @@
     <h4 style="text-align: center; margin-bottom: -1px;">Llamada con más minutos de atención</h4>
     <h2 style="text-align: center; margin-top: -15px;">{{ $llamadaMasMinutosPorDia }}</h2>
     <!--GRAFICA DE BARRAS-->
-    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}" alt="Gráfica de solicitudes por hora"
-        style="width: 100%; height: auto;">
+    <!--
+    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
+        alt="Gráfica de solicitudes por hora" style="width: 100%; height: auto;">
+    -->
+    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
+        alt="Gráfica de solicitudes por hora" style="width: 95%; height: auto;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
     <div id="areas">
-        <div id="grafica" style="float: left; margin-left: 15px">
-            <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorAreaAcum.png') }}" alt="Gráfica de solicitudes por hora"
-                style="width: 100%; height: auto;">
-        </div>
+        <h4 style="text-align: center; margin-top: -10px; font-size: 14px;">Áreas con mayor número de solicitudes</h4><br>
+        <!--<div id="grafica" style="float: left; margin-left: 15px">
+        
+                        
+        </div>-->
         <div id="parrafo" style="float: right; margin-right: 15px">
-            <p style="margin-top:80px;">Acumulado a la fecha, la mayoría de llamadas estuvieron relacionadas con temas de  
+        
+            <p style="margin-top: -15px;">Acumulado a la fecha, la mayoría de llamadas estuvieron relacionadas con temas
+                de
                 @foreach ($parrafoAreas as $index => $data)
                     @if ($index === count($parrafoAreas) - 1 && $index !== 0)
-                        y {{ $data->nombre }} ({{ $data->porcentaje }}%),  
+                        y {{ $data->nombre }} ({{ $data->porcentaje }}%),
                     @elseif ($index === 0)
                         {{ $data->nombre }} ({{ $data->porcentaje }}%)
                     @else
                         , {{ $data->nombre }} ({{ $data->porcentaje }}%)
                     @endif
-                @endforeach 
-                destacando los siguientes asuntos: 
+                @endforeach
+                destacando los siguientes asuntos:
                 @foreach ($parrafoTipos as $index => $data)
                     @if ($index === count($parrafoTipos) - 1 && $index !== 0)
                         y {{ $data->nombre }} ({{ $data->porcentaje }}%).
@@ -139,9 +153,9 @@
                     @else
                         , {{ $data->nombre }} ({{ $data->porcentaje }}%)
                     @endif
-                @endforeach 
+                @endforeach
             </p>
-            
+
         </div>
     </div>
 

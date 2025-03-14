@@ -250,16 +250,23 @@
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
 
 <script>
+     window.Laravel = <?php echo json_encode([
+        'getTipos' => route(name: 'seguimiento.obtenerTipos'),
+        'apiMunicipios' => route('api.apiMunicipios'),
+        'apiLocalidades' => route('api.apiLocalidades'),
+    ]); ?>
+
     $(document).ready(function () {
         $('#idArea').change(function () {
             var idArea = $(this).val();
             var tipoSolicitudSelect = $('#idTipoSolicitud');
-
             tipoSolicitudSelect.empty().append('<option value="">Cargando...</option>');
 
+            const obtenerTi = window.Laravel.getTipos;
+            
             if (idArea) {
                 $.ajax({
-                    url: '/solicitud/obtenerTipos',
+                    url: obtenerTi,
                     type: 'GET',
                     data: { idArea: idArea },
                     dataType: 'json',
@@ -471,10 +478,6 @@
 </script>
 
 <script>//API DE MUNICIPIOS Y LOCALIDADES
-    window.Laravel = <?php echo json_encode([
-    'apiMunicipios' => route('api.apiMunicipios'),
-    'apiLocalidades' => route('api.apiLocalidades'),
-]); ?>;
     document.addEventListener('DOMContentLoaded', function () {
 
         const apiMunicipios = window.Laravel.apiMunicipios;

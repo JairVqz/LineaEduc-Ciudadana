@@ -117,7 +117,11 @@ class ReportesController extends Controller
             'fechaR'
         ))->render();
 
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        if (env('APP_ENV') !== 'local') {
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        } else {
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        }
         //dd($mpdf);
         $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
@@ -181,17 +185,30 @@ class ReportesController extends Controller
         }
 
         //dd($encodedLabels);
-        //PARRAFO DE AREAS Y TIPOS
-        $parrafoAreas = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM [LineaEduC].[dbo].[listarSolicitudes]), 
+       //PARRAFO DE AREAS Y TIPOS
+       $parrafoAreas = DB::select("WITH Totales AS (
+        SELECT COUNT(*) AS total FROM [LineaEduC].[dbo].[listarSolicitudes]
+        ), 
         TopAreas AS (
-            SELECT TOP 5 area,
+            SELECT TOP 5 
+                area,
                 COUNT(*) AS cantidad, 
-                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje
+                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje,
+                SUM(CASE WHEN idEstatus = 1 THEN 1 ELSE 0 END) AS soliPendientes,
+                SUM(CASE WHEN idEstatus = 2 THEN 1 ELSE 0 END) AS soliProceso,
+                SUM(CASE WHEN idEstatus = 3 THEN 1 ELSE 0 END) AS soliTerminado
             FROM [LineaEduC].[dbo].[listarSolicitudes]
             GROUP BY area
             ORDER BY cantidad DESC
         )
-        SELECT 'area' AS categoria, area AS nombre, porcentaje FROM TopAreas");
+        SELECT 
+            area AS nombre, 
+            porcentaje, 
+            cantidad, 
+            soliPendientes, 
+            soliProceso, 
+            soliTerminado
+        FROM TopAreas;");
         //dd($parrafoAreas);
         $parrafoTipos = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM [LineaEduC].[dbo].[listarSolicitudes]), 
         TopTipos AS (
@@ -218,7 +235,12 @@ class ReportesController extends Controller
             'parrafoTipos'
         ))->render();
 
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        if (env('APP_ENV') !== 'local') {
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        } else {
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        }
+
         //dd($mpdf);
         $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
@@ -232,7 +254,7 @@ class ReportesController extends Controller
     {
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
-        dd($start_date,$end_date);
+        //dd($start_date,$end_date);
         $solicitudes = DB::table('listarSolicitudes')->get();
 
         //SELECT * FROM tbl_solicitudesGeneral WHERE CAST(created_at AS DATE) BETWEEN '2025-02-28' AND '2025-03-03'
@@ -356,7 +378,11 @@ class ReportesController extends Controller
             'parrafoTipos',
         ))->render();
 
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        if (env('APP_ENV') !== 'local') {
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        } else {
+            $mpdf = new \Mpdf\Mpdf(['tempDir' => storage_path('app/public/tempdir')]);
+        }
         //dd($mpdf);
         $mpdf->showImageErrors = true;
         $mpdf->WriteHTML($html);
@@ -366,23 +392,6 @@ class ReportesController extends Controller
         return $mpdf->Output($pdfFileName, 'D');
     }
 
-    /*public function guardarGrafica(Request $request)
-    {
-        $imagenBase64 = $request->input('imagen');
-
-        if ($imagenBase64) {
-            $imagen = str_replace('data:image/png;base64,', '', $imagenBase64);
-            $imagen = str_replace(' ', '+', $imagen);
-            $imagenDecodificada = base64_decode($imagen);
-
-            $rutaImagen = storage_path('app/public/tempdir/mpdf/ttfontdata/' . $request->input('nombre') . '.png');
-            file_put_contents($rutaImagen, $imagenDecodificada);
-
-            return response()->json(['mensaje' => 'Imagen guardada correctamente']);
-        }
-
-        return response()->json(['mensaje' => 'Error al guardar la imagen'], 400);
-    }*/
     public function guardarGrafica(Request $request)
     {
         $imagenBase64 = $request->input('imagen');
@@ -391,9 +400,16 @@ class ReportesController extends Controller
             $imagen = str_replace(' ', '+', $imagen);
             $imagenDecodificada = base64_decode($imagen);
 
-            $directorio = storage_path('app/public/tempdir/mpdf/ttfontdata/');
-            if (!file_exists($directorio)) {
-                mkdir($directorio, 0775, true);
+            if (env('APP_ENV') !== 'local') {
+                $directorio = storage_path('app/public/tempdir/mpdf/ttfontdata/');
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+            } else { 
+                $directorio = storage_path('app/public/tempdir/mpdf/ttfontdata/');
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
             }
 
             $rutaImagen = $directorio . $request->input('nombre') . '.png';
@@ -657,6 +673,35 @@ class ReportesController extends Controller
                 $valuesHora[$indice] = $solicitud->total;
             }
         }
+
+        //PARRAFO DE AREAS Y TIPOS
+        $parrafoAreas = DB::select("WITH Totales AS (
+            SELECT COUNT(*) AS total FROM [LineaEduC].[dbo].[listarSolicitudes]
+            ), 
+            TopAreas AS (
+                SELECT TOP 5 
+                    area,
+                    COUNT(*) AS cantidad, 
+                    CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje,
+                    SUM(CASE WHEN idEstatus = 1 THEN 1 ELSE 0 END) AS soliPendientes,
+                    SUM(CASE WHEN idEstatus = 2 THEN 1 ELSE 0 END) AS soliProceso,
+                    SUM(CASE WHEN idEstatus = 3 THEN 1 ELSE 0 END) AS soliTerminado
+                FROM [LineaEduC].[dbo].[listarSolicitudes]
+                GROUP BY area
+                ORDER BY cantidad DESC
+            )
+            SELECT 
+                area AS nombre, 
+                porcentaje, 
+                cantidad, 
+                soliPendientes, 
+                soliProceso, 
+                soliTerminado
+            FROM TopAreas;");
+        //dd($parrafoAreas);
+
+
+
         // json pq es ajax para que no recargue la pagin
         if ($request->ajax()) {
             return response()->json([
@@ -683,7 +728,8 @@ class ReportesController extends Controller
                 'llamadasRecibidas',
                 'primeraLlamadaFormateada',
                 'minutosEfectivos',
-                'ultimaLlamadaFormateada'
+                'ultimaLlamadaFormateada',
+                'parrafoAreas',
             )
         );
     }

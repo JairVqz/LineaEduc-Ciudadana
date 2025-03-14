@@ -102,7 +102,8 @@ Route::middleware('auth.validation')->group(function () {
             Route::get('/solicitud/solicitudSeguimiento/{folio}', [SeguimientoController::class, 'solicitudSeguimiento'])->name('solicitudSeguimiento');
             Route::get('/solicitud/coincidenciasSeguimiento', [SeguimientoController::class, 'coincidenciasSeguimiento'])->name('coincidenciasSeguimiento');
             Route::put('/solicitud/guardarSolicitud/{folio}', [SeguimientoController::class, 'guardarSolicitud'])->name('guardarSolicitud');
-            Route::get('/solicitud/obtenerTipos', [SeguimientoController::class, 'obtenerTipos']);
+            Route::get('/solicitud/obtenerTipos', [SeguimientoController::class, 'obtenerTipos'])->name('obtenerTipos');
+
         });
     });
 

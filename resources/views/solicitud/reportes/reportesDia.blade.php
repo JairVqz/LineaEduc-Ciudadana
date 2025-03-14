@@ -224,14 +224,18 @@
 <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+    window.Laravel = <?php echo json_encode(value: [
+        'guardarGrafica' => route('reportes.guardarGrafica'),
+    ]); ?>
+    
     function enviarGraficaAlServidorP() {//mando las 2
         html2canvas(document.getElementById('solicitudesPorHoraChart'), { willReadFrequently: true })
         .then(canvas => {
             let imagenBase64 = canvas.toDataURL('image/png');
             let nombre = 'solicitudesPorHoraDia';
 
-            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+            const guardarGrafica = window.Laravel.guardarGrafica;
+            fetch(guardarGrafica, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -251,8 +255,8 @@
             let imagenBase64 = canvas.toDataURL('image/png');
             let nombre = 'solicitudesPorAreaDia';
 
-            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
+            const guardarGrafica = window.Laravel.guardarGrafica;
+            fetch(guardarGrafica, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

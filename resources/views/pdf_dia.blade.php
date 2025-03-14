@@ -111,8 +111,12 @@
     <h4 style="text-align: center; margin-bottom: -1px;">Llamada con más minutos de atención</h4>
     <h2 style="text-align: center; margin-top: -15px;">{{ $llamadaMasMinutosPorDia }}</h2>
     <!--GRAFICA DE BARRAS-->
+    <!--
     <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraDia.png') }}" alt="Gráfica de solicitudes por hora"
         style="width: 100%; height: auto;">
+    -->
+    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraDia.png') }}" alt="Gráfica de solicitudes por hora"
+    style="width: 100%; height: auto;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
     <div id="areas">
         <div id="grafica" style="float: left; margin-left: 15px">
