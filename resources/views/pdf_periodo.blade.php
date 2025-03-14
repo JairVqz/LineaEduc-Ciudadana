@@ -115,12 +115,12 @@
     <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
         style="width: 100%; height: auto;">
     -->
-    <img src="{{ storage_path('app/html/tempdir/mpdf/ttfontdata/solicitudesPorHoraPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
+    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
     style="width: 100%; height: auto;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
     <div id="areas">
         <div id="grafica" style="float: left; margin-left: 15px">
-            <img src="{{ storage_path('app/html/tempdir/mpdf/ttfontdata/solicitudesPorAreaPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
+            <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorAreaPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
                 style="width: 100%; height: auto;">
         </div>
         <div id="parrafo" style="float: right; margin-right: 15px">
