@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
     <title>Reporte Acumulado</title>
     <style>
         body {
@@ -65,12 +66,18 @@
             justify-content: center;
             flex-direction: column;
             overflow: auto;
-            width: 300px;
-            height: 300px;
+            width: 200px;
+            height: 200px;
             text-align: justify;
             padding: 5px;
             font-size: 12px;
-            /*border: 1px dashed #6d6666;*/
+            /*display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            overflow: auto;
+            font-size: 12px;
+            text-align: justify*/
         }
     </style>
 </head>
@@ -116,14 +123,17 @@
         alt="Gráfica de solicitudes por hora" style="width: 100%; height: auto;">
     -->
     <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
-        alt="Gráfica de solicitudes por hora" style="width: 100%; height: auto;">
+        alt="Gráfica de solicitudes por hora" style="width: 95%; height: auto;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
     <div id="areas">
-        <div id="grafica" style="float: left; margin-left: 15px">
-
-        </div>
+        <h4 style="text-align: center; margin-top: -10px; font-size: 14px;">Áreas con mayor número de solicitudes</h4><br>
+        <!--<div id="grafica" style="float: left; margin-left: 15px">
+        
+                        
+        </div>-->
         <div id="parrafo" style="float: right; margin-right: 15px">
-            <p style="margin-top:80px;">Acumulado a la fecha, la mayoría de llamadas estuvieron relacionadas con temas
+        
+            <p style="margin-top: -15px;">Acumulado a la fecha, la mayoría de llamadas estuvieron relacionadas con temas
                 de
                 @foreach ($parrafoAreas as $index => $data)
                     @if ($index === count($parrafoAreas) - 1 && $index !== 0)
