@@ -96,60 +96,66 @@
             </div>
 
             <div class="row g-3 flex-row d-flex mt-2">
-                <div class="col-md-3" style="padding: 5px;">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesAChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudArea', 'solicitudesAChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
+                <div class="col-md-12" style="padding: 5px;">
+                    <div class="card" style="padding: 10px;">
+                        <h4 style="text-align: center; margin-top: 10px;">Áreas con mayor número de solicitudes</h4><br>
+                        <div style="height: 100%; width: 100%;">
+                            <table id="tablaSAreas" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Área</th>
+                                        <th style="text-align: center;">Estatus</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($parrafoAreas as $index => $data)
+                                        <tr>
+                                            <td>
+                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                <span style="font-size: 13px; font-weight: bold; color:rgb(107, 107, 107);">{{ $data->nombre }}</span>
+                                                <p style="font-size: 12px; font-weight: bold; color:rgb(155, 155, 155);" class="mb-0 ms-2">100% ({{ $llamadasRecibidas }})</p>
+                                            </div>
+
+                                            <div class="progress position-relative" id="progreso1" style="height: 20px; position: relative;">
+                                                <div class="progress-bar progress-bar-striped " 
+                                                    role="progressbar" aria-valuenow="{{ $data->porcentaje }}" 
+                                                    aria-valuemin="0" aria-valuemax="100" 
+                                                    style="width: {{ $data->porcentaje }}%;">
+                                                </div>
+                                                <span class="position-absolute fw-bold text-dark" 
+                                                    style="right: 5px; top: 50%; transform: translateY(-50%);">
+                                                    {{ $data->porcentaje }}% ({{ $data->cantidad }})
+                                                </span>
+                                            </div>
+
+                                            </td>
+                                            <td>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:red; font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">Pendientes: {{ $data->soliPendientes }} </span>
+                                                </div>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:rgb(230, 188, 53); font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">En proceso: {{ $data->soliProceso }} </span>
+                                                </div>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:green; font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">Terminadas: {{ $data->soliTerminado }}</span>
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3" style="padding: 5px;">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesPChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudPrioridad', 'solicitudesPChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3" style="padding: 5px; ">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesEChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudEstatus', 'solicitudesEChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
+
                     </div>
                 </div>
 
-                <div class="col-md-3" style="padding: 5px; ">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesMinutoACUMChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudMinutoACUM', 'solicitudesMinutoACUMChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+
+                
             </div>
 
 
@@ -214,64 +220,43 @@
 </body>
 <!--ACUMULADO-->
 @include('solicitud.reportes.acumulado.mapasAcum')
-@include('solicitud.reportes.acumulado.sPrioridadAcum')
-@include('solicitud.reportes.acumulado.sEstatusAcum')
-@include('solicitud.reportes.acumulado.sAreaAcum')
-@include('solicitud.reportes.acumulado.sDuracionMinutosAcum')
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.4/js/dataTables.bootstrap5.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+     window.Laravel = <?php echo json_encode(value: [
+        'guardarGrafica' => route('reportes.guardarGrafica'),
+    ]); ?>
+     
     function enviarGraficaAlServidorP() {//mando las 2
         html2canvas(document.getElementById('solicitudesPorHoraAcumuladoChart'), { willReadFrequently: true })
-        .then(canvas => {
-            let imagenBase64 = canvas.toDataURL('image/png');
-            let nombre = 'solicitudesPorHoraAcum';
+            .then(canvas => {
+                let imagenBase64 = canvas.toDataURL('image/png');
+                let nombre = 'solicitudesPorHoraAcum';
 
-            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
-            }).then(response => {
-                if (response.ok) {
-                    console.log("Imagen enviada correctamente");
-                } else {
-                    console.error("Error al enviar la imagen");
-                }
-            }).catch(error => console.error("Error en la petición:", error));
-        });
-        html2canvas(document.getElementById('solicitudesAChart'), { willReadFrequently: true })
-        .then(canvas => {
-            let imagenBase64 = canvas.toDataURL('image/png');
-            let nombre = 'solicitudesPorAreaAcum';
-
-            fetch("https://callcenter.sev.gob.mx/index.php/solicitud/guardarGrafica", {
-            //fetch("http://127.0.0.1:8000/solicitud/guardarGrafica",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
-            }).then(response => {
-                if (response.ok) {
-                    console.log("Imagen enviada correctamente");
-                } else {
-                    console.error("Error al enviar la imagen");
-                }
-            }).catch(error => console.error("Error en la petición:", error));
-        });
+                const guardarGrafica = window.Laravel.guardarGrafica;
+                fetch(guardarGrafica, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
+                }).then(response => {
+                    if (response.ok) {
+                        console.log("Imagen enviada correctamente");
+                    } else {
+                        console.error("Error al enviar la imagen");
+                    }
+                }).catch(error => console.error("Error en la petición:", error));
+            });
+        
     }
     document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(enviarGraficaAlServidorP, 2000);
+        setTimeout(enviarGraficaAlServidorP, 2000);
     });
 </script>
 
