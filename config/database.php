@@ -92,6 +92,20 @@ return [
             'encrypt' => env('DB_ENCRYPT', 'no'),
             'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE','false'),
         ],
+        /*'sqlsrv' => [
+            'driver' => 'sqlsrv',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', 'sqlsirh84.in.sev.gob.mx'),
+            'port' => env('DB_PORT', '59108'),
+            'database' => env('DB_DATABASE', 'LineaEduC'),
+            'username' => env('DB_USERNAME', 'apl_lineaeduc'),
+            'password' => env('DB_PASSWORD', 'whWxTZ3s'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'encrypt' => env('DB_ENCRYPT', 'no'),
+            'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE','false'),
+        ],*/
        /* 'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
