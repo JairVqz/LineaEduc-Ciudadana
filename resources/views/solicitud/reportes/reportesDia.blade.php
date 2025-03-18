@@ -93,60 +93,68 @@
             </div>
 
             <div class="row g-3 flex-row d-flex mt-2">
-                <div class="col-md-3" style="padding: 5px;">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesAChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudArea', 'solicitudesAChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
+                <div class="col-md-12" style="padding: 5px;">
+                    <div class="card" style="padding: 10px;">
+                        <h4 style="text-align: center; margin-top: 10px;">Áreas con mayor número de solicitudes</h4><br>
+                        <div style="height: 100%; width: 100%;">
+                            <table id="tablaSAreas" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Área</th>
+                                        <th style="text-align: center;">Estatus</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($parrafoAreas as $index => $data)
+                                        <tr>
+                                            <td>
+                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                <span style="font-size: 13px; font-weight: bold; color:rgb(107, 107, 107);">{{ $data->nombre }}</span>
+                                                <p style="font-size: 12px; font-weight: bold; color:rgb(155, 155, 155);" class="mb-0 ms-2">100% ({{ $llamadasRecibidasPorDia }})</p>
+                                            </div>
+
+                                            <div class="progress position-relative" id="progreso1" style="height: 20px; position: relative;">
+                                                <div class="progress-bar progress-bar-striped " 
+                                                    role="progressbar" aria-valuenow="{{ $data->porcentaje }}" 
+                                                    aria-valuemin="0" aria-valuemax="100" 
+                                                    style="width: {{ $data->porcentaje }}%;">
+                                                </div>
+                                                <span class="position-absolute fw-bold text-dark" 
+                                                    style="right: 5px; top: 50%; transform: translateY(-50%);">
+                                                    {{ $data->porcentaje }}% ({{ $data->cantidad }})
+                                                </span>
+                                            </div>
+
+                                            </td>
+                                            <td>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:red; font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">Pendientes: {{ $data->soliPendientes }} </span>
+                                                </div>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:rgb(230, 188, 53); font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">En proceso: {{ $data->soliProceso }} </span>
+                                                </div>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:green; font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">Terminadas: {{ $data->soliTerminado }}</span>
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-3" style="padding: 5px;">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesPChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudPrioridad', 'solicitudesPChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3" style="padding: 5px; ">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesEChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudEstatus', 'solicitudesEChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
+
                     </div>
                 </div>
 
-                <div class="col-md-3" style="padding: 5px; ">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesMinutoACUMChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudMinutoACUM', 'solicitudesMinutoACUMChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+
+                
             </div>
+                          
 
 
             <div class="row g-3 flex-row d-flex mt-2">

@@ -229,6 +229,7 @@
 <script>
      window.Laravel = <?php echo json_encode(value: [
         'guardarGrafica' => route('reportes.guardarGrafica'),
+        
     ]); ?>
      
     function enviarGraficaAlServidorP() {//mando las 2

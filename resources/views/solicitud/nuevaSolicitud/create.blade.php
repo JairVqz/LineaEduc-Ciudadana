@@ -82,8 +82,8 @@
                                 <input type="hidden" name="curpUsuario" id="curpUsuario">
                                 <input type="hidden" name="usuario" id="usuario">
                                 <input type="hidden" name="horaInicio" id="horaInicio">
-                                <input  name="nombreMunicipio" id="nombreMunicipio">
-                                <input  name="nombreLocalidad" id="nombreLocalidad">
+                                <input type="hidden" name="nombreMunicipio" id="nombreMunicipio">
+                                <input type="hidden" name="nombreLocalidad" id="nombreLocalidad">
                                 <input type="hidden" name="idArea" id="idArea">
                             </div>
                         </fieldset>

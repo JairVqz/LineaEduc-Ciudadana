@@ -79,6 +79,43 @@
             font-size: 12px;
             text-align: justify*/
         }
+        /*Estilos para la tabla*/
+        h3, h5 {
+            text-align: center;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid darkgray;
+            padding: 5px;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 100%;
+            background-color: #f3f3f3;
+            height: 20px;
+            border-radius: 5px;
+        }
+        
+        .status i {
+            margin-right: 2px;
+        }
+
+        progress {
+            height: 20px;
+            border-radius: 5px;
+            width: 450px !important;
+            margin-top: 10px;
+        }
+        
+
     </style>
 </head>
 
@@ -118,10 +155,6 @@
     <h4 style="text-align: center; margin-bottom: -1px;">Llamada con más minutos de atención</h4>
     <h2 style="text-align: center; margin-top: -15px;">{{ $llamadaMasMinutosPorDia }}</h2>
     <!--GRAFICA DE BARRAS-->
-    <!--
-    <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
-        alt="Gráfica de solicitudes por hora" style="width: 100%; height: auto;">
-    -->
     <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraAcum.png') }}"
         alt="Gráfica de solicitudes por hora" style="width: 95%; height: auto;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
@@ -158,6 +191,36 @@
 
         </div>
     </div>
+    <h4 style="text-align: center; margin-top: 20px;">Áreas con mayor número de solicitudes</h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Área</th>
+                <th>Estatus</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($parrafoAreas as $data)
+                <tr>
+                    <td style="text-align: left; font-weight: bold; width: 520px; color: #6d6666">{{ $data->nombre }}<br>
+                        <p>
+                            <progress id="file" value="{{$data->porcentaje}}" max="100"></progress>
+                            {{$data->porcentaje}}% ({{ $data->cantidad }})
+                        </p>
+                    </td>
+                    
+                    <td>
+                        <div class="status"><i style="color: red;">●</i> Pendientes: {{ $data->soliPendientes }}</div>
+                        <div class="status"><i style="color: orange;">●</i> En proceso: {{ $data->soliProceso }}</div>
+                        <div class="status"><i style="color: green;">●</i> Terminadas: {{ $data->soliTerminado }}</div>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+    
+
 
 
 </body>

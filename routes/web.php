@@ -120,6 +120,14 @@ Route::middleware('auth.validation')->group(function () {
 
             Route::post('/solicitud/guardarGrafica', [ReportesController::class, 'guardarGrafica'])->name('guardarGrafica');
 
+            //mapas, rutas directas a los archivos
+            Route::get('/mapa/delegacionMunicipio', function () {
+                return response()->file(public_path('mapa/delegacionMunicipio.json'));
+            })->name('delegacionMunicipio');
+            
+            Route::get('/mapa/veracruz_municipios', function () {
+                return response()->file(public_path('mapa/veracruz_municipios.geojson'));
+            })->name('veracruz_municipios');
 
         });
     });
@@ -127,20 +135,6 @@ Route::middleware('auth.validation')->group(function () {
     //AREAS
     Route::controller(CatalogosController::class)->group(function () {
         Route::name('catalogos.')->group(function () {
-            /*vista de catalogos crud de extension, area, tipo solicitud, usuarios
-            Route::get('/solicitud/catalogos', [CatalogosController::class, 'catalogos'])->name('catalogos');
-            //areas
-            Route::post('/agregarArea', [CatalogosController::class, 'agregarArea'])->name('agregarArea');
-            Route::post('/editarArea', [CatalogosController::class, 'editarArea'])->name('editarArea');
-            //select de areas
-            Route::get('/obtener-areas', [CatalogosController::class, 'obtenerAreas'])->name('obtenerAreas');
-            //extensiones
-            Route::post('/agregarExtension', [CatalogosController::class, 'agregarExtension'])->name('agregarExtension');
-            Route::post('/editarExtension', [CatalogosController::class, 'editarExtension'])->name('editarExtension');
-            //tipoSolicitud
-            Route::post('/agregarTipoS', [CatalogosController::class, 'agregarTipoS'])->name('agregarTipoS');
-            Route::post('/editarTipoS', [CatalogosController::class, 'editarTipoS'])->name('editarTipoS');*/
-
             Route::get('/solicitud/areas', [CatalogosController::class, 'areas'])->name('areas');
             Route::post('/areas', [CatalogosController::class, 'store'])->name('store');
             Route::post('/areas/update', [CatalogosController::class, 'update'])->name('update');

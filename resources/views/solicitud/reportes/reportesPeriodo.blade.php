@@ -27,8 +27,8 @@
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte por periodo</h1>
-                <a href="{{ route('reportes.pdfReportePeriodo') }}">
-                    <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
+                <a id="descargarPDF" href="#">
+                    <img src="{{ asset('images/pdf.png') }}" alt="Descargar PDF"
                         style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
                 </a>
             </div>
@@ -203,14 +203,18 @@
                     end_date: end.format('YYYY-MM-DD')
                 },
                 success: function (response) {
-
                     actualizarGraficas(response);
+                    setTimeout(enviarGraficaAlServidorP, 2000);
                 },
                 error: function () {
                     console.error('Error al obtener los datos.');
                 }
             });
+            // actualizar pdf
+            let pdfUrl = "{{ route('reportes.pdfReportePeriodo') }}?start_date=" + start.format('YYYY-MM-DD') + "&end_date=" + end.format('YYYY-MM-DD');
+            $('#descargarPDF').attr('href', pdfUrl);
         }
+               
 
         $('#reportrange').daterangepicker({
             startDate: start,
@@ -307,7 +311,7 @@
                 }
             }).catch(error => console.error("Error en la petición:", error));
         });
-        html2canvas(document.getElementById('solicitudesAChart'), { willReadFrequently: true })
+        /*html2canvas(document.getElementById('solicitudesAChart'), { willReadFrequently: true })
         .then(canvas => {
             let imagenBase64 = canvas.toDataURL('image/png');
             let nombre = 'solicitudesPorAreaPeriodo';
@@ -327,11 +331,11 @@
                     console.error("Error al enviar la imagen");
                 }
             }).catch(error => console.error("Error en la petición:", error));
-        });
+        });*/
     }
-    document.addEventListener("DOMContentLoaded", () => {
+    /*document.addEventListener("DOMContentLoaded", () => {
     setTimeout(enviarGraficaAlServidorP, 2000);
-    });
+    });*/
 </script>
 
 

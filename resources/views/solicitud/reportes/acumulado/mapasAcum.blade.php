@@ -1,11 +1,16 @@
 <script>
     const solicitudes = @json($solicitudesPorMunicipio);
     let solicitudesPorDelegacion = {};
+    window.Laravel = <?php echo json_encode(value: [
+        'mapaDelegaciones' => route('reportes.delegacionMunicipio'),
+        'mapaMunicipios' => route('reportes.veracruz_municipios'),
+    ]); ?>
+    
+    const mapaDelegaciones = window.Laravel.mapaDelegaciones;
+    const mapaMunicipios = window.Laravel.mapaMunicipios;
     Promise.all([
-        //fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json').then(res => res.json()),
-        //fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson').then(res => res.json()),
-        fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json').then(res => res.json()),
-        fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson').then(res => res.json())
+        fetch(mapaDelegaciones).then(res => res.json()),
+        fetch(mapaMunicipios).then(res => res.json())
     ]).then(([delegacionesData, municipiosGeoJSON]) => {
         solicitudes.forEach(solicitud => {
             let nombreMunicipio = solicitud.municipio.trim().toLowerCase();
@@ -161,9 +166,9 @@
 
 
 
+    
     // Cargar municipios y delegaciones
-    //fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json')
-    fetch('https://callcenter.sev.gob.mx/mapa/delegacionMunicipio.json')
+    fetch(mapaDelegaciones)
         .then(response => response.json())
         .then(data => {
             data.cvemun_serreg.forEach(entry => {
@@ -174,8 +179,7 @@
                 }
             });
 
-            //fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
-            fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson')
+            fetch(mapaMunicipios)
                 .then(response => response.json())
                 .then(geojsonData => {
                     geoJsonMunicipios = L.geoJson(geojsonData, {
@@ -329,319 +333,3 @@
 
 </script>
 
-<!--mapas por separado-->
-<script>
-    /*
-        var map2 = L.map('map2', {
-            center: [19.8738, -97.0000],
-            zoom: 7,
-            minZoom: 7,
-            maxZoom: 10,
-            zoomControl: false
-        });
-    
-        L.control.zoom({ position: 'bottomleft' }).addTo(map2);
-        var delegacionColors = {
-            "001": "#ff9999", "002": "#ffcc99", "003": "#ffff99",
-            "004": "#ccff99", "005": "#99ff99", "006": "#a1d388",
-            "007": "#88d3d0", "008": "#99ccff", "009": "#9999ff",
-            "010": "#cc99ff", "011": "#ff99ff", "012": "#ff99cc",
-            "013": "#bb84ea", "014": "#ea8484"
-        };
-        var delegacionNombres = {
-            "TUXPAN": "001", "POZA RICA": "002", "MARTINEZ DE LA TORRE": "003",
-            "COATEPEC": "004", "ORIZABA": "005", "VERACRUZ": "006",
-            "COATZACOALCOS": "007", "XALAPA": "008", "TANTOYUCA": "009",
-            "HUAYACOCOTLA": "010", "ZONGOLICA": "011", "COSAMALOAPAN": "012",
-            "ACAYUCAN": "013", "CÓRDOBA": "014"
-        };
-    
-        var legend = L.control({ position: 'topright' });
-    
-        legend.onAdd = function () {
-            var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML = "<strong>Delegaciones</strong><br>";
-    
-            Object.keys(delegacionNombres).forEach(function (delegacionNombre) {
-                let delegacionId = delegacionNombres[delegacionNombre]; // Convierte nombre en código
-                let color = delegacionColors[delegacionId] || "#afafaf"; // Obtiene el color correspondiente
-    
-                div.innerHTML +=
-                    '<i style="background:' + color + ';"></i> ' + delegacionNombre + '<br>';
-            });
-    
-            return div;
-        };
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map2);
-    
-        // relación municipios-delegaciones
-        var municipiosDelegaciones = {};
-    
-        fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json')
-            .then(response => response.json())
-            .then(data => {
-                //diccionario { "cvemun": "serreg" } :D
-                //console.log(data);
-                data.cvemun_serreg.forEach(entry => {
-                    //console.log([entry.cvemun.toString()]);
-                    if (entry.cvemun && entry.serreg !== undefined) {
-                        municipiosDelegaciones[entry.cvemun] = entry.serreg.toString().padStart(3, "0");
-                    } else {
-                        console.error("Error en registro:", entry);
-                    }
-                });
-    
-                // geojson uwu
-                fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
-                    .then(response => response.json())
-                    .then(geojsonData => {
-                        L.geoJson(geojsonData, {
-                            style: function (feature) {
-                                let munCode = parseInt(feature.properties.mun_code[0].replace("30", ""), 10);
-                                let delegacionId = municipiosDelegaciones[munCode] || "000";
-                                let color = delegacionColors[delegacionId] || "#afafaf";
-    
-                                return {
-                                    fillColor: color,
-                                    weight: 1,
-                                    opacity: 1,
-                                    color: 'gray',
-                                    fillOpacity: 0.7
-                                };
-                            }
-                        }).addTo(map2);
-                        legend.addTo(map2);
-                    })
-                    .catch(error => console.error('Error al cargar el GeoJSON :c', error));
-            })
-            .catch(error => console.error('Error al cargar el JSON :c', error));*/
-</script>
-
-
-<script>
-    /*solicitudes * municipio
-    const solicitudes = @json($solicitudesPorMunicipio);
-    var map = L.map('map', {
-        center: [19.8738, -97.0000],
-        zoom: 7,
-        minZoom: 7,
-        maxZoom: 10,
-        zoomControl: false
-    });
-    L.control.zoom({
-        position: 'bottomleft'
-    }).addTo(map);
-
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    }).addTo(map);
-
-    // Colores según el número de solicitudes
-    function getColor(d) {
-        return d > 100 ? '#f33d20' :
-            d > 50 ? '#f69d3f' :
-                d > 20 ? '#fbd286' :
-                    d > 10 ? '#ffff95' :
-                        d > 5 ? '#0d8310' :
-                            d > 0 ? '#29ca57' :
-                                '#afafaf';
-    }
-    // Estilo :D
-    function style(feature) {
-        const nombreMunicipio = feature.properties.mun_name.toString().trim().toLowerCase();
-        console.log(nombreMunicipio);
-        // Buscar el municipio en los datos de solicitudes
-        const municipio = solicitudes.find(s => s.municipio.toString().trim().toLowerCase() === nombreMunicipio);
-        const total = municipio ? municipio.total : 0;
-        return {
-            fillColor: getColor(total),
-            weight: 1,
-            opacity: 1,
-            color: 'gray',
-            fillOpacity: 0.7
-        };
-    }
-
-    function onEachFeature(feature, layer) {
-        const nombreMunicipio = feature.properties.mun_name.toString().trim().toLowerCase();
-        const municipio = solicitudes.find(s => s.municipio.toString().trim().toLowerCase() === nombreMunicipio);
-        const total = municipio ? municipio.total : 0;
-        // Pop-up con el nombre y total de solicitudes
-        layer.bindPopup(`<strong>${feature.properties.mun_name}</strong><br>Total de solicitudes: ${total}
-                        <br>Codigo de municipio: ${parseInt(feature.properties.mun_code[0].replace("30", ""), 10)}
-                        `);
-    }
-    // Cargar el GeoJSON
-    //fetch('{{ url('mapa/veracruz_municipios.geojson') }}')
-    fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
-        //fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson')
-        .then(response => response.json())
-        .then(data => {
-            L.geoJson(data, {
-                style: style,
-                onEachFeature: onEachFeature
-            }).addTo(map);
-        })
-        .catch(error => console.error('no se cargó bien el GeoJSON:', error));*/
-</script>
-
-
-
-
-
-
-<!--mapas por separado-->
-<script>
-            /*
-                var map2 = L.map('map2', {
-                    center: [19.8738, -97.0000],
-                    zoom: 7,
-                    minZoom: 7,
-                    maxZoom: 10,
-                    zoomControl: false
-                });
-            
-                L.control.zoom({ position: 'bottomleft' }).addTo(map2);
-                var delegacionColors = {
-                    "001": "#ff9999", "002": "#ffcc99", "003": "#ffff99",
-                    "004": "#ccff99", "005": "#99ff99", "006": "#a1d388",
-                    "007": "#88d3d0", "008": "#99ccff", "009": "#9999ff",
-                    "010": "#cc99ff", "011": "#ff99ff", "012": "#ff99cc",
-                    "013": "#bb84ea", "014": "#ea8484"
-                };
-                var delegacionNombres = {
-                    "TUXPAN": "001", "POZA RICA": "002", "MARTINEZ DE LA TORRE": "003",
-                    "COATEPEC": "004", "ORIZABA": "005", "VERACRUZ": "006",
-                    "COATZACOALCOS": "007", "XALAPA": "008", "TANTOYUCA": "009",
-                    "HUAYACOCOTLA": "010", "ZONGOLICA": "011", "COSAMALOAPAN": "012",
-                    "ACAYUCAN": "013", "CÓRDOBA": "014"
-                };
-            
-                var legend = L.control({ position: 'topright' });
-            
-                legend.onAdd = function () {
-                    var div = L.DomUtil.create('div', 'info legend');
-                    div.innerHTML = "<strong>Delegaciones</strong><br>";
-            
-                    Object.keys(delegacionNombres).forEach(function (delegacionNombre) {
-                        let delegacionId = delegacionNombres[delegacionNombre]; // Convierte nombre en código
-                        let color = delegacionColors[delegacionId] || "#afafaf"; // Obtiene el color correspondiente
-            
-                        div.innerHTML +=
-                            '<i style="background:' + color + ';"></i> ' + delegacionNombre + '<br>';
-                    });
-            
-                    return div;
-                };
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map2);
-            
-                // relación municipios-delegaciones
-                var municipiosDelegaciones = {};
-            
-                fetch('http://127.0.0.1:8000/mapa/delegacionMunicipio.json')
-                    .then(response => response.json())
-                    .then(data => {
-                        //diccionario { "cvemun": "serreg" } :D
-                        //console.log(data);
-                        data.cvemun_serreg.forEach(entry => {
-                            //console.log([entry.cvemun.toString()]);
-                            if (entry.cvemun && entry.serreg !== undefined) {
-                                municipiosDelegaciones[entry.cvemun] = entry.serreg.toString().padStart(3, "0");
-                            } else {
-                                console.error("Error en registro:", entry);
-                            }
-                        });
-            
-                        // geojson uwu
-                        fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
-                            .then(response => response.json())
-                            .then(geojsonData => {
-                                L.geoJson(geojsonData, {
-                                    style: function (feature) {
-                                        let munCode = parseInt(feature.properties.mun_code[0].replace("30", ""), 10);
-                                        let delegacionId = municipiosDelegaciones[munCode] || "000";
-                                        let color = delegacionColors[delegacionId] || "#afafaf";
-            
-                                        return {
-                                            fillColor: color,
-                                            weight: 1,
-                                            opacity: 1,
-                                            color: 'gray',
-                                            fillOpacity: 0.7
-                                        };
-                                    }
-                                }).addTo(map2);
-                                legend.addTo(map2);
-                            })
-                            .catch(error => console.error('Error al cargar el GeoJSON :c', error));
-                    })
-                    .catch(error => console.error('Error al cargar el JSON :c', error));*/
-</script>
-
-
-<script>
-    /*solicitudes * municipio
-    const solicitudes = @json($solicitudesPorMunicipio);
-    var map = L.map('map', {
-        center: [19.8738, -97.0000],
-        zoom: 7,
-        minZoom: 7,
-        maxZoom: 10,
-        zoomControl: false
-    });
-    L.control.zoom({
-        position: 'bottomleft'
-    }).addTo(map);
-
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    }).addTo(map);
-
-    // Colores según el número de solicitudes
-    function getColor(d) {
-        return d > 100 ? '#f33d20' :
-            d > 50 ? '#f69d3f' :
-                d > 20 ? '#fbd286' :
-                    d > 10 ? '#ffff95' :
-                        d > 5 ? '#0d8310' :
-                            d > 0 ? '#29ca57' :
-                                '#afafaf';
-    }
-    // Estilo :D
-    function style(feature) {
-        const nombreMunicipio = feature.properties.mun_name.toString().trim().toLowerCase();
-        console.log(nombreMunicipio);
-        // Buscar el municipio en los datos de solicitudes
-        const municipio = solicitudes.find(s => s.municipio.toString().trim().toLowerCase() === nombreMunicipio);
-        const total = municipio ? municipio.total : 0;
-        return {
-            fillColor: getColor(total),
-            weight: 1,
-            opacity: 1,
-            color: 'gray',
-            fillOpacity: 0.7
-        };
-    }
-
-    function onEachFeature(feature, layer) {
-        const nombreMunicipio = feature.properties.mun_name.toString().trim().toLowerCase();
-        const municipio = solicitudes.find(s => s.municipio.toString().trim().toLowerCase() === nombreMunicipio);
-        const total = municipio ? municipio.total : 0;
-        // Pop-up con el nombre y total de solicitudes
-        layer.bindPopup(`<strong>${feature.properties.mun_name}</strong><br>Total de solicitudes: ${total}
-                        <br>Codigo de municipio: ${parseInt(feature.properties.mun_code[0].replace("30", ""), 10)}
-                        `);
-    }
-    // Cargar el GeoJSON
-    //fetch('{{ url('mapa/veracruz_municipios.geojson') }}')
-    fetch('http://127.0.0.1:8000/mapa/veracruz_municipios.geojson')
-        //fetch('https://callcenter.sev.gob.mx/mapa/veracruz_municipios.geojson')
-        .then(response => response.json())
-        .then(data => {
-            L.geoJson(data, {
-                style: style,
-                onEachFeature: onEachFeature
-            }).addTo(map);
-        })
-        .catch(error => console.error('no se cargó bien el GeoJSON:', error));*/
-</script>
