@@ -80,11 +80,7 @@
             text-align: justify*/
         }
         /*Estilos para la tabla*/
-        h3, h5 {
-            text-align: center;
-            margin: 0;
-        }
-
+       
         table {
             width: 100%;
             border-collapse: collapse;
