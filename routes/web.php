@@ -9,6 +9,8 @@ use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
+use Illuminate\Support\Facades\Auth;
+
 
 //PAGINA DE INICIO LOGIN
 Route::get('/', function () {
@@ -84,16 +86,18 @@ Route::middleware('auth.validation')->group(function () {
         });
     });
 
-    //USUARIOS
-    Route::controller(UsuarioController::class)->group(function () {
-        Route::name('user.')->group(function () {
-            Route::get('/usuario/index', [UsuarioController::class, 'index'])->name('index');
-            Route::post('/usuario', [UsuarioController::class, 'store'])->name('store');
-            Route::post('/usuario/update', [UsuarioController::class, 'update'])->name('update');
-            Route::post('/usuario/destroy',  [UsuarioController::class,'destroy'])->name('destroy');
-            Route::post('/usuario/restore', [UsuarioController::class, 'restore'])->name('restore');
+    //USUARIOS.
+    
+        Route::controller(UsuarioController::class)->group(function () {
+            Route::name('user.')->group(function () {
+                Route::get('/usuario/index', [UsuarioController::class, 'index'])->name('index');
+                Route::post('/usuario', [UsuarioController::class, 'store'])->name('store');
+                Route::post('/usuario/update', [UsuarioController::class, 'update'])->name('update');
+                Route::post('/usuario/destroy',  [UsuarioController::class,'destroy'])->name('destroy');
+                Route::post('/usuario/restore', [UsuarioController::class, 'restore'])->name('restore');
+            });
         });
-    });
+    
 
     //SEGUIMIENTO
     Route::controller(SeguimientoController::class)->group(function () {
