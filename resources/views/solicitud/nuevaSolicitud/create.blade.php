@@ -131,7 +131,7 @@
                                 <div class="col-md-4">
                                     <label for="idExtension" class="form-label"
                                         style="font-weight:bold">Directorio:</label>
-                                    <select name="idExtension" id="idExtension" class="form-select select2-bootstrap"
+                                    <select name="idExtension" id="idExtension" class="form-select select2-bootstrap" style="width: 100%;"
                                         required>
                                         @foreach ($listaDirectorio as $data)
                                             <option value="{{ $data->idExtensionCatalogo }}"
@@ -154,7 +154,7 @@
                                     <label for="idTipoSolicitud" class="form-label" style="font-weight:bold">Tipo de
                                         Solicitud:</label>
                                     <select name="idTipoSolicitud" id="idTipoSolicitud"
-                                        class="form-select select2-bootstrap" required>
+                                        class="form-select select2-bootstrap" style="width: 100%;" required>
                                     </select>
                                 </div>
                                 <div class="col-md-12">
@@ -662,6 +662,7 @@
 
     $('#idExtension').select2({
         placeholder: "Selecciona una extensión",
+        width: 'resolve',
         allowClear: true,
         language: {
             noResults: function() {
@@ -675,6 +676,7 @@
 
     $('#idTipoSolicitud').select2({
         placeholder: "Selecciona un tipo de solicitud",
+        width: 'resolve',
         allowClear: true,
         language: {
             noResults: function() {

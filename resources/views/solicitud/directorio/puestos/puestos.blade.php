@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="/css/solicitud/general.css">
     <script src="/js/solicitud/general.js"></script>
     <link rel="stylesheet" href="/css/configuracion/listarUsuarios.css">
+    <style>
+        .dt-search {
+            display: contents !important;
+        }
+    </style>
 </head>
 
 @include('menuNavigation')
@@ -32,7 +37,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-center">
-                        <h1 class="mt-5 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Catálogo de Puestos</h1>
+                        <h1 class="mt-5 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Catálogo de
+                            Puestos</h1>
                     </div>
                 </div>
 
@@ -57,35 +63,35 @@
                     </thead>
                     <tbody>
                         @foreach ($listaPuestos as $key => $puesto)
-                                                <tr>
-                                                    <td>{{ $key+1 }} </td>
-                                                    <td>{{ $puesto->puesto }}</td>
-                                                    
-                                                    <td class="text-center">
+                            <tr>
+                                <td>{{ $key + 1 }} </td>
+                                <td>{{ $puesto->puesto }}</td>
 
-                                                        <button type="button" id="btnEditarUsuario" class="btn btn-primary"
-                                                            data-bs-toggle="modal" data-bs-target="#modalEditarUsuario{{ $puesto->idPuesto }}"
-                                                            title="Editar"><i class="bi bi-pencil"></i></button>
+                                <td class="text-center">
 
-                                                        @if ($puesto->trashed())
-                                                            <button type="button" id="btnActivarUsuario" class="btn btn-success"
-                                                                data-bs-toggle="modal" data-bs-target="#modalActivarUsuario{{ $puesto->idPuesto }}"
-                                                                title="Activar">
-                                                                <i class="bi bi-check-lg"></i></button>
-                                                        @else
-                                                            <button type="button" id="btnEliminarUsuario" class="btn btn-danger"
-                                                                data-bs-toggle="modal" data-bs-target="#modalEliminarUsuario{{ $puesto->idPuesto }}"
-                                                                title="Desactivar">
-                                                                <i class="bi bi-x-lg"></i></button>
-                                                        @endif
-                                                    </td>
+                                    <button type="button" id="btnEditarUsuario" class="btn btn-primary"
+                                        data-bs-toggle="modal" data-bs-target="#modalEditarUsuario{{ $puesto->idPuesto }}"
+                                        title="Editar"><i class="bi bi-pencil"></i></button>
 
-                                                </tr>
-                                                @include('solicitud.directorio.puestos.editarPuesto')
-                                                @include('solicitud.directorio.puestos.eliminarPuesto')
-                                                @include('solicitud.directorio.puestos.activarPuesto')
+                                    @if ($puesto->trashed())
+                                        <button type="button" id="btnActivarUsuario" class="btn btn-success"
+                                            data-bs-toggle="modal" data-bs-target="#modalActivarUsuario{{ $puesto->idPuesto }}"
+                                            title="Activar">
+                                            <i class="bi bi-check-lg"></i></button>
+                                    @else
+                                        <button type="button" id="btnEliminarUsuario" class="btn btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#modalEliminarUsuario{{ $puesto->idPuesto }}"
+                                            title="Desactivar">
+                                            <i class="bi bi-x-lg"></i></button>
+                                    @endif
+                                </td>
 
-                                                
+                            </tr>
+                            @include('solicitud.directorio.puestos.editarPuesto')
+                            @include('solicitud.directorio.puestos.eliminarPuesto')
+                            @include('solicitud.directorio.puestos.activarPuesto')
+
+
                         @endforeach
                     </tbody>
                 </table>
@@ -111,9 +117,9 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
                 "paginate": {
-                    "first": "<<",   
-                    "last": ">>",    
-                    "next": ">",    
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
                     "previous": "<"
                 },
             },

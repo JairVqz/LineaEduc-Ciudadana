@@ -73,6 +73,52 @@
             font-size: 12px;
             /*border: 1px dashed #6d6666;*/
         }
+        /*Estilos para la tabla*/
+       
+        .tabla {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .tablath {
+            border: 1px solid darkgray;
+            padding: 5px;
+        }
+        .tablatd {
+            border: 1px solid darkgray;
+            padding: 5px;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 100%;
+            background-color: #f3f3f3;
+            height: 15px;
+            border-radius: 5px;
+        }
+        
+        .status i {
+            margin-right: 2px;
+        }
+
+        progress {
+            height: 15px;
+            border-radius: 5px;
+            width: 430px !important;
+            margin-top: 10px;
+        }
+        progress::-webkit-progress-value {
+            background-color: rgb(159, 56, 190) !important;
+        }
+
+        progress::-moz-progress-bar {
+            background-color: rgb(159, 56, 190) !important;
+        }
+
+        progress::-ms-fill {
+            background-color: rgb(159, 56, 190) !important;
+        }
     </style>
 </head>
 
@@ -108,17 +154,16 @@
         </div>
     </div>
 
-    <h4 style="text-align: center; margin-bottom: -1px;">Llamada con más minutos de atención</h4>
-    <h2 style="text-align: center; margin-top: -15px;">{{ $llamadaMasMinutosPorDia }}</h2>
+    
     <!--GRAFICA DE BARRAS-->
     <!--
     <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
         style="width: 100%; height: auto;">
     -->
     <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorHoraPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
-    style="width: 100%; height: auto;">
+    style="width: 100%; height: auto; margin-top: 15px;">
     <!--GRAFICA DE PASTEL Y PARRAFO-->
-    <div id="areas">
+    <!--<div id="areas">
         <div id="grafica" style="float: left; margin-left: 15px">
             <img src="{{ storage_path('app/public/tempdir/mpdf/ttfontdata/solicitudesPorAreaPeriodo.png') }}" alt="Gráfica de solicitudes por hora"
                 style="width: 100%; height: auto;">
@@ -147,7 +192,35 @@
             </p>
             
         </div>
-    </div>
+    </div>-->
+    <h4 style="text-align: center; font-size: 14px; margin-bottom: -20px;">Áreas con mayor número de solicitudes</h4><br>
+    <table class="tabla">
+        <thead>
+            <tr>
+                <th class="tablath">Área</th>
+                <th class="tablath">Estatus</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($parrafoAreas as $key=> $data)
+                <tr>
+                    <td class="tablatd" style="text-align: left; font-weight: bold; width: 520px; color: #6d6666; font-size: 13px;"> 
+                    {{ $key+1 }}.- {{ $data->nombre }} {{$data->porcentaje}}% ({{ $data->cantidad }} solicitudes)<br>
+                        <!--<p style="font-size: 10px;">
+                            <progress id="file" value="{{$data->porcentaje}}" max="100"></progress>
+                            {{$data->porcentaje}}% ({{ $data->cantidad }})
+                        </p>-->
+                    </td>
+                    
+                    <td class="tablatd">
+                        <div class="status"><i style="color: red;">●</i> Pendientes: {{ $data->soliPendientes }}</div>
+                        <div class="status"><i style="color: orange;">●</i> En proceso: {{ $data->soliProceso }}</div>
+                        <div class="status"><i style="color: green;">●</i> Terminadas: {{ $data->soliTerminado }}</div>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
 
 </body>

@@ -1,5 +1,5 @@
 @php
-use App\Models\CatalogoExtensiones;
+    use App\Models\CatalogoExtensiones;
 @endphp
 <!DOCTYPE html>
 <html lang="es">
@@ -23,6 +23,11 @@ use App\Models\CatalogoExtensiones;
     <link rel="stylesheet" href="/css/solicitud/general.css">
     <script src="/js/solicitud/general.js"></script>
     <link rel="stylesheet" href="/css/configuracion/listarUsuarios.css">
+    <style>
+        .dt-search {
+            display: contents !important;
+        }
+    </style>
 </head>
 
 @include('menuNavigation')
@@ -76,9 +81,9 @@ use App\Models\CatalogoExtensiones;
                                         data-bs-toggle="modal"
                                         data-bs-target="#modalEditarUsuario{{ $directorio->idExtensionCatalogo }}"
                                         title="Editar"><i class="bi bi-pencil"></i></button>
-                                        
-                                    @if (optional(CatalogoExtensiones::withTrashed()->where('idExtensionCatalogo', $directorio->idExtensionCatalogo)->first())->trashed())                                        
-                                    <button type="button" id="btnActivarUsuario" class="btn btn-success"
+
+                                    @if (optional(CatalogoExtensiones::withTrashed()->where('idExtensionCatalogo', $directorio->idExtensionCatalogo)->first())->trashed())
+                                        <button type="button" id="btnActivarUsuario" class="btn btn-success"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalActivarUsuario{{ $directorio->idExtensionCatalogo }}"
                                             title="Activar">

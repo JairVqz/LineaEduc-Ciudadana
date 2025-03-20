@@ -102,76 +102,72 @@
                 <div class="col-md-2"></div>
             </div>
 
-
             <div class="row g-3 flex-row d-flex mt-2">
-                <div class="col-md-3" style="padding: 5px;">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesAChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudArea', 'solicitudesAChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
+                <div class="col-md-12" style="padding: 5px;">
+                    <div class="card" style="padding: 10px;">
+                        <h4 style="text-align: center; margin-top: 10px;">Áreas con mayor número de solicitudes</h4><br>
+                        <div style="height: 100%; width: 100%;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Área</th>
+                                        <th style="text-align: center;">Estatus</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaSAreas">
+                                    @foreach ($parrafoAreas as $index => $data)
+                                        <tr>
+                                            <td>
+                                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                                <span id="nombreNuevo" style="font-size: 13px; font-weight: bold; color:rgb(107, 107, 107);">{{ $data->nombre }}</span>
+                                                <p style="font-size: 12px; font-weight: bold; color:rgb(155, 155, 155);" class="mb-0 ms-2">100% ({{ $llamadasRecibidasPorDia }})</p>
+                                            </div>
+
+                                            <div class="progress position-relative" id="progreso1" style="height: 20px; position: relative;">
+                                                <div class="progress-bar progress-bar-striped " 
+                                                    role="progressbar" aria-valuenow="{{ $data->porcentaje }}" 
+                                                    aria-valuemin="0" aria-valuemax="100" 
+                                                    style="width: {{ $data->porcentaje }}%;">
+                                                </div>
+                                                <span class="position-absolute fw-bold text-dark" 
+                                                    style="right: 5px; top: 50%; transform: translateY(-50%);">
+                                                    {{ $data->porcentaje }}% ({{ $data->cantidad }})
+                                                </span>
+                                            </div>
+
+                                            </td>
+                                            <td>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:red; font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">Pendientes: {{ $data->soliPendientes }} </span>
+                                                </div>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:rgb(230, 188, 53); font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">En proceso: {{ $data->soliProceso }} </span>
+                                                </div>
+                                                <div class="d-flex ">
+                                                    <i class="bi bi-circle-fill" style="color:green; font-size: 14px; margin-right:4px" ></i>
+                                                    <span style="font-size: 14px;">Terminadas: {{ $data->soliTerminado }}</span>
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
+
                     </div>
                 </div>
 
-                <div class="col-md-3" style="padding: 5px;">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesPChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudPrioridad', 'solicitudesPChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3" style="padding: 5px; ">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesEChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudEstatus', 'solicitudesEChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-3" style="padding: 5px; ">
-                    <div class="card justify-content-center align-items-center" style="padding: 10px;">
-                        <canvas id="solicitudesMinutoACUMChart"></canvas>
-                        <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
-                            <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
-                                onclick="downloadChart('SolicitudMinutoACUM', 'solicitudesMinutoACUMChart')"
-                                onmouseover="this.style.transform='scale(1.2)'"
-                                onmouseout="this.style.transform='scale(1)'">
-                                <i class="bi bi-download" style="font-size: 1.5rem;"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
-
-
             
         </div>
     </div>
 </body>
 
 @include('solicitud.reportes.periodo.sHoraPeriodo')
-@include('solicitud.reportes.periodo.sPrioridadPeriodo')
-@include('solicitud.reportes.periodo.sEstatusPeriodo')
-@include('solicitud.reportes.periodo.sAreaPeriodo')
-@include('solicitud.reportes.periodo.sDuracionMinutosPeriodo')
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
@@ -203,7 +199,7 @@
                     end_date: end.format('YYYY-MM-DD')
                 },
                 success: function (response) {
-                    actualizarGraficas(response);
+                    actualizarVista(response);
                     setTimeout(enviarGraficaAlServidorP, 2000);
                 },
                 error: function () {
@@ -247,7 +243,7 @@
         cb(start, end);
     });
 
-    function actualizarGraficas(data) {
+    function actualizarVista(data) {
         $('#llamadasRecibidasPorDia').text(data.llamadasRecibidasPorDia);
         $('#primeraLlamadaPorDiaFormateada').text(data.primeraLlamadaPorDiaFormateada);
         $('#minutosEfectivosPorDia').text(data.minutosEfectivosPorDia);
@@ -259,31 +255,54 @@
             solicitudesPorHoraChart.update();
         }
 
-        if (solicitudesAChart) {
-            solicitudesAChart.data.labels = data.labelsArea;
-            solicitudesAChart.data.datasets[0].data = data.valuesArea;
-            solicitudesAChart.update();
-        }
-        
-        if (solicitudesPChart) {
-            solicitudesPChart.data.labels = data.labelsPrioridad;
-            solicitudesPChart.data.datasets[0].data = data.valuesPrioridad;
-            solicitudesPChart.update();
-        }
+        // Limpiar el contenido de la tabla
+    $('#tablaSAreas').empty();
 
-        if (solicitudesEChart) {
-            solicitudesEChart.data.labels = data.labelsEstatus;
-            solicitudesEChart.data.datasets[0].data = data.valuesEstatus;
-            solicitudesEChart.update();
-        }
+// Recorrer los datos recibidos y agregarlos a la tabla
+data.parrafoAreas.forEach(area => {
+    let fila = `
+        <tr>
+            <td>
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <span style="font-size: 13px; font-weight: bold; color:rgb(107, 107, 107);">${area.nombre}</span>
+                    <p style="font-size: 12px; font-weight: bold; color:rgb(155, 155, 155);" class="mb-0 ms-2">
+                        100% (${data.llamadasRecibidasPorDia})
+                    </p>
+                </div>
+                <div class="progress position-relative" style="height: 20px; position: relative;">
+                    <div class="progress-bar progress-bar-striped" 
+                        role="progressbar" 
+                        aria-valuenow="${area.porcentaje}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100" 
+                        style="width: ${area.porcentaje}%;"></div>
+                    <span class="position-absolute fw-bold text-dark" 
+                        style="right: 5px; top: 50%; transform: translateY(-50%);">
+                        ${area.porcentaje}% (${area.cantidad})
+                    </span>
+                </div>
+            </td>
+            <td>
+                <div class="d-flex">
+                    <i class="bi bi-circle-fill" style="color:red; font-size: 14px; margin-right:4px"></i>
+                    <span style="font-size: 14px;">Pendientes: ${area.soliPendientes} </span>
+                </div>
+                <div class="d-flex">
+                    <i class="bi bi-circle-fill" style="color:rgb(230, 188, 53); font-size: 14px; margin-right:4px"></i>
+                    <span style="font-size: 14px;">En proceso: ${area.soliProceso} </span>
+                </div>
+                <div class="d-flex">
+                    <i class="bi bi-circle-fill" style="color:green; font-size: 14px; margin-right:4px"></i>
+                    <span style="font-size: 14px;">Terminadas: ${area.soliTerminado}</span>
+                </div>
+            </td>
+        </tr>
+    `;
 
-        if (solicitudesMinutoACUMChart) {
-            solicitudesMinutoACUMChart.data.labels = data.labelsMinutoACUM;
-            solicitudesMinutoACUMChart.data.datasets[0].data = data.valuesMinutoACUM;
-            solicitudesMinutoACUMChart.update();
-        }
-        
-        
+    $('#tablaSAreas').append(fila);
+});
+
+
     }
 
 </script>
@@ -311,27 +330,7 @@
                 }
             }).catch(error => console.error("Error en la petición:", error));
         });
-        /*html2canvas(document.getElementById('solicitudesAChart'), { willReadFrequently: true })
-        .then(canvas => {
-            let imagenBase64 = canvas.toDataURL('image/png');
-            let nombre = 'solicitudesPorAreaPeriodo';
-
-            const guardarGrafica = window.Laravel.guardarGrafica;
-            fetch(guardarGrafica, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                },
-                body: JSON.stringify({ imagen: imagenBase64, nombre: nombre })
-            }).then(response => {
-                if (response.ok) {
-                    console.log("Imagen enviada correctamente");
-                } else {
-                    console.error("Error al enviar la imagen");
-                }
-            }).catch(error => console.error("Error en la petición:", error));
-        });*/
+        
     }
     /*document.addEventListener("DOMContentLoaded", () => {
     setTimeout(enviarGraficaAlServidorP, 2000);
