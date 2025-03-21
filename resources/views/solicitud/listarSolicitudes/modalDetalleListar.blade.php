@@ -28,6 +28,8 @@
                                     <p id="modalNombreCompleto" class="mb-0"></p>
                                 </div>
                             </div>
+                            
+
                             <div class="row mb-0">
                                 <div class="col-md-4 d-flex">
                                     <label class="form-label me-2"><strong>Correo:</strong></label>
@@ -156,24 +158,29 @@
                                     class="bi bi-telephone-fill" style="margin-right:5px;"></i>Datos de la llamada:
                             </legend>
                             <div class="row mb-0">
-                                <div class="col-md-6 d-flex">
+                                <div class="col-md-4 d-flex">
                                     <label class="form-label me-2"><strong>Hora de inicio:</strong></label>
                                     <p id="modalHoraI" class="mb-0"></p>
                                 </div>
-                                <div class="col-md-6 d-flex">
+                                <div class="col-md-4 d-flex">
                                     <label class="form-label me-2"><strong>Hora de término:</strong></label>
                                     <p id="modalHoraT" class="mb-0"></p>
+                                </div>
+                                <div class="col-md-4 d-flex">
+                                    <label class="form-label me-2"><strong>Duración:</strong></label>
+                                    <p id="modalDuracion" class="mb-0"></p>
                                 </div>
                                 
                             </div>
                             <div class="row mb-0">
-                                <div class="col-6 d-flex" >
+                                <div class="col-8 d-flex" >
                                     <label class="form-label me-2"><strong>Operadora:</strong></label>
                                     <p id="modalUsuario" class="mb-0"></p>
                                 </div>
-                                <div class="col-md-6 d-flex">
-                                    <label class="form-label me-2"><strong>Duración:</strong></label>
-                                    <p id="modalDuracion" class="mb-0"></p>
+                                
+                                <div class="col-md-4 d-flex">
+                                    <label class="form-label me-2"><strong>Número de llamadas:</strong></label>
+                                    <p id="modalContadorSeguimientos" class="mb-0"></p>
                                 </div>
                             </div>
                         </fieldset>
