@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
     <script src="/js/config.js"></script>
     <link rel="stylesheet" href="/css/solicitud/general.css">
     <script src="/js/solicitud/general.js"></script>
@@ -60,7 +62,8 @@
                         <div class="mb-4 row">
                             <div class="col-md-3">
                                 <label for="idArea" class="form-label">Área que atiende:</label>
-                                <select name="idArea" id="idArea" class="form-select">
+                                <select name="idArea" id="idArea" class="form-select select2-bootstrap"
+                                    style="width: 100%;">
                                     <option value="">Selecciona el área</option>
                                     @foreach ($listaAreas as $data)
                                         <option value="{{ $data->idArea }}">{{ $data->area }}</option>
@@ -70,7 +73,8 @@
 
                             <div class="col-md-3">
                                 <label for="idTipoSolicitud" class="form-label">Tipo de solicitud:</label>
-                                <select name="idTipoSolicitud" id="idTipoSolicitud" class="form-select">
+                                <select name="idTipoSolicitud" id="idTipoSolicitud"
+                                    class="form-select select2-bootstrap" style="width: 100%;">
                                     <option value="">Selecciona el tipo de solicitud</option>
                                 </select>
                             </div>
@@ -107,13 +111,13 @@
 
                             <div class="col-md-3">
                                 <label for="filtroMunicipio" class="form-label">Municipio:</label>
-                                <select name="idMunicipio" id="SelectMunicipio" class="form-select">
+                                <select name="idMunicipio" id="SelectMunicipio" class="form-select select2-bootstrap">
                                     <option>Selecciona el municipio</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label for="filtroLocalidad" class="form-label">Localidad:</label>
-                                <select name="idLocalidad" id="SelectLocalidad" class="form-select">
+                                <select name="idLocalidad" id="SelectLocalidad" class="form-select select2-bootstrap">
                                     <option>Selecciona la localidad</option>
                                 </select>
                             </div>
@@ -223,6 +227,8 @@
                                     data-nombrePlantel="{{ $solicitud->nombrePlantel }}"
                                     data-nivel="{{ $solicitud->nivelCct }}"
                                     data-usuario="{{ $solicitud->nombre_usuario }}"
+                                    data-contador="{{ $solicitud->contador_seguimiento }}"
+
                                     >
                                     <i class="bi bi-eye text-primary"></i>
                                 </a>
@@ -254,18 +260,27 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
 <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
     window.Laravel = <?php echo json_encode([
-        'getTipos' => route('seguimiento.obtenerTipos'),
-    ]); ?>
+    'getTipos' => route('seguimiento.obtenerTipos'),
+]); ?>
+
+    $(document).on('select2:open', (e) => { //select2: que al seleccionar me ponga el cursor en el buscador :D
+        const selectId = e.target.id;
+        $(".select2-search__field[aria-controls='select2-" + selectId + "-results']").each(function (key,
+            value,) {
+            value.focus();
+        });
+    });
 
     $(document).ready(function () {
         $('#idArea').change(function () {
             var idArea = $(this).val();
             var tipoSolicitudSelect = $('#idTipoSolicitud');
             tipoSolicitudSelect.empty().append('<option value="">Cargando...</option>');
-            
+
             const obtenerTi = window.Laravel.getTipos;
 
             if (idArea) {
@@ -367,25 +382,127 @@
             const filtro = filtroNombre.value.toLowerCase().trim();
             $('#tablaResultados').DataTable().columns(1).search(filtro).draw();
         });
-        idArea.addEventListener('input', function () {
-            const filtro = idArea.options[idArea.selectedIndex].text.toLowerCase().trim();
-            if (idArea.selectedIndex === 0) {
-                $('#tablaResultados').DataTable().columns(2).search('').draw();
-                return;
-            } else {
-                $('#tablaResultados').DataTable().columns(2).search(filtro).draw();
+
+        $('#idArea').select2({
+            placeholder: "Selecciona un área",
+            width: 'resolve',
+            allowClear: true,
+            language: {
+                noResults: function () {
+                    return "No hay resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
             }
+        }).on("select2:unselecting", function (e) {
+            $(this).data('state', 'unselected');
+        }).on("select2:open", function (e) {
+            if ($(this).data('state') === 'unselected') {
+                $(this).removeData('state');
+
+                var self = $(this);
+                setTimeout(function () {
+                    self.select2('close');
+                }, 0);
+            }
+        }).val(null).trigger('change');
+
+        $('#idTipoSolicitud').select2({
+            placeholder: "Selecciona un tipo de solicitud",
+            width: 'resolve',
+            allowClear: true,
+            language: {
+                noResults: function () {
+                    return "No hay resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
+            }
+        }).on("select2:unselecting", function (e) {
+            $(this).data('state', 'unselected');
+        }).on("select2:open", function (e) {
+            if ($(this).data('state') === 'unselected') {
+                $(this).removeData('state');
+
+                var self = $(this);
+                setTimeout(function () {
+                    self.select2('close');
+                }, 0);
+            }
+        }).val(null).trigger('change');
+
+        $('#idArea').on('change', function () {
+            const filtro = $(this).val() ? $(this).find(':selected').text().toLowerCase().trim() : '';
+            $('#tablaResultados').DataTable().columns(2).search(filtro).draw();
         });
 
-        idTipoSolicitud.addEventListener('input', function () {
-            const filtro = idTipoSolicitud.options[idTipoSolicitud.selectedIndex].text.toLowerCase().trim();
-            if (idTipoSolicitud.selectedIndex === 0) {
-                $('#tablaResultados').DataTable().columns(3).search('').draw();
-                return;
-            } else {
-                $('#tablaResultados').DataTable().columns(3).search(filtro).draw();
-            }
+        $('#idTipoSolicitud').on('change', function () {
+            const filtro = $(this).val() ? $(this).find(':selected').text().toLowerCase().trim() : '';
+            $('#tablaResultados').DataTable().columns(3).search(filtro).draw();
         });
+
+        $('#SelectMunicipio').select2({
+            placeholder: "Selecciona un municipio",
+            width: 'resolve',
+            allowClear: true,
+            language: {
+                noResults: function () {
+                    return "No hay resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
+            }
+        }).on("select2:unselecting", function (e) {
+            $(this).data('state', 'unselected');
+        }).on("select2:open", function (e) {
+            if ($(this).data('state') === 'unselected') {
+                $(this).removeData('state');
+
+                var self = $(this);
+                setTimeout(function () {
+                    self.select2('close');
+                }, 0);
+            }
+        }).val(null).trigger('change');
+
+        $('#SelectLocalidad').select2({
+            placeholder: "Selecciona una localidad",
+            width: 'resolve',
+            allowClear: true,
+            language: {
+                noResults: function () {
+                    return "No hay resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
+            }
+        }).on("select2:unselecting", function (e) {
+            $(this).data('state', 'unselected');
+        }).on("select2:open", function (e) {
+            if ($(this).data('state') === 'unselected') {
+                $(this).removeData('state');
+
+                var self = $(this);
+                setTimeout(function () {
+                    self.select2('close');
+                }, 0);
+            }
+        }).val(null).trigger('change');
+
+        $('#SelectMunicipio').on('change', function () {
+            const filtro = $(this).val() ? $(this).find(':selected').text().toLowerCase().trim() : '';
+            $('#tablaResultados').DataTable().columns(6).search(filtro).draw();
+        });
+
+        $('#SelectLocalidad').on('change', function () {
+            const filtro = $(this).val() ? $(this).find(':selected').text().toLowerCase().trim() : '';
+            $('#tablaResultados').DataTable().columns(7).search(filtro).draw();
+        });
+
 
         idPrioridad.addEventListener('input', function () {
             const filtro = idPrioridad.options[idPrioridad.selectedIndex].text.toLowerCase().trim();
@@ -396,24 +513,7 @@
                 $('#tablaResultados').DataTable().columns(4).search(filtro).draw();
             }
         });
-        SelectMunicipio.addEventListener('input', function () {
-            const filtro = SelectMunicipio.options[SelectMunicipio.selectedIndex].text.toLowerCase().trim();
-            if (SelectMunicipio.selectedIndex === 0) {
-                $('#tablaResultados').DataTable().columns(6).search('').draw();
-                return;
-            } else {
-                $('#tablaResultados').DataTable().columns(6).search(filtro).draw();
-            }
-        });
-        SelectLocalidad.addEventListener('input', function () {
-            const filtro = SelectLocalidad.options[SelectLocalidad.selectedIndex].text.toLowerCase().trim();
-            if (SelectLocalidad.selectedIndex === 0) {
-                $('#tablaResultados').DataTable().columns(7).search('').draw();
-                return;
-            } else {
-                $('#tablaResultados').DataTable().columns(7).search(filtro).draw();
-            }
-        });
+
         idEstatus.addEventListener('input', function () {
             const filtro = idEstatus.options[idEstatus.selectedIndex].text.toLowerCase().trim();
             if (idEstatus.selectedIndex === 0) {
@@ -446,6 +546,12 @@
         selects.forEach(select => {
             select.selectedIndex = 0;
         });
+
+        $('#idArea').val(null).trigger('change');
+        $('#idTipoSolicitud').val(null).trigger('change');
+        $('#SelectMunicipio').val(null).trigger('change');
+        $('#SelectLocalidad').val(null).trigger('change');
+
         const inputs = document.querySelectorAll('input[type="text"]');
         inputs.forEach(input => {
             input.value = '';
@@ -486,7 +592,8 @@
 
                     response.forEach(function (municipio) {
                         selectMunicipio.append(
-                            '<option value="' + municipio.Id + '">' + municipio.Nombre + '</option>'
+                            '<option value="' + municipio.Id + '">' + municipio.Nombre.toUpperCase() +
+                            '</option>'
                         );
                     });
                 } else {
@@ -516,14 +623,15 @@
                     type: 'GET',
                     success: function (response) {
                         if (response) {
-                            // Iterar sobre las localidades y agregarlas al select
                             response.forEach(function (localidad) {
                                 selectLocalidad.append(
-                                    '<option value="' + localidad.Id + '">' + localidad.Nombre + '</option>'
+                                    '<option value="' + localidad.Id + '">' +
+                                    localidad.Nombre.toUpperCase() + '</option>'
                                 );
                             });
                         } else {
-                            console.error('La respuesta de la API de localidades está vacía.');
+                            console.error(
+                                'La respuesta de la API de localidades está vacía.');
                         }
                     },
                     error: function () {

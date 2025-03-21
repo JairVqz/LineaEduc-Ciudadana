@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const modalDetalle = document.getElementById('modalDetalle');
     modalDetalle.addEventListener('show.bs.modal', function (event) {
@@ -24,11 +23,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const extension = button.getAttribute('data-extension');
         const usuario = button.getAttribute('data-usuario');
 
+        const contador = button.getAttribute('data-contador');
+
+
         document.getElementById('modalFolio').textContent = folio;
         document.getElementById('modalNombreCompleto').textContent = `${nombre} ${apellidoPaterno} ${apellidoMaterno}`;
         document.getElementById('modalTipoSolicitud').textContent = tipoSolicitud;
         document.getElementById('modalArea').textContent = area;
         document.getElementById('modalPrioridad').textContent = prioridad;
+
+
+        document.getElementById('modalContadorSeguimientos').textContent = parseInt(contador) + 1;
+
+
 
         const estatusElement = document.getElementById('modalEstatus');
         estatusElement.textContent = estatus;
@@ -46,13 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modalTelefonoFijo').textContent = telefonoFijo;
         document.getElementById('modalTelefonoCelular').textContent = telefonoCelular;
         document.getElementById('modalDescripcion').value = descripcion;
-        document.getElementById('modalFecha').textContent=created_at;
-        document.getElementById('modalDias').textContent=diasTranscurridos;
+        document.getElementById('modalFecha').textContent = created_at;
+        document.getElementById('modalDias').textContent = diasTranscurridos;
         if (modalHoraI && modalHoraT) {
             modalHoraI.textContent = horaInicio;
             modalHoraT.textContent = horaTermino;
         }
-        document.getElementById('modalDuracion').textContent=duracion;
+        document.getElementById('modalDuracion').textContent = duracion;
         document.getElementById('modalExtension').textContent = extension;
         document.getElementById('modalUsuario').textContent = usuario;
 
@@ -118,9 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
             divDatosUbicacion.style.display = "none";
             divDatosMunicipio.style.display = "none";
         } else {
-            
 
-            // Contar cuántos valores están llenos
+
+            // contar cuántos valores están llenos
             let camposLlenos = 0;
             if (!esVacio(cct)) camposLlenos++;
             if (!esVacio(nivel)) camposLlenos++;
@@ -130,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!esVacio(nombreDirector)) camposLlenos++;
             if (!esVacio(direccionCct)) camposLlenos++;
 
-            // Si solo hay valores en Municipio y Localidad, mostrar solo esos dos
+            // si solo hay valores en municipio y localidad, mostrar solo esos dos
             if (!esVacio(municipio) && !esVacio(localidad) && camposLlenos === 2) {
                 divDatosMunicipio.style.display = "block";
                 divDatosUbicacion.style.display = "none";
@@ -143,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 divDatosMunicipio.style.display = "none";
 
                 divDatosUbicacion.style.display = "block";
-                // Si hay otros datos además de municipio y localidad, mostrar todo
+                // si hay otros datos además de municipio y localidad, mostrar todo
                 if (!esVacio(municipio)) divMunicipio.style.display = "flex";
                 if (!esVacio(localidad)) divLocalidad.style.display = "flex";
                 if (!esVacio(cct)) divCct.style.display = "flex";
@@ -153,8 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!esVacio(direccionCct)) divDireccionCct.style.display = "flex";
             }
         }
-        
+
     });
 });
 
-            

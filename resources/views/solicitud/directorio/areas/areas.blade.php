@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="/css/solicitud/general.css">
     <script src="/js/solicitud/general.js"></script>
     <link rel="stylesheet" href="/css/configuracion/listarUsuarios.css">
+    <style>
+        .dt-search {
+            display: contents !important;
+        }
+    </style>
 </head>
 
 @include('menuNavigation')

@@ -78,16 +78,27 @@ class ReportesController extends Controller
         //PARRAFO DE AREAS Y TIPOS
         $parrafoAreas = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM listarSolicitudes
         WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)), 
-        TopAreas AS (
-            SELECT TOP 5 area,
-                COUNT(*) AS cantidad, 
-                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje
-            FROM listarSolicitudes
-            WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)
-            GROUP BY area
-            ORDER BY cantidad DESC
-        )
-        SELECT 'area' AS categoria, area AS nombre, porcentaje FROM TopAreas");
+            TopAreas AS (
+                SELECT TOP 5 
+                    area ,
+                    COUNT(*) AS cantidad, 
+                    CAST(COALESCE(NULLIF((COUNT(*) * 100.0),0) / NULLIF((SELECT total FROM Totales),0),0) AS DECIMAL(5,2)) AS porcentaje,
+                    SUM(CASE WHEN idEstatus = 1 THEN 1 ELSE 0 END) AS soliPendientes,
+                    SUM(CASE WHEN idEstatus = 2 THEN 1 ELSE 0 END) AS soliProceso,
+                    SUM(CASE WHEN idEstatus = 3 THEN 1 ELSE 0 END) AS soliTerminado
+                FROM listarSolicitudes
+				WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)
+                GROUP BY area
+                ORDER BY cantidad DESC
+            )
+            SELECT 
+                area AS nombre, 
+                porcentaje, 
+                cantidad, 
+                soliPendientes, 
+                soliProceso, 
+                soliTerminado
+            FROM TopAreas;");
         //dd($parrafoAreas);
         $parrafoTipos = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM listarSolicitudes
         WHERE CAST(created_at AS DATE) = CAST(GETDATE() AS DATE)), 
@@ -334,21 +345,30 @@ class ReportesController extends Controller
         }
 
         //PARRAFO DE AREAS Y TIPOS
-        $parrafoAreas = DB::select("WITH Totales AS (
-        SELECT COUNT(*) AS total 
-        FROM listarSolicitudes
-        WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'
-        ),
-        TopAreas AS (
-            SELECT TOP 5 area,
-                COUNT(*) AS cantidad, 
-                CAST(COUNT(*) * 100.0 / (SELECT total FROM Totales) AS DECIMAL(5,2)) AS porcentaje
-            FROM listarSolicitudes
-            WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'
-            GROUP BY area
-            ORDER BY cantidad DESC
-        )
-        SELECT 'area' AS categoria, area AS nombre, porcentaje FROM TopAreas");
+        $parrafoAreas = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM listarSolicitudes
+        WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'), 
+            TopAreas AS (
+                SELECT TOP 5 
+                    area ,
+                    COUNT(*) AS cantidad, 
+                    CAST(COALESCE(NULLIF((COUNT(*) * 100.0),0) / NULLIF((SELECT total FROM Totales),0),0) AS DECIMAL(5,2)) AS porcentaje,
+                    SUM(CASE WHEN idEstatus = 1 THEN 1 ELSE 0 END) AS soliPendientes,
+                    SUM(CASE WHEN idEstatus = 2 THEN 1 ELSE 0 END) AS soliProceso,
+                    SUM(CASE WHEN idEstatus = 3 THEN 1 ELSE 0 END) AS soliTerminado
+                FROM listarSolicitudes
+				WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'
+                GROUP BY area
+                ORDER BY cantidad DESC
+            )
+            SELECT 
+                area AS nombre, 
+                porcentaje, 
+                cantidad, 
+                soliPendientes, 
+                soliProceso, 
+                soliTerminado
+            FROM TopAreas;");
+        //dd($parrafoAreas);
 
         $parrafoTipos = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM listarSolicitudes
         WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'),
@@ -510,6 +530,30 @@ class ReportesController extends Controller
             $valuesMinutoACUM[] = $ACUMm->total;
         }
 
+        $parrafoAreas = DB::select("WITH Totales AS (SELECT COUNT(*) AS total FROM listarSolicitudes
+        WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'), 
+            TopAreas AS (
+                SELECT TOP 5 
+                    area ,
+                    COUNT(*) AS cantidad, 
+                    CAST(COALESCE(NULLIF((COUNT(*) * 100.0),0) / NULLIF((SELECT total FROM Totales),0),0) AS DECIMAL(5,2)) AS porcentaje,
+                    SUM(CASE WHEN idEstatus = 1 THEN 1 ELSE 0 END) AS soliPendientes,
+                    SUM(CASE WHEN idEstatus = 2 THEN 1 ELSE 0 END) AS soliProceso,
+                    SUM(CASE WHEN idEstatus = 3 THEN 1 ELSE 0 END) AS soliTerminado
+                FROM listarSolicitudes
+				WHERE CAST(created_at AS DATE) BETWEEN '$start_date' AND '$end_date'
+                GROUP BY area
+                ORDER BY cantidad DESC
+            )
+            SELECT 
+                area AS nombre, 
+                porcentaje, 
+                cantidad, 
+                soliPendientes, 
+                soliProceso, 
+                soliTerminado
+            FROM TopAreas;");
+
         //mapa
         $solicitudesPorMunicipio = Ubicacion::select('municipio', DB::raw('count(*) as total'))
             ->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
@@ -534,6 +578,7 @@ class ReportesController extends Controller
                 'labelsMinutoACUM' => $labelsMinutoACUM,
                 'valuesMinutoACUM' => $valuesMinutoACUM,
                 'solicitudesPorMunicipio' => $solicitudesPorMunicipio,
+                'parrafoAreas'=>$parrafoAreas,
             ]);
         }
         return view(
@@ -554,6 +599,7 @@ class ReportesController extends Controller
                 'labelsMinutoACUM',
                 'valuesMinutoACUM',
                 'solicitudesPorMunicipio',
+                'parrafoAreas',
             )
         );
 
