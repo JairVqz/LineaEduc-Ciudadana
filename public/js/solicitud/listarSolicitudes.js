@@ -23,11 +23,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const extension = button.getAttribute('data-extension');
         const usuario = button.getAttribute('data-usuario');
 
+        const contador = button.getAttribute('data-contador');
+
+
         document.getElementById('modalFolio').textContent = folio;
         document.getElementById('modalNombreCompleto').textContent = `${nombre} ${apellidoPaterno} ${apellidoMaterno}`;
         document.getElementById('modalTipoSolicitud').textContent = tipoSolicitud;
         document.getElementById('modalArea').textContent = area;
         document.getElementById('modalPrioridad').textContent = prioridad;
+
+
+        document.getElementById('modalContadorSeguimientos').textContent = parseInt(contador) + 1;
+
+
 
         const estatusElement = document.getElementById('modalEstatus');
         estatusElement.textContent = estatus;

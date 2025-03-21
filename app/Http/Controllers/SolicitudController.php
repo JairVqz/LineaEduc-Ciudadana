@@ -268,29 +268,41 @@ class SolicitudController extends Controller
     }
 
 
-    public function listarSolicitudes() //YA ESTA BIEN CON LA NUEVA BD
-    {
-        Solicitud::actualizarDiasTranscurridos(); // Actualizo días
+    public function listarSolicitudes()
+{
+    Solicitud::actualizarDiasTranscurridos(); // Actualizo días
 
-        $solicitud = new Solicitud();
+    $solicitud = new Solicitud();
+    $solicitudes = $solicitud->listarSolicitudesDESC();
 
-        $solicitudes = $solicitud->listarSolicitudesDESC();
-        $listaTiposSolicitud = TipoSolicitud::all(); // Para los filtros
-        $listaAreas = CatalogoAreas::all();
-        $listaPrioridades = Prioridad::all();
-        $listaEstatus = Estatus::all();
+    // Agregar conteo de seguimientos por cada solicitud
+    //  select count(*) from tbl_seguimientoSolicitud 
+    // where folio='20250300108' and 
+    // comentario='La solicitud ha recibido nuevamente una llamada, favor de revisar la soliciud y dar seguimiento';
 
-        return view(
-            'solicitud.listarSolicitudes.listarSolicitudes',
-            [
-                'listaAreas' => $listaAreas,
-                'listaTiposSolicitud' => $listaTiposSolicitud,
-                'listaPrioridades' => $listaPrioridades,
-                'listaEstatus' => $listaEstatus,
-                'solicitudes' => $solicitudes,
-            ]
-        );
+    foreach ($solicitudes as $solicitud) {
+        $solicitud->contador_seguimiento = DB::table('tbl_seguimientoSolicitud')
+            ->where('folio', '=', $solicitud->folio,'and', 
+            'comentario', '=', 'La solicitud ha recibido nuevamente una llamada, favor de revisar la soliciud y dar seguimiento')
+            ->count();
     }
+
+    $listaTiposSolicitud = TipoSolicitud::all();
+    $listaAreas = CatalogoAreas::all();
+    $listaPrioridades = Prioridad::all();
+    $listaEstatus = Estatus::all();
+
+    return view(
+        'solicitud.listarSolicitudes.listarSolicitudes',
+        [
+            'listaAreas' => $listaAreas,
+            'listaTiposSolicitud' => $listaTiposSolicitud,
+            'listaPrioridades' => $listaPrioridades,
+            'listaEstatus' => $listaEstatus,
+            'solicitudes' => $solicitudes,
+        ]
+    );
+}
 
     public function detalle($folio)
     {

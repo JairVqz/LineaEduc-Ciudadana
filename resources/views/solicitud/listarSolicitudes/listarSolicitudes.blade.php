@@ -227,6 +227,8 @@
                                     data-nombrePlantel="{{ $solicitud->nombrePlantel }}"
                                     data-nivel="{{ $solicitud->nivelCct }}"
                                     data-usuario="{{ $solicitud->nombre_usuario }}"
+                                    data-contador="{{ $solicitud->contador_seguimiento }}"
+
                                     >
                                     <i class="bi bi-eye text-primary"></i>
                                 </a>
