@@ -63,21 +63,18 @@
                     <br><br><br>
 
                     <div class="mb-3 row">
-                        <div class="col-md-2 mb-3"></div>
+                        <div class="col-md-12 d-flex align-items-center justify-content-center">
                         @if (Auth::user()->rol == 'Capturista' || Auth::user()->rol == 'Administrador')
-                            <div class="col-md-3 mb-3">
-                                <button name="button" id="mostrarBuscador" style="border-radius: 8px; font-weight: bold; font-size: large;
-                                                width:100%; height:200%"><i class="bi bi-search me-2"></i>Buscar
+                            <div class="text-center" style="margin-right: 15px;">
+                                <button name="button" id="mostrarBuscador" class="btn btn-color btn-lg"><i class="bi bi-search me-2"></i>Buscar
                                     solicitud</button>
                             </div>
-                            <div class="col-md-2 mb-3"></div>
-                            <div class="col-md-3 mb-3">
+                            <div class="text-center" style="margin-right: 15px;">
                                 <a href="{{ route('solicitud.create') }}"><button name="button"
-                                         id="boton" style="border-radius: 8px; font-weight: bold; font-size: large;
-                                                width:100%; height:200%"><i class="bi bi-file-earmark-plus me-2"></i>Nueva
+                                         id="boton" class="btn btn-color btn-lg"><i class="bi bi-file-earmark-plus me-2"></i>Nueva
                                         solicitud</button></a>
                             </div>
-                            <div class="col-md-2"></div>
+                        </div>
                         @endif
                     </div>
 

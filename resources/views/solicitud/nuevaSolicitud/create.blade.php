@@ -319,12 +319,10 @@
 
         let debounceTimer; // Variable para almacenar el temporizador de debounce
         $('#nombre, #apellidoPaterno, #apellidoMaterno').on('input', function() {
-            console.log('Hubo un cambio en alguno de los inputs');
 
             // Cancelar la solicitud anterior si existe
             if (xhrRequest !== null) {
                 xhrRequest.abort();
-                console.log('Solicitud anterior cancelada');
             }
 
             // Cancelar cualquier ejecución pendiente de la función de búsqueda

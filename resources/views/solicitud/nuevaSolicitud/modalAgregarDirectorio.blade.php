@@ -72,8 +72,8 @@
                         <div class="col-md-12">
                             <label for="nuevoFuncionario" class="form-label"
                                 style="font-weight:bold">Funcionario</label>
-                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoFuncionario" id="nuevoFuncionario" class="form-control"
-                                placeholder="">
+                            <input type="text" oninput="this.value = this.value.toUpperCase()"
+                                name="nuevoFuncionario" id="nuevoFuncionario" class="form-control" placeholder="">
                         </div>
 
                         <div class="col-md-6">
@@ -91,8 +91,8 @@
                         <div class="col-md-6">
                             <label for="nuevaArea" class="form-label" style="font-weight:bold">Nueva
                                 Área:</label>
-                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevaArea" id="nuevaArea" class="form-control" placeholder=""
-                                readonly>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevaArea"
+                                id="nuevaArea" class="form-control" placeholder="" readonly>
                         </div>
 
                         <div class="col-md-6">
@@ -108,14 +108,14 @@
                         </div>
                         <div class="col-md-6">
                             <label for="nuevoPuesto" class="form-label" style="font-weight:bold">Nuevo Puesto:</label>
-                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoPuesto" id="nuevoPuesto" class="form-control"
-                                placeholder="" readonly>
+                            <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoPuesto"
+                                id="nuevoPuesto" class="form-control" placeholder="" readonly>
                         </div>
                     </div>
                 </div>
 
                 <div class="row g-3 mt-1">
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="divIdNuevoTipoSolicitd">
                         <label for="idNuevoTipoSolicitud" class="form-label" style="font-weight:bold">Tipo de
                             Solicitud:</label>
                         <select name="idNuevoTipoSolicitud" id="idNuevoTipoSolicitud"
@@ -123,12 +123,13 @@
                         </select>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-6" id="divNuevoTipoSolicitud">
+                        <input type="hidden" name="valNuevoTipoSolicitud" id="valNuevoTipoSolicitud">
                         <label for="nuevoTipoSolicitud" class="form-label" style="font-weight:bold">Nuevo tipo
                             de
                             solicitud:</label>
-                        <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoTipoSolicitud" id="nuevoTipoSolicitud" class="form-control"
-                            placeholder="" readonly>
+                        <input type="text" oninput="this.value = this.value.toUpperCase()" name="nuevoTipoSolicitud"
+                            id="nuevoTipoSolicitud" class="form-control" placeholder="" readonly>
                     </div>
                 </div>
 
@@ -190,12 +191,24 @@
 
             if ($('#idNuevoTipoSolicitud').val() == "otro") {
                 $('#nuevoTipoSolicitud').prop('readonly', false);
+                $('#valNuevoTipoSolicitud').val('otro');
             } else if ($('#idNuevoTipoSolicitud').val() == null) {
-                $('#nuevoTipoSolicitud').prop('readonly', true);
+                if ($('#valNuevoTipoSolicitud').val() == 'otro') {
+                    $('#nuevoTipoSolicitud').prop('readonly', false);
+                } else {
+                    $('#nuevoTipoSolicitud').prop('readonly', true);
+                    $('#valNuevoTipoSolicitud').val('');
+                }
             } else {
                 $('#nuevoTipoSolicitud').prop('readonly', true);
+                $('#valNuevoTipoSolicitud').val($('#idNuevoTipoSolicitud').val());
+
             }
 
+        });
+
+        $('#idNuevoTipoSolicitud').on('select2:unselect', function(e) {
+            $('#valNuevoTipoSolicitud').val('');
         });
 
         function fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada) {
@@ -244,7 +257,7 @@
             var nuevaArea = document.getElementById("nuevaArea").value;
             var idNuevoPuesto = document.getElementById("idNuevoPuesto").value;
             var nuevoPuesto = document.getElementById("nuevoPuesto").value;
-            var idNuevoTipoSolicitud = document.getElementById("idNuevoTipoSolicitud").value;
+            var valNuevoTipoSolicitud = document.getElementById("valNuevoTipoSolicitud").value;
             var nuevoTipoSolicitud = document.getElementById("nuevoTipoSolicitud").value;
 
             fetch(guardarDirectorioRoute, {
@@ -263,7 +276,7 @@
                         nuevaArea: nuevaArea,
                         idNuevoPuesto: idNuevoPuesto,
                         nuevoPuesto: nuevoPuesto,
-                        idNuevoTipoSolicitud: idNuevoTipoSolicitud,
+                        valNuevoTipoSolicitud: valNuevoTipoSolicitud,
                         nuevoTipoSolicitud: nuevoTipoSolicitud,
                     })
                 })
@@ -271,64 +284,65 @@
                 .then(data => {
                     console.log('Petición enviada correctamente:', data);
                     if (data.mensaje === "directorio guardado correctamente") {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Directorio registrado con éxito!",
-                            showCancelButton: false,
-                            confirmButtonText: `ACEPTAR`,
-                            confirmButtonColor: "#7A1737",
-                            cancelButtonText: `CANCELAR`,
-                        }).then((result) => {
 
-                            /*REFRESCAR Y SELECCIONAR LA EXTENSION GUARDADA EN EL SELECT DIRECTORIO*/
-                            $('#idExtension').empty();
-                            $('#idExtension').select2('destroy');
+                        /*REFRESCAR Y SELECCIONAR LA EXTENSION GUARDADA EN EL SELECT DIRECTORIO*/
+                        $('#idExtension').empty();
+                        $('#idExtension').select2('destroy');
 
-                            data.listaDirectorio.forEach(function(item) {
-                                $('#idExtension').append(
-                                    `<option value="${item.idExtensionCatalogo}" data-idpuesto="${item.idPuesto}"
+                        data.listaDirectorio.forEach(function(item) {
+                            $('#idExtension').append(
+                                `<option value="${item.idExtensionCatalogo}" data-idpuesto="${item.idPuesto}"
                                         data-idarea="${item.idArea}" data-nombretitular="${item.nombreTitular}">
                                         ${item.extension} - ${item.area} - ${item.puesto}</option>`
-                                );
-                            });
-
-                            $('#idExtension').append('<option value="otro">Otra</option>');
-
-                            $('#idExtension').select2({
-                                placeholder: "Selecciona una extensión",
-                                allowClear: true,
-                                language: {
-                                    noResults: function() {
-                                        return "No hay resultados";
-                                    },
-                                    searching: function() {
-                                        return "Buscando..";
-                                    }
-                                },
-                                width: '100%'
-                            }).trigger('change');
-
-                            $('#idExtension').val(data.idExtension).trigger('change');
-                            /*FIN SELECT DIRECTORIO*/
-
-                            setTimeout(function() {
-                                console.log("entro a setear tipo: " + data
-                                    .idTipoSolicitud);
-                                $('#idTipoSolicitud').val(data.idTipoSolicitud)
-                                    .trigger('change');
-                                $('#idTipoSolicitud').trigger(
-                                    'select2:open'
-                                    ); // Forzar la actualización si es necesario
-                            }, 1000);
-
-                            if (result.isConfirmed) {
-                                Swal.close();
-                                $("#modalAgregarDirectorio").modal('hide');
-                            } else {
-                                Swal.close();
-                                $("#modalAgregarDirectorio").modal('hide');
-                            }
+                            );
                         });
+
+                        $('#idExtension').append('<option value="otro">Otra</option>');
+
+                        $('#idExtension').select2({
+                            placeholder: "Selecciona una extensión",
+                            allowClear: true,
+                            language: {
+                                noResults: function() {
+                                    return "No hay resultados";
+                                },
+                                searching: function() {
+                                    return "Buscando..";
+                                }
+                            },
+                            width: '100%'
+                        }).trigger('change');
+
+                        $('#idExtension').val(data.idExtension).trigger('change');
+                        /*FIN SELECT DIRECTORIO*/
+
+                        setTimeout(function() {
+                            console.log("entro a setear tipo: " + data.idTipoSolicitud);
+
+                            $('#idTipoSolicitud').val(data.idTipoSolicitud).trigger('change');
+                            $('#idTipoSolicitud').trigger('select2:open');
+                            
+                        }, 1000);
+
+                        setTimeout(function() {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Directorio registrado con éxito!",
+                                showCancelButton: false,
+                                confirmButtonText: `ACEPTAR`,
+                                confirmButtonColor: "#7A1737",
+                                cancelButtonText: `CANCELAR`,
+                            }).then((result) => {
+
+                                if (result.isConfirmed) {
+                                    Swal.close();
+                                    $("#modalAgregarDirectorio").modal('hide');
+                                } else {
+                                    Swal.close();
+                                    $("#modalAgregarDirectorio").modal('hide');
+                                }
+                            });
+                        }, 1000);
 
                     } else {
                         Swal.fire({
