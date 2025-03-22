@@ -15,6 +15,10 @@
     margin-left: 0;
 }
 
+#navbarPrimeNg{
+    background-color: #FDFDFD !important;
+}
+
 .sidebar {
     height: 100vh;
     position: fixed;

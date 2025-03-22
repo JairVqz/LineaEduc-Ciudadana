@@ -12,6 +12,11 @@ body {
     will-change: margin-left;
 }
 
+.card{
+    margin-top: 68px;
+    border-radius: 20px;
+}
+
 .sidebar {
     height: 100vh;
     position: fixed;
@@ -48,6 +53,17 @@ body {
 .collapsed .content {
     margin-left: 0;
 }
+
+#muesca{
+    margin-left: 250px;
+    transition: transform 0.5s ease;
+}
+
+.collapsed #muesca{
+    transform: translateX(-250px);
+    transition: transform 0.5s ease;
+}
+
 #boton {
     background-color: #7A1737;
     color: white;

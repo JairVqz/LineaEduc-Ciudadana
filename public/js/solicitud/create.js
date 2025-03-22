@@ -236,6 +236,16 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('divNombreDirector').style.display = 'block';
             document.getElementById('divDireccionCct').style.display = 'block';
 
+            $('#cct').val('');
+            $('#nivelCct').val('');
+            $('#nombreCct').val('');
+            $('#municipio').val(null).trigger('change');
+            $('#nombreMunicipio').val('');
+            $('#localidad').val(null).trigger('change');
+            $('#nombreLocalidad').val('');
+            $('#nombreDirector').val('');
+            $('#direccionCct').val('');
+
         } else if (this.id === 'snUbicacion') {
 
             document.getElementById('datosUbicacion').style.display = 'none';
