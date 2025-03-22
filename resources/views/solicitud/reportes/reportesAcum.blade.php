@@ -27,9 +27,16 @@
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte acumulado</h1>
-                <a href="{{ route('reportes.pdfReporteAcum') }}" id="pdfAcumulado">
+                <a href="{{ route('reportes.exportarExcelAcumulado') }}" class="ms-2 tooltip-trigger" 
+                data-bs-toggle="tooltip" data-bs-placement="left" title="Descargar registro de solicitudes">
+                    <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
+                        style="height: 47px; object-fit: contain; margin: 5px; font-size:12px; margin-right: 10px;">
+                </a>
+                
+                <a href="{{ route('reportes.pdfReporteAcum') }}" id="pdfAcumulado" class="ms-2 tooltip-trigger"
+                data-bs-toggle="tooltip" data-bs-placement="left" title="Descargar reporte de solicitudes ">
                     <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
-                        style="height: 50px; object-fit: contain; margin: 5px; font-size:12px;">
+                        style="height: 53px; object-fit: contain; margin: 5px; font-size:12px;">
                 </a>
             </div>
 
@@ -261,6 +268,35 @@
     });
 </script>
 
+
+<style>
+    .tooltip {
+        pointer-events: none; 
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = document.querySelectorAll('.tooltip-trigger');
+
+        tooltipTriggerList.forEach(function (el) {
+            var tooltip = new bootstrap.Tooltip(el, {
+                trigger: 'manual',
+                html: true
+            });
+
+            el.addEventListener('mouseenter', function () {
+                tooltip.show();
+            });
+
+            el.addEventListener('mouseleave', function () {
+                setTimeout(function () {
+                    tooltip.hide();
+                }, 50); 
+            });
+        });
+    });
+</script>
 
 <script>
     function actualizarTablaMunicipios() {

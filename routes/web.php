@@ -114,14 +114,12 @@ Route::middleware('auth.validation')->group(function () {
     //REPORTES
     Route::controller(ReportesController::class)->group(function () {
         Route::name('reportes.')->group(function () {
+            //vistas
             Route::get('/solicitud/reportesDia', [ReportesController::class, 'reportesDia'])->name('reportesDia');
             Route::get('/solicitud/reportesAcumulado', [ReportesController::class, 'reportesAcumulado'])->name('reportesAcumulado');
             Route::get('/solicitud/reportesPeriodo', [ReportesController::class, 'reportesPeriodo'])->name('reportesPeriodo');
 
-            Route::get('/solicitud/pdfReporteDia', [ReportesController::class, 'pdfReporteDia'])->name('pdfReporteDia');
-            Route::get('/solicitud/pdfReporteAcum', [ReportesController::class, 'pdfReporteAcum'])->name('pdfReporteAcum');
-            Route::get('/solicitud/pdfReportePeriodo', [ReportesController::class, 'pdfReportePeriodo'])->name('pdfReportePeriodo');
-
+            //base64
             Route::post('/solicitud/guardarGrafica', [ReportesController::class, 'guardarGrafica'])->name('guardarGrafica');
 
             //mapas, rutas directas a los archivos
@@ -132,6 +130,16 @@ Route::middleware('auth.validation')->group(function () {
             Route::get('/mapa/veracruz_municipios', function () {
                 return response()->file(public_path('mapa/veracruz_municipios.geojson'));
             })->name('veracruz_municipios');
+
+            //pdf
+            Route::get('/solicitud/pdfReporteDia', [ReportesController::class, 'pdfReporteDia'])->name('pdfReporteDia');
+            Route::get('/solicitud/pdfReporteAcum', [ReportesController::class, 'pdfReporteAcum'])->name('pdfReporteAcum');
+            Route::get('/solicitud/pdfReportePeriodo', [ReportesController::class, 'pdfReportePeriodo'])->name('pdfReportePeriodo');
+
+            //EXCEL
+            Route::get('/exportarExcelDia', [ReportesController::class, 'exportarExcelDia'])->name('exportarExcelDia');
+            Route::get('/exportarExcelAcumulado', [ReportesController::class, 'exportarExcelAcumulado'])->name('exportarExcelAcumulado');
+            Route::get('/exportarExcelPeriodo', [ReportesController::class, 'exportarExcelPeriodo'])->name('exportarExcelPeriodo');
 
         });
     });

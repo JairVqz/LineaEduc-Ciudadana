@@ -36,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modalContadorSeguimientos').textContent = parseInt(contador) + 1;
 
 
-
         const estatusElement = document.getElementById('modalEstatus');
         estatusElement.textContent = estatus;
         estatusElement.className = '';

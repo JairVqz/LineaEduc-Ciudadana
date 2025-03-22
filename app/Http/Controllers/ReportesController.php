@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SolicitudesExport;
+use App\Exports\SolicitudDiaExport;
+use App\Exports\SolicitudPeriodoExport;
 
 use Illuminate\Http\Request;
 
@@ -971,6 +975,26 @@ class ReportesController extends Controller
                 'parrafoAreas',
             )
         );
+    }
+
+    public function exportarExcelAcumulado()
+    {
+        $nombre = 'SolicitudesAcum_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new SolicitudesExport, $nombre);
+    }
+
+    public function exportarExcelDia()
+    {
+        $nombre = 'SolicitudesDia_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new SolicitudDiaExport, $nombre);
+    }
+
+    public function exportarExcelPeriodo(Request $request)
+    {
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+        $nombre = 'SolicitudesPeriodo_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new SolicitudPeriodoExport, $nombre);
     }
 
 
