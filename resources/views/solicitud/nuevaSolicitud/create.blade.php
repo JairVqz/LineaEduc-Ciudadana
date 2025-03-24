@@ -31,7 +31,7 @@
     <!-- Contenido Principal -->
     <div class="content">
         <div class="card" style="padding: 30px;">
-            <h1 class="mt-5" style="text-align: center; font-weight: bold; color: #7A1737;">Registro de solicitud</h1>
+            <h1 class="mt-2" style="text-align: center; font-weight: bold; color: #7A1737;">Registro de solicitud</h1>
 
             <div class="row g-3">
                 <div class="text-end d-flex justify-content-end align-items-center">
@@ -319,12 +319,10 @@
 
         let debounceTimer; // Variable para almacenar el temporizador de debounce
         $('#nombre, #apellidoPaterno, #apellidoMaterno').on('input', function() {
-            console.log('Hubo un cambio en alguno de los inputs');
 
             // Cancelar la solicitud anterior si existe
             if (xhrRequest !== null) {
                 xhrRequest.abort();
-                console.log('Solicitud anterior cancelada');
             }
 
             // Cancelar cualquier ejecución pendiente de la función de búsqueda

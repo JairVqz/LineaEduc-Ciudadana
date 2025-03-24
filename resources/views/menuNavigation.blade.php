@@ -19,6 +19,13 @@
     </div>
 </nav>
 
+<!--Muesca-->
+<nav id="muesca" class="navbar navbar-expand-lg" style="background-color: #7A1737; width: 20px; height: 50px; border-top-left-radius: 30px; margin-top: 41px; margin-left: 250px; position: fixed; z-index: 1000; border-top-right-radius: 30px;">
+    <div class="container-fluid d-flex align-items-center justify-content-center" style="position: relative;">
+        <div id="navbarPrimeNg" style="position: absolute; top: 0; left: 0; background-color: #F5F5F5; width: 20px; height: 27px; border-top-left-radius: 30px; z-index: -2;"></div>
+    </div>
+</nav>
+
 @include('solicitud.modalPerfil')
 <div class="sidebar">
     @if (Auth::user()->rol == 'Administrador')

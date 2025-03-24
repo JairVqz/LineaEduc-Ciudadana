@@ -137,7 +137,7 @@ class DirectorioController extends Controller
             $idExtension = $request->input('idNuevaExtension');
             $idArea = $request->input('idNuevaArea');
             $idPuesto = $request->input('idNuevoPuesto');
-            $idTipoSolicitud = $request->input('idNuevoTipoSolicitud');
+            $idTipoSolicitud = $request->input('valNuevoTipoSolicitud');
 
             //NUEVOS CATÁLOGOS
             if ($idArea == "otro") {

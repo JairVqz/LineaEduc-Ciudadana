@@ -28,7 +28,7 @@
     <!-- mi contenedor -->
     <div class="content">
         <div class="card" style="padding: 30px;">
-            <div class="d-flex justify-content-between align-items-center mt-5">
+            <div class="d-flex justify-content-between align-items-center mt-2">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Seguimiento de
                     solicitudes</h1>
                 <a href="{{ route('solicitud.exportarExcelSeguimiento') }}">
@@ -124,7 +124,7 @@
                             </div>
                             <div class="col-md-3" style="text-align: center;">
                                 <br>
-                                <button name="button" id="btnLimpiarFiltros" style="border-radius: 8px; 
+                                <button name="button" id="btnLimpiarFiltros" style="border-radius: 8px;
                                 width:100%; height:75%">Limpiar filtros</button>
                             </div>
                         </div>
@@ -267,7 +267,7 @@
             tipoSolicitudSelect.empty().append('<option value="">Cargando...</option>');
 
             const obtenerTi = window.Laravel.getTipos;
-            
+
             if (idArea) {
                 $.ajax({
                     url: obtenerTi,
@@ -326,9 +326,9 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
                 "paginate": {
-                    "first": "<<",   
-                    "last": ">>",    
-                    "next": ">",    
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
                     "previous": "<"
                 },
             },
@@ -349,7 +349,7 @@
                     let cct = $(this.node()).find('td:last-child a').data('cct') || ''; // Obtiene el data-cct
                     let match = cct.toLowerCase().includes(filtro);
                     console.log(match);
-    
+
                     $(this.node()).toggle(match); // Muestra u oculta la fila según el filtro
                 });
             });*/
@@ -375,7 +375,7 @@
             $('#tablaResultados').DataTable().columns(1).search(filtro).draw();
         });
 
-    
+
 
         idPrioridad.addEventListener('input', function () {
             const filtro = idPrioridad.options[idPrioridad.selectedIndex].text.toLowerCase().trim();
@@ -386,7 +386,7 @@
                 $('#tablaResultados').DataTable().columns(4).search(filtro).draw();
             }
         });
-        
+
         idEstatus.addEventListener('input', function () {
             const filtro = idEstatus.options[idEstatus.selectedIndex].text.toLowerCase().trim();
             if (idEstatus.selectedIndex === 0) {

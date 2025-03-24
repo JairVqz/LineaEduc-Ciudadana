@@ -30,7 +30,7 @@
     <!-- mi contenedor -->
     <div class="content">
         <div class="card" style="padding: 30px;">
-            <h1 class="mt-5" style="text-align: center; font-weight: bold; color: #7A1737;">Seguimiento de la solicitud:
+            <h1 class="mt-2" style="text-align: center; font-weight: bold; color: #7A1737;">Seguimiento de la solicitud:
                 {{ $solicitudes[0]->folio }}
             </h1>
             <button class="accordion" style="font-weight:bold;"><i class="bi bi-clipboard2-plus-fill"
@@ -295,7 +295,7 @@
                                                                             <i class="bi bi-person-circle " style="font-size: 35px; margin-right: 5px; color:rgb(143, 0, 0)"></i>
                                                                         @endif
 
-                                                                        <div class="p-3 rounded shadow-sm message-bubble 
+                                                                        <div class="p-3 rounded shadow-sm message-bubble
                                                         {{ $esUsuarioActual ? 'bg-success-subtle text-end' : 'text-start' }}"style="background-color:rgb(255, 212, 212)">
 
                                                                             <strong>{{ $seguimiento->nombre_usuario }}</strong><br>
@@ -540,7 +540,7 @@
     }
 </script>
 
-<script>//acordeon 
+<script>//acordeon
     var acc = document.getElementsByClassName("accordion");
     var i;
 

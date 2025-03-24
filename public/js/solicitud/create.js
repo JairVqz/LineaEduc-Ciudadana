@@ -58,9 +58,14 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#idNuevaExtension').val('').trigger('change');
             $('#idNuevaArea').val('').trigger('change');
             $('#idNuevoTipoSolicitud').val(null).trigger('change');
+            $('#valNuevoTipoSolicitud').val('');
             $('#idNuevaPrioridad').val('').trigger('change');
 
             $("#nombreTitular").val('');
+            document.getElementById("divNuevoTipoSolicitud").classList.remove("col-md-12");
+            document.getElementById("divNuevoTipoSolicitud").classList.add("col-md-6");
+            $('#divIdNuevoTipoSolicitd').css('display', 'block');
+            $('#nuevoTipoSolicitud').prop('readonly', true);
 
             fetchAreaTipoSolicitudes(idAreaDirectorioSeleccionada);
 
@@ -106,18 +111,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
             $('#idNuevaPrioridad').val(null).trigger('change');
 
-            if ($('#idExtension').val() != "otro" && $('#idExtension').val() != null){
+            if ($('#idExtension').val() != "otro" && $('#idExtension').val() != null) {
                 var extensionSeleccionada = $('#idExtension').find('option:selected');
 
                 $('#idNuevaExtension').val($('#idExtension').val()).trigger('change');
-                $('#idNuevaArea').val(extensionSeleccionada.data('idarea')).trigger('change');
+                $('#idNuevaArea').val(extensionSeleccionada.data('idarea')).trigger('change');                
                 $('#idNuevoPuesto').val(extensionSeleccionada.data('idpuesto')).trigger('change');
+                $('#valNuevoTipoSolicitud').val('otro');
+
+                document.getElementById("divNuevoTipoSolicitud").classList.remove("col-md-6");
+                document.getElementById("divNuevoTipoSolicitud").classList.add("col-md-12");
+                $('#nuevoTipoSolicitud').prop('readonly', false);
+
+                $('#divIdNuevoTipoSolicitd').css('display', 'none');
+
+
             } else {
                 $('#idNuevaExtension').val(null).trigger('change');
                 $('#idNuevaArea').val(null).trigger('change');
                 $('#idNuevoPuesto').val(null).trigger('change');
             }
-
 
         }
     });
@@ -222,6 +235,16 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('divLocalidad').style.display = 'block';
             document.getElementById('divNombreDirector').style.display = 'block';
             document.getElementById('divDireccionCct').style.display = 'block';
+
+            $('#cct').val('');
+            $('#nivelCct').val('');
+            $('#nombreCct').val('');
+            $('#municipio').val(null).trigger('change');
+            $('#nombreMunicipio').val('');
+            $('#localidad').val(null).trigger('change');
+            $('#nombreLocalidad').val('');
+            $('#nombreDirector').val('');
+            $('#direccionCct').val('');
 
         } else if (this.id === 'snUbicacion') {
 
@@ -411,7 +434,6 @@ document.addEventListener('DOMContentLoaded', function () {
         e.preventDefault();
 
         var formData = $(this).serialize();
-        console.log(formData);
 
         var correo = document.getElementById("correo").value;
         var telefonoFijo = document.getElementById("telefonoFijo").value;

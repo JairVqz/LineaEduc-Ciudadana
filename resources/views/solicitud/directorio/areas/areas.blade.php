@@ -39,7 +39,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-center">
-                        <h1 class="mt-5 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Catálogo de Áreas</h1>
+                        <h1 class="mt-2 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Catálogo de Áreas</h1>
                     </div>
                 </div>
 
@@ -67,7 +67,7 @@
                                                 <tr>
                                                     <td>{{ $key+1 }} </td>
                                                     <td>{{ $area->area }}</td>
-                                                    
+
                                                     <td class="text-center">
 
                                                         <button type="button" id="btnEditarUsuario" class="btn btn-primary"
@@ -92,7 +92,7 @@
                                                 @include('solicitud.directorio.areas.eliminarArea')
                                                 @include('solicitud.directorio.areas.activarArea')
 
-                                                
+
                         @endforeach
                     </tbody>
                 </table>
@@ -118,9 +118,9 @@
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json",
                 "paginate": {
-                    "first": "<<",   
-                    "last": ">>",    
-                    "next": ">",    
+                    "first": "<<",
+                    "last": ">>",
+                    "next": ">",
                     "previous": "<"
                 },
             },

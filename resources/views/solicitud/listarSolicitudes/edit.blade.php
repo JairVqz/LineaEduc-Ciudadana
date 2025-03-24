@@ -30,7 +30,7 @@
             <form id="formularioActualizarSolicitud" method="POST">
                 @csrf
 
-                <h1 class="mt-5" style="text-align: center; font-weight: bold; color: #7A1737;">Edición de la
+                <h1 class="mt-2" style="text-align: center; font-weight: bold; color: #7A1737;">Edición de la
                     solicitud: {{ $solicitudes[0]->folio }}</h1>
 
                 <fieldset class="border border-secondary p-3" style="border-radius:5px">
