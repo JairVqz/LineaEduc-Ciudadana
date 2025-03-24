@@ -1,6 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SolicitudesExport;
+use App\Exports\SolicitudDiaExport;
+use App\Exports\SolicitudPeriodoExport;
 
 use Illuminate\Http\Request;
 
@@ -972,6 +976,32 @@ class ReportesController extends Controller
             )
         );
     }
+
+    public function exportarExcelAcumulado()
+    {
+        $nombre = 'SolicitudesAcum_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new SolicitudesExport, $nombre);
+    }
+
+    public function exportarExcelDia()
+    {
+        $nombre = 'SolicitudesDia_' . now()->format('Ymd_His') . '.xlsx';
+        return Excel::download(new SolicitudDiaExport, $nombre);
+    }
+
+    public function exportarExcelPeriodo(Request $request)
+{
+    // Recibir las fechas desde la petición
+    $start_date = $request->input('start_date');
+    $end_date = $request->input('end_date');   
+
+    // Generar el nombre del archivo con fecha y hora
+    $nombre = 'SolicitudesPeriodo_' . now()->format('Ymd_His') . '.xlsx';
+
+    // **PASAR LAS FECHAS AL EXPORT**
+    return Excel::download(new SolicitudPeriodoExport($start_date, $end_date), $nombre);
+}
+
 
 
 
