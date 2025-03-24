@@ -990,12 +990,18 @@ class ReportesController extends Controller
     }
 
     public function exportarExcelPeriodo(Request $request)
-    {
-        $start_date = $request->input('start_date');
-        $end_date = $request->input('end_date');
-        $nombre = 'SolicitudesPeriodo_' . now()->format('Ymd_His') . '.xlsx';
-        return Excel::download(new SolicitudPeriodoExport, $nombre);
-    }
+{
+    // Recibir las fechas desde la petición
+    $start_date = $request->input('start_date');
+    $end_date = $request->input('end_date');   
+
+    // Generar el nombre del archivo con fecha y hora
+    $nombre = 'SolicitudesPeriodo_' . now()->format('Ymd_His') . '.xlsx';
+
+    // **PASAR LAS FECHAS AL EXPORT**
+    return Excel::download(new SolicitudPeriodoExport($start_date, $end_date), $nombre);
+}
+
 
 
 

@@ -27,7 +27,7 @@
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-5">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte por periodo</h1>
-                <a href="{{ route('reportes.exportarExcelPeriodo') }}" class="ms-2 tooltip-trigger" 
+                <a id="btnExportarExcel" href="{{ route('reportes.exportarExcelPeriodo') }}" class="ms-2 tooltip-trigger" 
                 data-bs-toggle="tooltip" data-bs-placement="left" title="Descargar registro de solicitudes">
                     <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
                         style="height: 47px; object-fit: contain; margin: 5px; font-size:12px; margin-right: 10px;">
@@ -263,6 +263,9 @@
 
         // Limpiar el contenido de la tabla
     $('#tablaSAreas').empty();
+
+   
+
 
 // Recorrer los datos recibidos y agregarlos a la tabla
 data.parrafoAreas.forEach(area => {
