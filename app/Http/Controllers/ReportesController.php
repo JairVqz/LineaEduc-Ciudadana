@@ -583,6 +583,8 @@ class ReportesController extends Controller
                 'valuesMinutoACUM' => $valuesMinutoACUM,
                 'solicitudesPorMunicipio' => $solicitudesPorMunicipio,
                 'parrafoAreas'=>$parrafoAreas,
+                'start_date'=>$start_date,
+                'end_date'=>$end_date,
             ]);
         }
         return view(
@@ -604,6 +606,7 @@ class ReportesController extends Controller
                 'valuesMinutoACUM',
                 'solicitudesPorMunicipio',
                 'parrafoAreas',
+
             )
         );
 
@@ -993,7 +996,15 @@ class ReportesController extends Controller
 {
     // Recibir las fechas desde la petición
     $start_date = $request->input('start_date');
-    $end_date = $request->input('end_date');   
+    $end_date = $request->input('end_date');
+    //SELECT * FROM tbl_solicitudesGeneral WHERE CAST(created_at AS DATE) BETWEEN '2025-02-28' AND '2025-03-03'
+    //->whereRaw("CAST(created_at AS DATE) BETWEEN ? AND ?", [$start_date, $end_date])
+    // Si no hay fechas en la petición, usamos el rango predeterminado (últimos 30 días)
+    if (!$start_date || !$end_date) {
+        $start_date = now()->startOfMonth()->format('Y-m-d');
+        $end_date = now()->endOfMonth()->format('Y-m-d');
+    }
+    //dd($start_date, $end_date); 
 
     // Generar el nombre del archivo con fecha y hora
     $nombre = 'SolicitudesPeriodo_' . now()->format('Ymd_His') . '.xlsx';

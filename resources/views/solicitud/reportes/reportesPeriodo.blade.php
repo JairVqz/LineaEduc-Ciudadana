@@ -27,7 +27,7 @@
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-2">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte por periodo</h1>
-                <a id="btnExportarExcel" href="{{ route('reportes.exportarExcelPeriodo') }}" class="ms-2 tooltip-trigger" 
+                <a id="btnExportarExcel" class="ms-2 tooltip-trigger" 
                 data-bs-toggle="tooltip" data-bs-placement="left" title="Descargar registro de solicitudes">
                     <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
                         style="height: 47px; object-fit: contain; margin: 5px; font-size:12px; margin-right: 10px;">
@@ -195,6 +195,8 @@
 
         function cb(start, end) {
             $('#reportrange span').html('Desde ' + start.format('DD-MM-YYYY') + ' hasta ' + end.format('DD-MM-YYYY'));
+            startDater = start;
+            endDater = end;
 
             const reportesPeriodo = window.Laravel.reportesPeriodo;
             $.ajax({
@@ -247,6 +249,21 @@
             }
         }, cb);
         cb(start, end);
+        $('#btnExportarExcel').click(function (e) {
+            e.preventDefault(); // Evita la recarga de la página
+
+            let startD = startDater.format('YYYY-MM-DD');
+            let endD = endDater.format('YYYY-MM-DD');
+            //console.log(startD);
+
+            if (!startD || !endD) {
+                alert("Por favor, selecciona ambas fechas.");
+                return;
+            }
+
+            // Redirigir a la URL con los parámetros de fecha
+            window.location.href = `/exportarExcelPeriodo?start_date=${startD}&end_date=${endD}`;
+        });
     });
 
     function actualizarVista(data) {
