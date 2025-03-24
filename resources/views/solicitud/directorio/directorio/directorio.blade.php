@@ -40,7 +40,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="text-center">
-                        <h1 class="mt-5 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Directorio
+                        <h1 class="mt-2 mb-2" style="text-align: center; font-weight: bold; color: #7A1737;">Directorio
                         </h1>
                     </div>
                 </div>

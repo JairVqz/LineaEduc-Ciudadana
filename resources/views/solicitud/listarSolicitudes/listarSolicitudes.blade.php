@@ -25,7 +25,7 @@
     <!-- mi contenedor -->
     <div class="content">
         <div class="card" style="padding: 30px;">
-            <div class="d-flex justify-content-between align-items-center mt-5">
+            <div class="d-flex justify-content-between align-items-center mt-2">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Lista de solicitudes</h1>
                 <a href="{{ route('solicitud.exportarExcel') }}">
                     <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
@@ -123,7 +123,7 @@
                             </div>
                             <div class="col-md-3" style="text-align: center;">
                                 <br>
-                                <button name="button" id="btnLimpiarFiltros" style="border-radius: 8px; 
+                                <button name="button" id="btnLimpiarFiltros" style="border-radius: 8px;
                                 width:100%; height:75%">Limpiar filtros</button>
                             </div>
 
@@ -640,7 +640,7 @@
                 });
             }
         });
-    });                      
+    });
 </script>
 
 

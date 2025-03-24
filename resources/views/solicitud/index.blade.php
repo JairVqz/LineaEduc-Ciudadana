@@ -28,7 +28,7 @@
     <div class="content" style="padding:50px;">
         <div class="row justify-content-center align-items-center ">
             <!-- Imagen del lado izquierdo -->
-            <div class="col-12 text-center" style="margin-top: 5em; ">
+            <div class="col-12 text-center" style="margin-top: 3em; ">
                 <img src="/images/sev_vertical.png" style="height:18vh; margin-right: 50px;"
                     alt="Línea Educación Ciudadana">
                 <img src="/images/LEC.png" style="height:20vh; " alt="Línea Educación Ciudadana">

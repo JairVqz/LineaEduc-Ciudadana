@@ -25,7 +25,7 @@
 <body>
     <div class="content">
         <div class="card" style="padding: 30px;">
-            <div class="d-flex justify-content-between align-items-center mt-5">
+            <div class="d-flex justify-content-between align-items-center mt-2">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte acumulado</h1>
                 <a href="{{ route('reportes.pdfReporteAcum') }}" id="pdfAcumulado">
                     <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
@@ -118,12 +118,12 @@
                                             </div>
 
                                             <div class="progress position-relative" id="progreso1" style="height: 20px; position: relative;">
-                                                <div class="progress-bar progress-bar-striped " 
-                                                    role="progressbar" aria-valuenow="{{ $data->porcentaje }}" 
-                                                    aria-valuemin="0" aria-valuemax="100" 
+                                                <div class="progress-bar progress-bar-striped "
+                                                    role="progressbar" aria-valuenow="{{ $data->porcentaje }}"
+                                                    aria-valuemin="0" aria-valuemax="100"
                                                     style="width: {{ $data->porcentaje }}%;">
                                                 </div>
-                                                <span class="position-absolute fw-bold text-dark" 
+                                                <span class="position-absolute fw-bold text-dark"
                                                     style="right: 5px; top: 50%; transform: translateY(-50%);">
                                                     {{ $data->porcentaje }}% ({{ $data->cantidad }})
                                                 </span>
@@ -143,7 +143,7 @@
                                                     <i class="bi bi-circle-fill" style="color:green; font-size: 14px; margin-right:4px" ></i>
                                                     <span style="font-size: 14px;">Terminadas: {{ $data->soliTerminado }}</span>
                                                 </div>
-                                                
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -155,7 +155,7 @@
                 </div>
 
 
-                
+
             </div>
 
 
@@ -229,9 +229,9 @@
 <script>
      window.Laravel = <?php echo json_encode(value: [
         'guardarGrafica' => route('reportes.guardarGrafica'),
-        
+
     ]); ?>
-     
+
     function enviarGraficaAlServidorP() {//mando las 2
         html2canvas(document.getElementById('solicitudesPorHoraAcumuladoChart'), { willReadFrequently: true })
             .then(canvas => {
@@ -254,7 +254,7 @@
                     }
                 }).catch(error => console.error("Error en la petición:", error));
             });
-        
+
     }
     document.addEventListener("DOMContentLoaded", () => {
         setTimeout(enviarGraficaAlServidorP, 2000);
