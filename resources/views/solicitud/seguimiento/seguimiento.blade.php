@@ -42,7 +42,7 @@
                     style="margin-right:10px"></i>Filtros de búsqueda</button>
             <div class="panel">
                 <!-- Filtros-->
-                <div class="card mb-3" style="border-radius: 0px">
+                <div class="card mb-3" style="border-radius: 0px; margin-top: 0 !important;">
                     <div class="card-body">
 
                         <div class="mb-3 row">

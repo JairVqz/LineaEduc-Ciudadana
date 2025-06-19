@@ -57,31 +57,31 @@
             </div>
 
             <!--REPORTE ACUMULADO-->
-            <div class="row g-3 flex-row d-flex mt-2">
+            <div class="row g-3 flex-row d-flex mt-2" style="margin-top: 0 !important;">
                 <div class="col-md-3" style="padding: 5px; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: #7A1737 ; color: white;">
+                        style="padding: 10px;background-color: #7A1737 ; color: white; margin-top: 0 !important;">
                         <h1 id="llamadasRecibidasPorDia">{{ $llamadasRecibidasPorDia }}</h1>
                         <h5>Llamadas recibidas </h5>
                     </div>
                 </div>
                 <div class="col-md-3 " style="padding: 5px; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: #B28854 ; color: white;">
+                        style="padding: 10px;background-color: #B28854 ; color: white;margin-top: 0 !important;">
                         <h1 id="primeraLlamadaPorDiaFormateada">{{ $primeraLlamadaPorDiaFormateada }}</h1>
                         <h5>Primera llamada recibida</h5>
                     </div>
                 </div>
-                <div class="col-md-3" style="padding: 5px; ">
+                <div class="col-md-3" style="padding: 5px ; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: #DAC195; ">
+                        style="padding: 10px;background-color: #DAC195; margin-top: 0 !important;">
                         <h1 id="minutosEfectivosPorDia">{{ $minutosEfectivosPorDia }}</h1>
                         <h5>Minutos efectivos</h5>
                     </div>
                 </div>
                 <div class="col-md-3" style="padding: 5px; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: rgb(192,192,192) ;">
+                        style="padding: 10px;background-color: rgb(192,192,192) ;margin-top: 0 !important;">
                         <h1 id="ultimaLlamadaPorDiaFormateada">{{ $ultimaLlamadaPorDiaFormateada }}</h1>
                         <h5>Úlitma llamada recibida</h5>
                     </div>
@@ -93,7 +93,7 @@
                 <div class="col-md-2"></div>
                 <div class="col-md-8" style="padding: 5px; justify-content-center align-items-center">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px; padding-top: 20px; border: none;">
+                        style="padding: 10px; padding-top: 20px; border: none; margin-top: 0 !important;">
                         <canvas id="solicitudesPorHoraChart"></canvas>
                         <div style="display: flex; justify-content: flex-end; width: 100%; padding-right: 10px;">
                             <a style="text-align: right; cursor: pointer; transition: transform 0.2s;"
@@ -110,7 +110,7 @@
 
             <div class="row g-3 flex-row d-flex mt-2">
                 <div class="col-md-12" style="padding: 5px;">
-                    <div class="card" style="padding: 10px;">
+                    <div class="card" style="padding: 10px; margin-top: 0 !important;">
                         <h4 style="text-align: center; margin-top: 10px;">Áreas con mayor número de solicitudes</h4><br>
                         <div style="height: 100%; width: 100%;">
                             <table class="table table-bordered">
@@ -262,7 +262,9 @@
             }
 
             // Redirigir a la URL con los parámetros de fecha
-            window.location.href = `/exportarExcelPeriodo?start_date=${startD}&end_date=${endD}`;
+            //window.location.href = `http://127.0.0.1:8000/exportarExcelPeriodo?start_date=${startD}&end_date=${endD}`;
+            window.location.href = `https://callcenter.sev.gob.mx/index.php/exportarExcelPeriodo?start_date=${startD}&end_date=${endD}`;
+
         });
     });
 

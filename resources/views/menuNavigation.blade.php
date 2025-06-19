@@ -206,11 +206,7 @@
             class="{{ request()->routeIs('solicitud.listarSolicitudes') ? 'active' : '' }}">
             <i class="bi bi-table me-2"></i>Solicitudes
         </a>
-        <a href="{{ route('solicitud.create') }}" class="{{ request()->routeIs('solicitud.create') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-plus me-2"></i>Nueva Solicitud
-        </a>
         
-
         @php
             $isReportesActive = request()->routeIs('reportes.reportesDia') || request()->routeIs('reportes.reportesAcumulado');
             $isCatalogosActive =  request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
@@ -233,28 +229,6 @@
                 <a href="{{ route('reportes.reportesPeriodo') }}"
                     class="ms-3 {{ request()->routeIs('reportes.reportesPeriodo') ? 'active' : '' }}">
                     <i class="bi bi-calendar4-week me-2"></i>Reporte periódico
-                </a>
-            </div>
-        </div>
-
-        <div class="dropdown">
-            <a href="#" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#submenuCatalogos"
-                aria-expanded="{{ $isCatalogosActive ? 'true' : 'false' }}">
-                <i class="bi bi-collection me-2"></i>Catálogos
-            </a>
-
-            <div id="submenuCatalogos" class="collapse {{ $isCatalogosActive ? 'show' : '' }}">
-                <a href="{{ route('directorio.collection') }}"
-                    class="ms-3 {{ request()->routeIs('directorio.collection') ? 'active' : '' }}">
-                    <i class="bi bi-telephone me-2"></i>Directorio
-                </a><!--DIRECTORIO, AREAS, PUESTOS-->
-                <a href="{{ route('catalogos.areas') }}"
-                    class="ms-3 {{ request()->routeIs('catalogos.areas') ? 'active' : '' }}">
-                    <i class="bi bi-building-gear me-2"></i>Áreas
-                </a>
-                <a href="{{ route('puestos.puestos') }}"
-                    class="ms-3 {{ request()->routeIs('puestos.puestos') ? 'active' : '' }}">
-                    <i class="bi bi-person-gear me-2"></i>Puestos
                 </a>
             </div>
         </div>
