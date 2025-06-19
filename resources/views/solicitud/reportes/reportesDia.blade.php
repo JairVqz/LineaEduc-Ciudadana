@@ -42,28 +42,28 @@
             <div class="row g-3 flex-row d-flex mt-2">
                 <div class="col-md-3" style="padding: 5px; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: #7A1737 ; color: white;">
+                        style="padding: 10px;background-color: #7A1737 ; color: white; margin-top: 0 !important;">
                         <h1>{{ $llamadasRecibidasPorDia }}</h1>
                         <h5>Llamadas recibidas </h5>
                     </div>
                 </div>
                 <div class="col-md-3 " style="padding: 5px; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: #B28854 ; color: white;">
+                        style="padding: 10px;background-color: #B28854 ; color: white; margin-top: 0 !important;">
                         <h1>{{ $primeraLlamadaPorDiaFormateada }}</h1>
                         <h5>Primera llamada recibida</h5>
                     </div>
                 </div>
                 <div class="col-md-3" style="padding: 5px; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: #DAC195; ">
+                        style="padding: 10px;background-color: #DAC195;  margin-top: 0 !important;">
                         <h1>{{ $minutosEfectivosPorDia }}</h1>
                         <h5>Minutos efectivos</h5>
                     </div>
                 </div>
                 <div class="col-md-3" style="padding: 5px; ">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px;background-color: rgb(192,192,192) ;">
+                        style="padding: 10px;background-color: rgb(192,192,192) ; margin-top: 0 !important;">
                         <h1>{{ $ultimaLlamadaPorDiaFormateada }}</h1>
                         <h5>Úlitma llamada recibida</h5>
                     </div>
@@ -75,7 +75,7 @@
                 <div class="col-md-2"></div>
                 <div class="col-md-8" style="padding: 5px; justify-content-center align-items-center">
                     <div class="card justify-content-center align-items-center"
-                        style="padding: 10px; padding-top: 20px; border: none;">
+                        style="padding: 10px; padding-top: 20px; border: none; margin-top: 0 !important;">
 
                         <canvas id="solicitudesPorHoraChart"></canvas>
                         <!--<form id="formFiltro" class="flex-row d-flex align-items-center justify-content-center">
@@ -100,7 +100,7 @@
 
             <div class="row g-3 flex-row d-flex mt-2">
                 <div class="col-md-12" style="padding: 5px;">
-                    <div class="card" style="padding: 10px;">
+                    <div class="card" style="padding: 10px; margin-top: 0 !important;">
                         <h4 style="text-align: center; margin-top: 10px;">Áreas con mayor número de solicitudes</h4><br>
                         <div style="height: 100%; width: 100%;">
                             <table id="tablaSAreas" class="table table-bordered">
@@ -165,7 +165,7 @@
 
             <div class="row g-3 flex-row d-flex mt-2">
                 <div class="col-md-8">
-                    <div class="card" style="padding: 20px; position: relative;">
+                    <div class="card" style="padding: 20px; position: relative; margin-top: 0 !important;">
                         <div id="mapToggle">
                             <select id="mapSelect">
                                 <option value="Delegaciones">Delegaciones</option>
@@ -179,7 +179,7 @@
 
 
                 <div class="col-md-4">
-                    <div class="card" style="padding: 20px; max-height: 592px; min-height: 592px; overflow: hidden;">
+                    <div class="card" style="padding: 20px; max-height: 592px; min-height: 592px; overflow: hidden; margin-top: 0 !important;">
                         <h4 style="text-align: center;" id="tituloTabla">Solicitudes por Municipio</h4><br>
                         <div class="input-group">
                             <input type="text" class="form-control" id="filtroTabla" placeholder="Buscar...">

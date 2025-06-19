@@ -61,7 +61,7 @@
     </div>
 </section>
 
-<footer class="bg-footer d-flex justify-content-between align-items-center px-4">
+<footer class="d-flex justify-content-between align-items-center px-4">
     <div class="text-white">
         Horario de atención al usuario: Lunes a Viernes de 8:00 hrs a 20:00hrs
     </div>
