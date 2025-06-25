@@ -18,7 +18,7 @@ class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings,
     {
         $idArea = Auth::user()->idArea;
 
-        if ($idArea === "Revisor") {
+        if (Auth::user()->rol === "Revisor" || Auth::user()->rol === "Supervisor") {
             return collect(DB::select('SELECT [folio]
             ,[nombre]
             ,[apellidoPaterno]
@@ -81,7 +81,8 @@ class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings,
     {
 
         $idArea = Auth::user()->idArea;
-        if ($idArea === "Revisor") {
+        if (Auth::user()->rol === "Revisor" || Auth::user()->rol === "Supervisor") {
+
             return [
                 "FOLIO",
                 "NOMBRE",
@@ -110,23 +111,42 @@ class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings,
                 "OPERADORA QUE ATENDIÓ"
             ];
         } else {
-            return ["FOLIO", "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO","CORREO", 
-            "TELÉFONO FIJO", "TELÉFONO CELULAR",
-            "TIPO DE SOLICITUD", "PRIORIDAD", "ESTATUS", "DESCRIPCION", 
-            "EXTENSION",
-            "ÁREA A LA QUE PERTENECE",
-            "CCT", "NIVEL", "NOMBRE DEL PLANTEL", "NOMBRE DEL DIRECTOR",
-            "MUNICIPIO", "LOCALIDAD", "DIRECCIÓN DEL CCT",
-            "HORA DE INICIO", "HORA DE FIN", 
-            "DURACIÓN DE LA LLAMADA",
-            "FECHA DE SOLICITUD", "DIAS TRANSCURRIDOS", "OPERADORA QUE ATENDIÓ"];
+            return [
+                "FOLIO",
+                "NOMBRE",
+                "APELLIDO PATERNO",
+                "APELLIDO MATERNO",
+                "CORREO",
+                "TELÉFONO FIJO",
+                "TELÉFONO CELULAR",
+                "TIPO DE SOLICITUD",
+                "PRIORIDAD",
+                "ESTATUS",
+                "DESCRIPCION",
+                "EXTENSION",
+                "ÁREA A LA QUE PERTENECE",
+                "CCT",
+                "NIVEL",
+                "NOMBRE DEL PLANTEL",
+                "NOMBRE DEL DIRECTOR",
+                "MUNICIPIO",
+                "LOCALIDAD",
+                "DIRECCIÓN DEL CCT",
+                "HORA DE INICIO",
+                "HORA DE FIN",
+                "DURACIÓN DE LA LLAMADA",
+                "FECHA DE SOLICITUD",
+                "DIAS TRANSCURRIDOS",
+                "OPERADORA QUE ATENDIÓ"
+            ];
         }
     }
 
     public function registerEvents(): array
     {
         $idArea = Auth::user()->idArea;
-        if ($idArea === "Revisor") {
+        if (Auth::user()->rol === "Revisor" || Auth::user()->rol === "Supervisor") {
+
             return [
                 AfterSheet::class => function (AfterSheet $event) {
                     $sheet = $event->sheet;
@@ -157,14 +177,14 @@ class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings,
                     $sheet->setAutoFilter($cellRange);
                 },
             ];
-        }else{
+        } else {
             return [
-                AfterSheet::class => function(AfterSheet $event) {
+                AfterSheet::class => function (AfterSheet $event) {
                     $sheet = $event->sheet;
-    
-                    $cellRange = 'A1:Z1'; 
+
+                    $cellRange = 'A1:Z1';
                     $lastRow = $sheet->getHighestRow();
-    
+
                     $sheet->getStyle($cellRange)->applyFromArray([
                         'font' => ['bold' => true],
                         'fill' => [
@@ -173,7 +193,7 @@ class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings,
                         ],
                         'alignment' => ['horizontal' => 'center'],
                     ]);
-    
+
                     // bordes
                     $sheet->getStyle("A1:Z{$lastRow}")->applyFromArray([
                         'borders' => [
@@ -183,7 +203,7 @@ class SeguimientoExport implements FromCollection, ShouldAutoSize, WithHeadings,
                             ],
                         ],
                     ]);
-    
+
                     // filtros
                     $sheet->setAutoFilter($cellRange);
                 },

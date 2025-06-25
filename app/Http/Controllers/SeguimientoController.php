@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\CatalogoPuestos;
 use Illuminate\Http\Request;
 use App\Models\CatalogoAreas;
 use App\Models\Estatus;
@@ -21,14 +22,18 @@ class SeguimientoController extends Controller
             $solicitudes = DB::select('SELECT * FROM listarSolicitudes where idArea = ? order by idestatus ASC, idprioridad desc ', [Auth::user()->idArea]);
             $listaTiposSolicitud = TipoSolicitud::all()->where('idArea',"=",Auth::user()->idArea);
             $listaAreas = CatalogoAreas::all();
+            $directorioArea = DB::select('SELECT extension, puesto, idExtensionCatalogo FROM directorio where idArea = ?', [Auth::user()->idArea]);
+            
 
         } else {
             $solicitud = new Solicitud();
             $solicitudes = $solicitud->listarSolicitudesSeguimiento();
             $listaTiposSolicitud = TipoSolicitud::all();
             $listaAreas = CatalogoAreas::all();
+            $directorioArea = DB::select('SELECT extension, puesto, idExtensionCatalogo FROM directorio');
         }
         //dd($solicitudes);
+        
         $listaPrioridades = Prioridad::all();
         $listaEstatus = Estatus::all();
 
@@ -36,6 +41,7 @@ class SeguimientoController extends Controller
             'solicitud.seguimiento.seguimiento',
             [
                 'listaAreas' => $listaAreas,
+                'directorioArea' => $directorioArea,
                 'listaTiposSolicitud' => $listaTiposSolicitud,
                 'listaPrioridades' => $listaPrioridades,
                 'listaEstatus' => $listaEstatus,

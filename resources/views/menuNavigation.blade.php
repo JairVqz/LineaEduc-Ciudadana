@@ -20,15 +20,20 @@
 </nav>
 
 <!--Muesca-->
-<nav id="muesca" class="navbar navbar-expand-lg" style="background-color: #7A1737; width: 20px; height: 50px; border-top-left-radius: 30px; margin-top: 41px; margin-left: 250px; position: fixed; z-index: 1000; border-top-right-radius: 30px;">
+<nav id="muesca" class="navbar navbar-expand-lg"
+    style="background-color: #7A1737; width: 20px; height: 50px; border-top-left-radius: 30px; margin-top: 41px; margin-left: 250px; position: fixed; z-index: 1000; border-top-right-radius: 30px;">
     <div class="container-fluid d-flex align-items-center justify-content-center" style="position: relative;">
-        <div id="navbarPrimeNg" style="position: absolute; top: 0; left: 0; background-color: #F5F5F5; width: 20px; height: 27px; border-top-left-radius: 30px; z-index: -2;"></div>
+        <div id="navbarPrimeNg"
+            style="position: absolute; top: 0; left: 0; background-color: #F5F5F5; width: 20px; height: 27px; border-top-left-radius: 30px; z-index: -2;">
+        </div>
     </div>
 </nav>
 
 @include('solicitud.modalPerfil')
 <div class="sidebar">
-    @if (Auth::user()->rol == 'Administrador')
+    @if (Auth::user()->rol == 'Administrador' || Auth::user()->rol == 'Superuser')
+
+        
 
         <a href="{{ route('solicitud.index') }}" class="{{ request()->routeIs('solicitud.index') ? 'active' : '' }}">
             <i class="bi bi-house me-2"></i>Inicio
@@ -47,7 +52,7 @@
 
         @php
             $isReportesActive = request()->routeIs('reportes.reportesDia') || request()->routeIs('reportes.reportesAcumulado');
-            $isCatalogosActive =  request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
+            $isCatalogosActive = request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
         @endphp
 
         <div class="dropdown">
@@ -93,10 +98,20 @@
             </div>
         </div>
 
-        
+
         <a href="{{ route('user.index') }}" class="{{ request()->routeIs('user.index') ? 'active' : '' }}">
             <i class="bi bi-people me-2"></i>Usuarios
         </a>
+
+        @if (Auth::user()->rol == 'Superuser')
+            <a href="{{ route('archivos.subir') }}" class="{{ request()->routeIs('archivos.subir') ? 'active' : '' }}">
+                <i class="bi bi-house me-2"></i>Subir Archivos
+            </a>
+            <a href="{{ route('archivos.lista') }}" class="{{ request()->routeIs('archivos.lista') ? 'active' : '' }}">
+                <i class="bi bi-house me-2"></i>Lista de archivos
+            </a>
+           
+        @endif
     @endif
 
     @if (Auth::user()->rol == 'Revisor')
@@ -111,7 +126,7 @@
 
         @php
             $isReportesActive = request()->routeIs('reportes.reportesDia') || request()->routeIs('reportes.reportesAcumulado');
-            $isCatalogosActive =  request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
+            $isCatalogosActive = request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
         @endphp
 
         <div class="dropdown">
@@ -135,27 +150,7 @@
             </div>
         </div>
 
-        <div class="dropdown">
-            <a href="#" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#submenuCatalogos"
-                aria-expanded="{{ $isCatalogosActive ? 'true' : 'false' }}">
-                <i class="bi bi-collection me-2"></i>Catálogos
-            </a>
 
-            <div id="submenuCatalogos" class="collapse {{ $isCatalogosActive ? 'show' : '' }}">
-                <a href="{{ route('directorio.collection') }}"
-                    class="ms-3 {{ request()->routeIs('directorio.collection') ? 'active' : '' }}">
-                    <i class="bi bi-telephone me-2"></i>Directorio
-                </a><!--DIRECTORIO, AREAS, PUESTOS-->
-                <a href="{{ route('catalogos.areas') }}"
-                    class="ms-3 {{ request()->routeIs('catalogos.areas') ? 'active' : '' }}">
-                    <i class="bi bi-building-gear me-2"></i>Áreas
-                </a>
-                <a href="{{ route('puestos.puestos') }}"
-                    class="ms-3 {{ request()->routeIs('puestos.puestos') ? 'active' : '' }}">
-                    <i class="bi bi-person-gear me-2"></i>Puestos
-                </a>
-            </div>
-        </div>
     @endif
 
     @if (Auth::user()->rol == 'Capturista')
@@ -170,9 +165,9 @@
             <i class="bi bi-file-earmark-plus me-2"></i>Nueva Solicitud
         </a>
         @php
-            $isCatalogosActive =  request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
+            $isCatalogosActive = request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
         @endphp
-        
+
         <div class="dropdown">
             <a href="#" class="dropdown-toggle" data-bs-toggle="collapse" data-bs-target="#submenuCatalogos"
                 aria-expanded="{{ $isCatalogosActive ? 'true' : 'false' }}">
@@ -206,10 +201,10 @@
             class="{{ request()->routeIs('solicitud.listarSolicitudes') ? 'active' : '' }}">
             <i class="bi bi-table me-2"></i>Solicitudes
         </a>
-        
+
         @php
             $isReportesActive = request()->routeIs('reportes.reportesDia') || request()->routeIs('reportes.reportesAcumulado');
-            $isCatalogosActive =  request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
+            $isCatalogosActive = request()->routeIs('directorio.collection') || request()->routeIs('catalogos.areas') || request()->routeIs('puestos.puestos');
         @endphp
 
         <div class="dropdown">
@@ -241,19 +236,19 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    let toggles = document.querySelectorAll(".dropdown-toggle");
+        let toggles = document.querySelectorAll(".dropdown-toggle");
 
-    toggles.forEach(function (toggle) {
-        toggle.addEventListener("click", function () {
-            let target = document.querySelector(this.getAttribute("data-bs-target"));
+        toggles.forEach(function (toggle) {
+            toggle.addEventListener("click", function () {
+                let target = document.querySelector(this.getAttribute("data-bs-target"));
 
-            // Cierra cualquier otro menú abierto
-            document.querySelectorAll(".collapse.show").forEach(function (openMenu) {
-                if (openMenu !== target) {
-                    bootstrap.Collapse.getInstance(openMenu)?.hide();
-                }
+                // Cierra cualquier otro menú abierto
+                document.querySelectorAll(".collapse.show").forEach(function (openMenu) {
+                    if (openMenu !== target) {
+                        bootstrap.Collapse.getInstance(openMenu)?.hide();
+                    }
+                });
             });
         });
     });
-});
 </script>

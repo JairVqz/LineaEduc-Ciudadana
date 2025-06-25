@@ -75,7 +75,8 @@
 
                             <div class="col-md-3">
                                 <label for="idTipoSolicitud" class="form-label">Tipo de solicitud:</label>
-                                <select name="idTipoSolicitud" id="idTipoSolicitud" class="form-select select2-bootstrap">
+                                <select name="idTipoSolicitud" id="idTipoSolicitud"
+                                    class="form-select select2-bootstrap">
                                     <option value="">Selecciona el tipo de solicitud</option>
                                 </select>
                             </div>
@@ -133,6 +134,20 @@
             </div>
             <br>
 
+            
+            <div class="d-flex justify-content-end align-items-end">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <label for="directorioArea" class="me-2 mb-0">Seleccione:</label>
+                        <select name="directorioArea" id="directorioArea" class="form-select select2-bootstrap flex-grow-1">
+                            @foreach ($directorioArea as $data)
+                                <option value="{{ $data->idExtensionCatalogo }}">{{$data->extension. ' - ' . $data->puesto }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+
             <!--tabla de solicitudes-->
             <div class="table-responsive">
                 <table id="tablaResultados" class="table table-striped table-bordered">
@@ -140,7 +155,11 @@
                         <tr>
                             <th>Folio</th>
                             <th>Nombre del solicitante</th>
-                            <th>Área que atiende</th>
+                             @if (Auth::user()->rol == 'Revisor' || Auth::user()->rol == 'Supervisor')
+                              <th>Atiende</th>
+                             @else
+                              <th>Área que atiende</th>
+                             @endif
                             <th>Solicitud</th>
                             <th>Prioridad</th>
                             <th>CCT</th>
@@ -160,7 +179,9 @@
                                 {{ $solicitud->apellidoMaterno }}
                             </td>
                             <!--todos los que son foraneas-->
-                            <td>{{ $solicitud->area ?? 'Sin asignar' }}</td>
+                              <td value="{{ $solicitud->idExtensionCatalogo ?? 'Sin asignar' }}">{{ $solicitud->area ?? 'Sin asignar' }}</td>
+                             
+                            
                             <td>{{ $solicitud->tipoSolicitud ?? 'Sin asignar' }}</td>
                             <td>{{ $solicitud->prioridad ?? 'Sin asignar' }}</td>
 
@@ -254,11 +275,11 @@
 
 
 <script>
-     window.Laravel = <?php echo json_encode([
-        'getTipos' => route(name: 'seguimiento.obtenerTipos'),
-        'apiMunicipios' => route('api.apiMunicipios'),
-        'apiLocalidades' => route('api.apiLocalidades'),
-    ]); ?>
+    window.Laravel = <?php echo json_encode([
+    'getTipos' => route(name: 'seguimiento.obtenerTipos'),
+    'apiMunicipios' => route('api.apiMunicipios'),
+    'apiLocalidades' => route('api.apiLocalidades'),
+]); ?>
 
     $(document).ready(function () {
         $('#idArea').change(function () {
@@ -339,6 +360,56 @@
             info: true,
             autoWidth: true,
             responsive: true,
+        });
+
+        $('#directorioArea').select2({
+            placeholder: "Seleccione la extensión que atiende",
+            width: 'resolve',
+            allowClear: true,
+            language: {
+                noResults: function () {
+                    return "No hay resultados";
+                },
+                searching: function () {
+                    return "Buscando..";
+                }
+            }
+        }).on("select2:unselecting", function (e) {
+            $(this).data('state', 'unselected');
+        }).on("select2:open", function (e) {
+            if ($(this).data('state') === 'unselected') {
+                $(this).removeData('state');
+
+                var self = $(this);
+                setTimeout(function () {
+                    self.select2('close');
+                }, 0);
+            }
+        }).val(null).trigger('change');
+
+        let extensionFilter = null;
+        $('#directorioArea').on('change', function () {
+            const filtro = $(this).val();
+
+            if (extensionFilter) {
+                const idx = $.fn.dataTable.ext.search.indexOf(extensionFilter);
+                if (idx !== -1) {
+                    $.fn.dataTable.ext.search.splice(idx, 1);
+                }
+                extensionFilter = null;
+            }
+
+            if (filtro) {
+                extensionFilter = function (settings, data, dataIndex, rowData, counter) {
+                    var row = $('#tablaResultados').DataTable().row(dataIndex).node();
+                    var td = $(row).find('td').eq(2);
+                    var value = td.attr('value');
+                    return value == filtro;
+                };
+                $.fn.dataTable.ext.search.push(extensionFilter);
+            }
+
+            $('#tablaResultados').DataTable().draw();
         });
 
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ArchivosController;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -174,6 +175,16 @@ Route::middleware('auth.validation')->group(function () {
             Route::post('/directorio/update', [DirectorioController::class, 'update'])->name('update');
             Route::post('/directorio/destroy',  [DirectorioController::class,'destroy'])->name('destroy');
             Route::post('/directorio/restore', [DirectorioController::class, 'restore'])->name('restore');
+        });
+    });
+
+    //ARCHIVOS
+    Route::controller(ArchivosController::class)->group(function () {
+        Route::name('archivos.')->group(function () {
+            Route::get('/archivos/subir', [ArchivosController::class, 'subir'])->name( 'subir');
+            Route::get('/archivos/lista', [ArchivosController::class, 'lista'])->name( 'lista');
+            Route::post('/archivos/guardarArchivo', [ArchivosController::class, 'guardarArchivo'])->name( 'guardarArchivo');
+            Route::get('/archivos/descargarArchivo', [ArchivosController::class, 'descargarArchivo'])->name( 'descargarArchivo');
         });
     });
 
