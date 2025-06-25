@@ -184,7 +184,6 @@ class ArchivosController extends Controller
         $ruta = storage_path('app/public/tempdir/mpdf/ttfontdata/' . $nombre);
 
         if (file_exists($ruta)) {
-            // Esto descarga el archivo al equipo del usuario, en la carpeta de descargas del navegador.
             return response()->download($ruta, $nombre);
         }
 
