@@ -16,13 +16,9 @@ class AuthController extends Controller
     {
         $request->validate([
             'Usuario'   => 'required|string',
-            'Nombre'    => 'required|string',
-            'CURP'      => 'required|string',
         ]);
 
-        $user = User::where('name', $request->Nombre)
-        ->where('email', $request->Usuario)
-        ->where('curp', $request->CURP)
+        $user = User::where('email', $request->Usuario)
         ->first();
 
         if ($user) {

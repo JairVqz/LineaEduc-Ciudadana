@@ -134,8 +134,10 @@
         Object.keys(delegacionNombres).forEach(function (delegacionNombre) {
             let delegacionId = delegacionNombres[delegacionNombre]; // Convierte nombre en código
             let color = delegacionColors[delegacionId] || "#afafaf"; // Obtiene el color correspondiente
+            let total = solicitudesPorDelegacion[delegacionId] || 0; // Total por delegación
             div.innerHTML +=
-                '<i style="background:' + color + ';width: 15px; height: 15px; display: inline-block; margin-right: 5px;"></i> ' + delegacionNombre + '<br>';
+            '<i style="background:' + color + ';width: 15px; height: 15px; display: inline-block; margin-right: 5px;"></i> ' +
+            delegacionNombre + ' (' + total +')<br>';
         });
         return div;
     };

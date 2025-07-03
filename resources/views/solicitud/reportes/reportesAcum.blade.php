@@ -27,7 +27,8 @@
         <div class="card" style="padding: 30px;">
             <div class="d-flex justify-content-between align-items-center mt-2">
                 <h1 class="flex-grow-1 text-center" style="font-weight: bold; color: #7A1737;">Reporte acumulado</h1>
-                <a href="{{ route('reportes.exportarExcelAcumulado') }}" class="ms-2 tooltip-trigger" 
+                @if (Auth::user()->rol == 'Administrador' || Auth::user()->rol == 'Supervisor')
+                    <a href="{{ route('reportes.exportarExcelAcumulado') }}" class="ms-2 tooltip-trigger" 
                 data-bs-toggle="tooltip" data-bs-placement="left" title="Descargar registro de solicitudes">
                     <img src="{{ asset('images/excel.png') }}" alt="Logo SEV"
                         style="height: 47px; object-fit: contain; margin: 5px; font-size:12px; margin-right: 10px;">
@@ -38,6 +39,8 @@
                     <img src="{{ asset('images/pdf.png') }}" alt="Logo SEV"
                         style="height: 53px; object-fit: contain; margin: 5px; font-size:12px;">
                 </a>
+                @endif
+                
             </div>
 
             <!--REPORTE ACUMULADO-->

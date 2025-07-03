@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="/css/configuracion/listarUsuarios.css">
 </head>
 
+<style>
+    .dt-search {
+    display: block !important;
+}
+</style>
+
 @include('menuNavigation')
 
 <body>
@@ -144,10 +150,7 @@
             "responsive": true,
         });
 
-        $('#parametroBusqueda').on('input', function () {
-            const parametro = parametroBusqueda.value.toLowerCase().trim();
-            $('#tablaUsuarios').DataTable().columns(0).search(parametro).draw();
-        });
+        
 
     });
 </script>

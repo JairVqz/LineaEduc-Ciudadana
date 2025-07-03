@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+
 
 class SolicitudController extends Controller
 {
@@ -802,6 +804,11 @@ class SolicitudController extends Controller
     public function exportarExcelSeguimiento()
     {
         $nombre = 'Seguimiento_' . now()->format('Ymd_His') . '.xlsx';
-        return Excel::download(new SeguimientoExport, $nombre);
+            return Excel::download(new SeguimientoExport, $nombre);
+        
+              
+        
     }
+
+    
 }
